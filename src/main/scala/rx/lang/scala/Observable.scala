@@ -374,7 +374,10 @@ trait Observable[+T]
    * Returns an Observable formed from this Observable and another Observable by combining 
    * corresponding elements in pairs. 
    * The number of `onNext` invocations of the resulting `Observable[(T, U)]`
-   * is the minumum of the number of `onNext` invocations of `this` and `that`. 
+   * is the minumum of the number of `onNext` invocations of `this` and `that`.
+   *
+   * @param that the Observable to zip with
+   * @return an Observable that pairs up values from `this` and `that` Observables.
    */
   def zip[U](that: Observable[U]): Observable[(T, U)] = {
     zipWith(that)((_, _))
@@ -421,6 +424,9 @@ trait Observable[+T]
    * corresponding elements using the selector function.
    * The number of `onNext` invocations of the resulting `Observable[(T, U)]`
    * is the minumum of the number of `onNext` invocations of `this` and `that`.
+   *
+   * @param that the Observable to zip with
+   * @return an Observable that pairs up values from `this` and `that` Observables.
    */
   def zipWith[U, R](that: Observable[U])(selector: (T, U) => R): Observable[R] = {
     toScalaObservable[R](rx.Observable.zip[T, U, R](this.asJavaObservable, that.asJavaObservable, selector))
