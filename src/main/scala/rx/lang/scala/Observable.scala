@@ -2459,8 +2459,7 @@ trait Observable[+T]
 
   /**
    * Combines two observables, emitting a pair of the latest values of each of
-   * the source observables each time an event is received from one of the source observables, where the
-   * aggregation is defined by the given function.
+   * the source observables each time an event is received from one of the source observables.
    *
    * @param that
    *            The second source observable.
