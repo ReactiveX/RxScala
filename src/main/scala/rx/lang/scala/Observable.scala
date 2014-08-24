@@ -219,12 +219,12 @@ trait Observable[+T]
   }
 
   /**
-   * Returns a pair of a start function and an [[rx.lang.scala.Observable]] that upon calling the start function causes the source Observable to
+   * Returns a [[rx.lang.scala.observables.ConnectableObservable]] that upon calling the `connect` function causes the source Observable to
    * push results into the specified subject.
    *
    * @param subject
    *            the `rx.lang.scala.subjects.Subject` to push source items into. Note: this is a by-name parameter.
-   * @return a pair of a start function and an [[rx.lang.scala.Observable]] such that when the start function
+   * @return a [[rx.lang.scala.observables.ConnectableObservable]] such that when the `connect` function
    *         is called, the Observable starts to push results into the specified Subject
    */
   def multicast[R >: T](subject: => rx.lang.scala.Subject[R]): ConnectableObservable[R] = {
@@ -374,7 +374,10 @@ trait Observable[+T]
    * Returns an Observable formed from this Observable and another Observable by combining 
    * corresponding elements in pairs. 
    * The number of `onNext` invocations of the resulting `Observable[(T, U)]`
-   * is the minumum of the number of `onNext` invocations of `this` and `that`. 
+   * is the minumum of the number of `onNext` invocations of `this` and `that`.
+   *
+   * @param that the Observable to zip with
+   * @return an Observable that pairs up values from `this` and `that` Observables.
    */
   def zip[U](that: Observable[U]): Observable[(T, U)] = {
     zipWith(that)((_, _))
@@ -421,6 +424,9 @@ trait Observable[+T]
    * corresponding elements using the selector function.
    * The number of `onNext` invocations of the resulting `Observable[(T, U)]`
    * is the minumum of the number of `onNext` invocations of `this` and `that`.
+   *
+   * @param that the Observable to zip with
+   * @return an Observable that pairs up values from `this` and `that` Observables.
    */
   def zipWith[U, R](that: Observable[U])(selector: (T, U) => R): Observable[R] = {
     toScalaObservable[R](rx.Observable.zip[T, U, R](this.asJavaObservable, that.asJavaObservable, selector))
@@ -1268,13 +1274,13 @@ trait Observable[+T]
   }
 
   /**
-   * Returns a pair of a start function and an [[rx.lang.scala.Observable]] that shares a single subscription to the underlying
+   * Returns a [[rx.lang.scala.observables.ConnectableObservable]] that shares a single subscription to the underlying
    * Observable that will replay all of its items and notifications to any future [[rx.lang.scala.Observer]].
    *
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.png">
    *
-   * @return a pair of a start function and an [[rx.lang.scala.Observable]] such that when the start function
-   *         is called, the Observable starts to emit items to its [[rx.lang.scala.Observer]]s
+   * @return a [[rx.lang.scala.observables.ConnectableObservable]] such that when the `connect` function
+   *         is called, the [[rx.lang.scala.observables.ConnectableObservable]] starts to emit items to its [[rx.lang.scala.Observer]]s
    */
   def replay: ConnectableObservable[T] = {
     new ConnectableObservable[T](asJavaObservable.replay())
@@ -1610,8 +1616,9 @@ trait Observable[+T]
   }
 
   /**
-   * Returns a a pair of a start function and an [[rx.lang.scala.Observable]], which waits until the start function is called before it begins emitting
-   * items to those [[rx.lang.scala.Observer]]s that have subscribed to it.
+   * Returns a [[rx.lang.scala.observables.ConnectableObservable]], which waits until the `connect` function is called
+   * before it begins emitting items from `this` [[rx.lang.scala.Observable]] to those [[rx.lang.scala.Observer]]s that
+   * have subscribed to it.
    *
    * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/publishConnect.png">
    *
@@ -1623,11 +1630,11 @@ trait Observable[+T]
 
 
   /**
-   * Returns an Observable that emits `initialValue` followed by the items emitted by a `ConnectableObservable` that shares a single subscription to the source Observable.
+   * Returns a ConnectableObservable that emits `initialValue` followed by the items emitted by `this` Observable.
    * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishConnect.i.png">
    *
-   * @param initialValue the initial value to be emitted by the resulting Observable
+   * @param initialValue the initial value to be emitted by the resulting ConnectableObservable
    * @return a `ConnectableObservable` that shares a single subscription to the underlying Observable and starts with `initialValue`
    */
   def publish[T](initialValue: T): ConnectableObservable[T] = {
@@ -2459,8 +2466,7 @@ trait Observable[+T]
 
   /**
    * Combines two observables, emitting a pair of the latest values of each of
-   * the source observables each time an event is received from one of the source observables, where the
-   * aggregation is defined by the given function.
+   * the source observables each time an event is received from one of the source observables.
    *
    * @param that
    *            The second source observable.
