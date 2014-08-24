@@ -364,4 +364,15 @@ class ObservableTests extends JUnitSuite {
     assertEquals(false, Observable.empty.nonEmpty.toBlocking.single)
     assertEquals(true, Observable.just(1, 2, 3).nonEmpty.toBlocking.single)
   }
+
+  @Test
+  def testFromOptionWithItem(): Unit = {
+    val testItem = "test"
+    assertEquals(testItem, Observable.from(Some(testItem)).toBlocking.single)
+  }
+
+  @Test
+  def testFromOptionWithNone(): Unit = {
+    assertEquals(0, Observable.from(None).toBlocking.toList.size)
+  }
 }

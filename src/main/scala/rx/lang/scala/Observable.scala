@@ -4571,6 +4571,22 @@ object Observable {
     toScalaObservable(rx.Observable.from(iterable.asJava, scheduler.asJavaScheduler))
   }
 
+  /**
+   * Converts an `Option` into an Observable.
+   *
+   * @param option the source `Option`
+   * @tparam T the type of item in the `Option` and the type of item
+   *           to be emitted by the resulting Observable
+   * @return an Observable that emits the item in the source `Option` or
+   *         an empty Observable if `Option` contains no item
+   */
+  def from[T](option: Option[T]): Observable[T] = {
+    option match {
+      case Some(v) => Observable.just(v)
+      case _ => Observable.empty
+    }
+  }
+
 
   /**
    * Returns an Observable that calls an Observable factory to create its Observable for each
