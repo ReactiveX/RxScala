@@ -7,7 +7,7 @@ apply plugin: 'rxjava-project'
 apply plugin: 'scala'
 
 dependencies {
-    compile 'com.netflix.rxjava:rxjava-core:0.20.2'
+    compile 'io.reactivex:rxjava:1.0.+'
     compile 'org.scala-lang:scala-library:2.10.+'
     
     testCompile 'junit:junit-dep:4.10'
