@@ -36,11 +36,11 @@ trait Subscriber[-T] extends Observer[T] with Subscription {
   }
 
   override final def isUnsubscribed: Boolean = {
-    asJavaSubscriber.isUnsubscribed()
+    asJavaSubscriber.isUnsubscribed
   }
 
   def onStart(): Unit = {
-    asJavaSubscriber.onStart()
+    // do nothing by default
   }
 
   protected final def request(n: Long): Unit = {
@@ -66,6 +66,7 @@ object Subscriber extends ObserverFactoryMethods[Subscriber] {
     override val asJavaObserver: rx.Observer[_ >: T] = asJavaSubscriber
     override val asJavaSubscription: rx.Subscription = asJavaSubscriber
 
+    override def onStart(): Unit = asJavaSubscriber.onStart()
     override def onNext(value: T): Unit = asJavaSubscriber.onNext(value)
     override def onError(error: Throwable): Unit = asJavaSubscriber.onError(error)
     override def onCompleted(): Unit = asJavaSubscriber.onCompleted()
