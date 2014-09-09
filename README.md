@@ -1,6 +1,8 @@
-# Scala Adaptor for RxJava
+# RxScala: Reactive Extensions for Scala
 
-This adaptor allows to use RxJava in Scala with anonymous functions, e.g.
+This is a Scala adapter to [RxJava](http://github.com/ReactiveX/RxJava).
+
+Example usage:
 
 ```scala
 val o = Observable.interval(200 millis).take(5)
@@ -58,20 +60,46 @@ def never: Observable[Nothing]
 
 Also, the Scala Observable is fully covariant in its type parameter, whereas the Java Observable only achieves partial covariance due to limitations of Java's type system (or if you can fix this, your suggestions are very welcome).
 
-For more examples, see [RxScalaDemo.scala](https://github.com/Netflix/RxJava/blob/master/language-adaptors/rxjava-scala/src/examples/scala/rx/lang/scala/examples/RxScalaDemo.scala).
+For more examples, see [RxScalaDemo.scala](https://github.com/ReactiveX/RxScala/blob/0.x/src/examples/scala/rx/lang/scala/examples/RxScalaDemo.scala).
 
 Scala code using Rx should only import members from `rx.lang.scala` and below.
 
 
-## Documentation
+## Master Build Status
 
-The API documentation can be found [here](http://rxscala.github.io/scaladoc/index.html#rx.lang.scala.Observable).
+<a href='https://travis-ci.org/ReactiveX/RxScala/builds'><img src='https://travis-ci.org/ReactiveX/RxScala.svg?branch=0.x'></a>
+
+## Communication
+
+Since RxScala is part of the RxJava family the communication channels are similar:
+
+- Google Group: [RxJava](http://groups.google.com/d/forum/rxjava)
+- Twitter: [@RxJava](http://twitter.com/RxJava)
+- [GitHub Issues](https://github.com/ReactiveX/RxScala/issues)
+
+## Versioning
+
+RxScala 0.x is based on RxScala 0.x. RxScala 1.0 will be released when RxScala 1.0 is released.
+
+As of 1.0.0 semantic versioning will be used.
+
+## Full Documentation
+
+RxScala: 
+
+- The API documentation can be found [here](http://rxscala.github.io/scaladoc/index.html#rx.lang.scala.Observable). 
 
 Note that starting from version 0.15, `rx.lang.scala.Observable` is not a value class any more.  [./Rationale.md](https://github.com/Netflix/RxJava/blob/master/language-adaptors/rxjava-scala/Rationale.md) explains why.
 
 You can build the API documentation yourself by running `./gradlew scaladoc` in the RxJava root directory.
 
 Then navigate to `RxJava/language-adaptors/rxjava-scala/build/docs/scaladoc/index.html` to display it.
+
+RxJava:
+
+- [Wiki](https://github.com/ReactiveX/RxJava/wiki)
+- [Javadoc](http://reactivex.io/RxJava/javadoc/)
+
 
 
 ## Binaries
@@ -101,3 +129,36 @@ libraryDependencies ++= Seq(
   "com.netflix.rxjava" % "rxjava-scala" % "x.y.z"
 )
 ```
+
+## Build
+
+To build:
+
+```
+$ git clone git@github.com:ReactiveX/RxScala.git
+$ cd RxScala/
+$ ./RxScala build
+```
+
+Futher details on building can be found on the RxJava [Getting Started](https://github.com/ReactiveX/RxJava/wiki/Getting-Started) page of the wiki.
+
+## Bugs and Feedback
+
+For bugs, questions and discussions please use the [Github Issues](https://github.com/ReactiveX/RxGroovy/issues).
+
+
+## LICENSE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
