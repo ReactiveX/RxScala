@@ -79,7 +79,7 @@ Since RxScala is part of the RxJava family the communication channels are simila
 
 ## Versioning
 
-RxScala 0.x is based on RxScala 0.x. RxScala 1.0 will be released when RxScala 1.0 is released.
+RxScala 0.x is based on RxJava 0.x. RxScala 1.0 will be released when RxJava 1.0 is released.
 
 As of 1.0.0 semantic versioning will be used.
 
