@@ -27,7 +27,7 @@ package object scala {
    */
   implicit class ObservableExtensions[T](val source: Iterable[T]) extends AnyVal {
       def toObservable: Observable[T] = {  Observable.from(source) }
-      def toObservable(scheduler: Scheduler): Observable[T] = {  Observable.from(source, scheduler) }
+      def toObservable(scheduler: Scheduler): Observable[T] = {  Observable.from(source).subscribeOn(scheduler) }
   }
 
 
