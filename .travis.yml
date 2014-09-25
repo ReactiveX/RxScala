@@ -1,4 +1,10 @@
-language: java
-
+language: scala
+script:
+  - sbt publish-local test
+scala:
+  - 2.10.4
 jdk:
+  - openjdk6
+  - openjdk7
   - oraclejdk7
+  - oraclejdk8
