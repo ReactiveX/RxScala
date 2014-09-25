@@ -1256,31 +1256,6 @@ trait Observable[+T]
   }
 
   /**
-   * Intercepts `onError` notifications from the source Observable and replaces them with the
-   * `onNext` emissions of an Observable returned by a specified function. This allows the source
-   * sequence to continue even if it issues multiple `onError` notifications.
-   *
-   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorFlatMap.png">
-   *
-   * @param resumeFunction a function that accepts an `Throwable` and an `Option` associated with this error representing
-   *                       the Throwable issued by the source Observable, and returns an Observable that emits items
-   *                       that will be emitted in place of the error. If no value is associated with the error, the value
-   *                       will be `None`.
-   * @return the original Observable, with appropriately modified behavior
-   */
-  @Deprecated
-  def onErrorFlatMap[U >: T](resumeFunction: (Throwable, Option[Any]) => Observable[U]): Observable[U] = {
-    val f = new Func1[rx.exceptions.OnErrorThrowable, rx.Observable[_ <: U]] {
-      override def call(t: rx.exceptions.OnErrorThrowable): rx.Observable[_ <: U] = {
-        val v = if (t.isValueNull) Some(t.getValue) else None
-        resumeFunction(t.getCause, v).asJavaObservable
-      }
-    }
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[U]]
-    toScalaObservable[U](thisJava.onErrorFlatMap(f))
-  }
-
-  /**
    * Returns an Observable that applies a function of your choosing to the first item emitted by a
    * source Observable, then feeds the result of that function along with the second item emitted
    * by the source Observable into the same function, and so on until all items have been emitted
@@ -3550,53 +3525,6 @@ trait Observable[+T]
     toScalaObservable(asJavaObservable.asInstanceOf[rx.Observable[T]].parallel[R](fJava, scheduler))
   }
 
-  /**
-   * Converts an `Observable[Observable[T]]` into another `Observable[Observable[T]]` whose
-   * emitted Observables emit the same items, but the number of such Observables is restricted by `parallelObservables`.
-   *
-   * For example, if the original `Observable[Observable[T]]` emits 100 Observables and `parallelObservables` is 8,
-   * the items emitted by the 100 original Observables will be distributed among 8 Observables emitted by the resulting Observable.
-   *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/parallelMerge.png">
-   *
-   * This is a mechanism for efficiently processing `n` number of Observables on a smaller `m` number of resources (typically CPU cores).
-   *
-   * @param parallelObservables the number of Observables to merge into
-   * @return an Observable of Observables constrained in number by `parallelObservables`
-   */
-  def parallelMerge[U](parallelObservables: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[Observable[U]] = {
-    val o2: Observable[Observable[U]] = this
-    val o3: Observable[rx.Observable[U]] = o2.map(_.asJavaObservable.asInstanceOf[rx.Observable[U]])
-    val o4: rx.Observable[rx.Observable[U]] = o3.asJavaObservable.asInstanceOf[rx.Observable[rx.Observable[U]]]
-    val o5: rx.Observable[rx.Observable[U]] = rx.Observable.parallelMerge[U](o4, parallelObservables)
-    toScalaObservable(o5).map(toScalaObservable[U](_))
-  }
-
-  /**
-   * Converts an `Observable[Observable[T]]` into another `Observable[Observable[T]]` whose
-   * emitted Observables emit the same items, but the number of such Observables is restricted by `parallelObservables`,
-   * and each runs on a defined Scheduler.
-   *
-   * For example, if the original Observable[Observable[T]]` emits 100 Observables and `parallelObservables` is 8,
-   * the items emitted by the 100 original Observables will be distributed among 8 Observables emitted by the resulting Observable.
-   *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/parallelMerge.png">
-   *
-   * This is a mechanism for efficiently processing n` number of Observables on a smaller `m`
-   * number of resources (typically CPU cores).
-   *
-   * @param parallelObservables the number of Observables to merge into
-   * @param scheduler the [[Scheduler]] to run each Observable on
-   * @return an Observable of Observables constrained in number by `parallelObservables`
-   */
-  def parallelMerge[U](parallelObservables: Int, scheduler: Scheduler)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[Observable[U]] = {
-    val o2: Observable[Observable[U]] = this
-    val o3: Observable[rx.Observable[U]] = o2.map(_.asJavaObservable.asInstanceOf[rx.Observable[U]])
-    val o4: rx.Observable[rx.Observable[U]] = o3.asJavaObservable.asInstanceOf[rx.Observable[rx.Observable[U]]]
-    val o5: rx.Observable[rx.Observable[U]] = rx.Observable.parallelMerge[U](o4, parallelObservables, scheduler)
-    toScalaObservable(o5).map(toScalaObservable[U](_))
-  }
-
   /** Tests whether a predicate holds for some of the elements of this `Observable`.
     *
     *  @param   p     the predicate used to test elements.
@@ -4597,23 +4525,6 @@ object Observable {
   }
 
   /**
-   * Returns an Observable that invokes an `Observer`'s `onError` method on the
-   * specified Scheduler.
-   *
-   * <img width="640" height="190" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/error.s.png">
-   *
-   * @param exception the particular Throwable to pass to `onError`
-   * @param scheduler the Scheduler on which to call `onError`
-   * @tparam T the type of the items (ostensibly) emitted by the Observable
-   * @return an Observable that invokes the `Observer`'s `onError` method, on the specified Scheduler
-   * @deprecated use `#subscribeOn` to schedule
-   */
-  @deprecated("Use with `error(Throwable).subscribeOn` instead", "0.20")
-  def error[T](exception: Throwable, scheduler: Scheduler): Observable[T] = {
-    toScalaObservable[T](rx.Observable.error(exception, scheduler))
-  }
-
-  /**
    * Returns an Observable that emits no data to the [[rx.lang.scala.Observer]] and
    * immediately invokes its [[rx.lang.scala.Observer#onCompleted onCompleted]] method
    * with the specified scheduler.
@@ -4629,28 +4540,6 @@ object Observable {
    */
   def empty: Observable[Nothing] = {
     toScalaObservable(rx.Observable.empty[Nothing]())
-  }
-
-  /**
-   * Returns an Observable that emits no data to the [[rx.lang.scala.Observer]] and
-   * immediately invokes its [[rx.lang.scala.Observer#onCompleted onCompleted]] method
-   * with the specified scheduler.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/empty.s.png">
-   *
-   * @param scheduler the scheduler to call the
-                        [[rx.lang.scala.Observer#onCompleted onCompleted]] method
-   * @return an Observable that returns no data to the [[rx.lang.scala.Observer]] and
-   *         immediately invokes the [[rx.lang.scala.Observer]]r's
-   *        [[rx.lang.scala.Observer#onCompleted onCompleted]] method with the
-   *         specified scheduler
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#empty-error-and-never">RxJava Wiki: empty()</a>
-   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229066.aspx">MSDN: Observable.Empty Method (IScheduler)</a>
-   * @deprecated use `#subscribeOn` to schedule
-   */
-  @deprecated("Use `empty.subscribeOn` instead", "0.20")
-  def empty(scheduler: Scheduler): Observable[Nothing] = {
-    toScalaObservable(rx.Observable.empty[Nothing](scalaSchedulerToJavaScheduler(scheduler)))
   }
 
   /**
@@ -4731,21 +4620,6 @@ object Observable {
   def from[T](iterable: Iterable[T]): Observable[T] = {
     toScalaObservable(rx.Observable.from(iterable.asJava))
   }
-
-  /**
-   *
-   * @param iterable  the source `Iterable` sequence
-   * @param scheduler the scheduler to use
-   * @tparam T   the type of items in the `Iterable` sequence and the
-   *            type of items to be emitted by the resulting Observable
-   * @return   an Observable that emits each item in the source `Iterable`
-   *         sequence
-   */
-  @deprecated("Use `from(Iterable).subscribeOn` instead", "0.20")
-  def from[T](iterable: Iterable[T], scheduler: Scheduler): Observable[T] = {
-    toScalaObservable(rx.Observable.from(iterable.asJava, scheduler.asJavaScheduler))
-  }
-
 
   /**
    * Returns an Observable that calls an Observable factory to create its Observable for each
@@ -4916,29 +4790,6 @@ object Observable {
    */
   def timer(delay: Duration, scheduler: Scheduler): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(delay.length, delay.unit, scheduler)).map(_.longValue())
-  }
-
-  /**
-   * Constructs an Observable that creates a dependent resource object.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/using.png">
-   *
-   * @param resourceFactory the factory function to create a resource object that depends on the Observable
-   * @param observableFactory the factory function to obtain an Observable
-   * @return the Observable whose lifetime controls the lifetime of the dependent resource object
-   */
-  @deprecated("Use `using(=> Resource)(Resource => Observable[T], Resource => Unit)` instead", "0.20.1")
-  def using[T, Resource <: Subscription](resourceFactory: () => Resource, observableFactory: Resource => Observable[T]): Observable[T] = {
-    class ResourceSubscription(val resource: Resource) extends rx.Subscription {
-      def unsubscribe = resource.unsubscribe
-
-      def isUnsubscribed: Boolean = resource.isUnsubscribed
-    }
-
-    toScalaObservable(rx.Observable.using[T, ResourceSubscription](
-      () => new ResourceSubscription(resourceFactory()),
-      (s: ResourceSubscription) => observableFactory(s.resource).asJavaObservable
-    ))
   }
 
   /**
