@@ -3,10 +3,7 @@ scala:
   - 2.10.4
   - 2.11.2
 jdk:
-  - openjdk6
-  - openjdk7
   - oraclejdk7
-  - oraclejdk8
 after_success:
   - publishViaTravis.sh
 env:
