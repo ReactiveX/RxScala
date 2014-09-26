@@ -27,11 +27,11 @@ bintraySettings
 
 repository in bintray := "RxJava"
 
+name in bintray := "RxScala"
+
 licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
 
 bintrayOrganization in bintray := Some("reactivex")
-
-packageLabels in bintray := Seq("RxScala")
 
 lazy val storeBintrayCredentials = taskKey[Unit]("store bintray credentials")
 
