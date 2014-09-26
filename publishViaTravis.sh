@@ -6,7 +6,7 @@ echo -e 'Bintray Upload Script => Branch ['$TRAVIS_BRANCH']  Tag ['$TRAVIS_TAG']
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
   echo -e 'Bintray Upload => Starting upload ...\n'
 
-  sbt storeBintrayCredentials clean +publish
+  sbt ++$TRAVIS_SCALA_VERSION storeBintrayCredentials clean publish
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
