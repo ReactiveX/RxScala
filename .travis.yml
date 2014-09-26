@@ -1,12 +1,13 @@
 language: scala
 scala:
-  - 2.10.4
-  - 2.11.2
+- 2.10.4
+- 2.11.2
 jdk:
-  - oraclejdk7
+- oraclejdk7
 after_success:
-  - ./publishViaTravis.sh
+- ./publishViaTravis.sh
 env:
   global:
-    - secure: Crf4hu2G53xisZChdK0Tam/FSBX/UpbPwGi0sJq5rPSlUt3jEp/AUFnlYiKD1oWtteWHvTgdh1IRqfZfLG0G49hT9+V0knvCTAtY6tPGI+0I/L/WctINIRxMec7JdArKhwxLBJGfYN2U1XM5lGWn6ge/X+CVOFuygk8GN/+688Q=
-    - secure: YPEAWead3ErfHcDohij5v7fYT9Kl6Zt5YgBtn3GVM4sKJukIJIyKXcHwxtEWvPoTYjsgFyYil9JnGZMyD+0tJ5fDf/HB6IeWuq81Tr9qn07Xh0JvuR2tWW2XhiTUt8+yJIRQ4gHH2F1UygyxTsBnaR3zSHjBoKcW72zSEQV1dEY=
+  - secure: Crf4hu2G53xisZChdK0Tam/FSBX/UpbPwGi0sJq5rPSlUt3jEp/AUFnlYiKD1oWtteWHvTgdh1IRqfZfLG0G49hT9+V0knvCTAtY6tPGI+0I/L/WctINIRxMec7JdArKhwxLBJGfYN2U1XM5lGWn6ge/X+CVOFuygk8GN/+688Q=
+  - secure: YPEAWead3ErfHcDohij5v7fYT9Kl6Zt5YgBtn3GVM4sKJukIJIyKXcHwxtEWvPoTYjsgFyYil9JnGZMyD+0tJ5fDf/HB6IeWuq81Tr9qn07Xh0JvuR2tWW2XhiTUt8+yJIRQ4gHH2F1UygyxTsBnaR3zSHjBoKcW72zSEQV1dEY=
+  - secure: L2sXfNYgRW57FPlhEhcCkWLLT7kuq4ZvrndAxRyuoMs1Wv8IsgYGjaetktMVHIv0TAAgVBcOe8mZUjuC4VOgUcfkIblX+MHxruZcWTN5VSqGOFxm22aLymY9tM2j3XXAKa/cE/UkxDqccQtTK7SMH4+J5Iknkcv6BRu568dkOWY=
