@@ -5,7 +5,7 @@ scala:
 jdk:
   - oraclejdk7
 after_success:
-  - publishViaTravis.sh
+  - ./publishViaTravis.sh
 env:
   global:
     - secure: Crf4hu2G53xisZChdK0Tam/FSBX/UpbPwGi0sJq5rPSlUt3jEp/AUFnlYiKD1oWtteWHvTgdh1IRqfZfLG0G49hT9+V0knvCTAtY6tPGI+0I/L/WctINIRxMec7JdArKhwxLBJGfYN2U1XM5lGWn6ge/X+CVOFuygk8GN/+688Q=
