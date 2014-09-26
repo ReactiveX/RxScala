@@ -5,7 +5,7 @@ organization := "io.reactivex"
 
 name := "rxscala"
 
-version := "1.0.0-rc.3"
+version := sys.env.getOrElse("TRAVIS_TAG", "x.y-SNAPSHOT")
 
 lazy val root = project in file(".")
 
@@ -35,4 +35,4 @@ packageLabels in bintray := Seq("RxScala")
 
 lazy val storeBintrayCredentials = taskKey[Unit]("store bintray credentials")
 
-storeBintrayCredentials := IO.write(credentialsFile.value, api.template(System getenv "bintrayUser", System getenv "bintrayKey"))
+storeBintrayCredentials := IO.write(credentialsFile.value, api.template(sys env "bintrayUser", sys env "bintrayKey"))
