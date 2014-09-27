@@ -1,11 +1,6 @@
-import bintray.BintrayCredentials.api
-import bintray.Keys._
-
 organization := "io.reactivex"
 
 name := "rxscala"
-
-version := sys.env.getOrElse("TRAVIS_TAG", "x.y-SNAPSHOT")
 
 lazy val root = project in file(".")
 
@@ -22,17 +17,3 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "junit" % "junit-dep" % "4.11" % "test",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test")
-
-bintraySettings
-
-repository in bintray := "RxJava"
-
-name in bintray := "RxScala"
-
-licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
-
-bintrayOrganization in bintray := Some("reactivex")
-
-lazy val storeBintrayCredentials = taskKey[Unit]("store bintray credentials")
-
-storeBintrayCredentials := IO.write(credentialsFile.value, api.template(sys env "bintrayUser", sys env "bintrayKey"))

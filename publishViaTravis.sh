@@ -8,6 +8,10 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
 
   sbt storeBintrayCredentials
 
+  # (as soon as we have the keyrings)
+  # sbt ++$TRAVIS_SCALA_VERSION publishSigned
+  # RETVAL=$?
+
   sbt ++$TRAVIS_SCALA_VERSION publish
   RETVAL=$?
 

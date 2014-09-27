@@ -1,11 +1,21 @@
 language: scala
+
 scala:
 - 2.10.4
 - 2.11.2
+
 jdk:
 - oraclejdk7
+
+# (as soon as we have the encrypted keyrings)
+#
+# before_install:
+# - openssl aes-256-cbc -pass pass:$PGP_ENCRYPTION_PASSWORD -in secring.gpg.enc -out local.secring.gpg -d
+# - openssl aes-256-cbc -pass pass:$PGP_ENCRYPTION_PASSWORD -in pubring.gpg.enc -out local.pubring.gpg -d
+
 after_success:
 - ./publishViaTravis.sh
+
 env:
   global:
   - secure: Crf4hu2G53xisZChdK0Tam/FSBX/UpbPwGi0sJq5rPSlUt3jEp/AUFnlYiKD1oWtteWHvTgdh1IRqfZfLG0G49hT9+V0knvCTAtY6tPGI+0I/L/WctINIRxMec7JdArKhwxLBJGfYN2U1XM5lGWn6ge/X+CVOFuygk8GN/+688Q=
