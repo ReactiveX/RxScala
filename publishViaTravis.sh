@@ -8,8 +8,8 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
 
   sbt storeBintrayCredentials
 
-  sbt ++$TRAVIS_SCALA_VERSION publishSigned
-  # RETVAL=$?
+  sbt +publishSigned
+  RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
     echo 'Completed upload!'

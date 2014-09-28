@@ -1,9 +1,8 @@
 language: scala
-scala:
-- 2.10.4
-- 2.11.2
 jdk:
 - oraclejdk7
+script:
+- sbt +test
 after_success:
 - ./publishViaTravis.sh
 env:

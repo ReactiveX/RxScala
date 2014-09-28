@@ -15,5 +15,5 @@ crossScalaVersions := Seq("2.10.4", "2.11.2")
 libraryDependencies ++= Seq(
   "io.reactivex" % "rxjava" % "1.0.0-rc.3",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
-  "junit" % "junit-dep" % "4.11" % "test",
+  "junit" % "junit" % "4.11" % "test",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test")
