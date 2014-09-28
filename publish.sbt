@@ -1,11 +1,11 @@
 import bintray.BintrayCredentials.api
 import bintray.Keys._
 
-pgpSecretRing := file("local.secring.gpg")
+pgpSecretRing := file("key.private.F984A085.asc")
 
-pgpPublicRing := file("local.pubring.gpg")
+pgpPublicRing := file("key.public.F984A085.asc")
 
-pgpPassphrase := sys.env get "PGP_PASSPHRASE" map (_ toCharArray)
+pgpPassphrase := sys.env get "PGP_ENCRYPTION_PASSWORD" map (_ toCharArray)
 
 bintraySettings
 
