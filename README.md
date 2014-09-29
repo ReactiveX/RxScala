@@ -132,19 +132,23 @@ libraryDependencies ++= Seq(
 
 ## Build
 
-To build:
+To build (you need [sbt](http://scala-sbt.org)):
 
 ```
 $ git clone git@github.com:ReactiveX/RxScala.git
 $ cd RxScala/
-$ ./RxScala build
+$ sbt package
 ```
 
-Futher details on building can be found on the RxJava [Getting Started](https://github.com/ReactiveX/RxJava/wiki/Getting-Started) page of the wiki.
+You can also run the examples from within `sbt`:
+
+```
+$ sbt examples/run
+```
 
 ## Bugs and Feedback
 
-For bugs, questions and discussions please use the [Github Issues](https://github.com/ReactiveX/RxGroovy/issues).
+For bugs, questions and discussions please use the [Github Issues](https://github.com/ReactiveX/RxScala/issues).
 
 
 ## LICENSE
@@ -153,7 +157,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-<http://www.apache.org/licenses/LICENSE-2.0>
+<https://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
