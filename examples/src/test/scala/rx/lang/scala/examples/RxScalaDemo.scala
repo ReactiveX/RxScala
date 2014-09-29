@@ -1381,16 +1381,6 @@ class RxScalaDemo extends JUnitSuite {
     o.unsubscribeOn(NewThreadScheduler()).subscribe(println(_))
   }
 
-  @Test def parallelMergeExample() {
-    val o: Observable[Observable[Int]] = (1 to 100).toObservable.map(_ => (1 to 10).toObservable)
-    assertEquals(100, o.size.toBlocking.single)
-    assertEquals(1000, o.flatten.size.toBlocking.single)
-
-    val o2: Observable[Observable[Int]] = o.parallelMerge(10, ComputationScheduler())
-    assertEquals(10, o2.size.toBlocking.single)
-    assertEquals(1000, o2.flatten.size.toBlocking.single)
-  }
-
   @Test def debounceExample() {
     val o = Observable.interval(100 millis).take(20).debounce {
       n =>
@@ -1476,28 +1466,6 @@ class RxScalaDemo extends JUnitSuite {
         subscriber.onNext(4)
     }
     o.onErrorResumeNext(_ => Observable.just(10, 11, 12)).subscribe(println(_))
-  }
-
-  @Test def onErrorFlatMapExample() {
-    val o = Observable {
-      (subscriber: Subscriber[Int]) =>
-        subscriber.onNext(1)
-        subscriber.onNext(2)
-        subscriber.onError(new IOException("Oops"))
-        subscriber.onNext(3)
-        subscriber.onNext(4)
-    }
-    o.onErrorFlatMap((_, _) => Observable.just(10, 11, 12)).subscribe(println(_))
-  }
-
-  @Test def onErrorFlatMapExample2() {
-    val o = Observable.just(4, 2, 0).map(16 / _).onErrorFlatMap {
-      (e, op) => op match {
-        case Some(v) if v == 0 => Observable.just(Int.MinValue)
-        case _ => Observable.empty
-      }
-    }
-    o.subscribe(println(_))
   }
 
   @Test def switchMapExample() {

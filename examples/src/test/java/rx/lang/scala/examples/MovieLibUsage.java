@@ -25,7 +25,7 @@ public class MovieLibUsage {
 
     public static void main(String[] args) {
 
-        Observable<Movie> movies = Observable.from(
+        Observable<Movie> movies = Observable.just(
                 new Movie(3000),
                 new Movie(1000),
                 new Movie(2000)

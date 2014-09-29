@@ -3474,17 +3474,6 @@ trait Observable[+T]
   }
 
   /**
-   * Converts an Observable into a [[BlockingObservable]] (an Observable with blocking operators).
-   *
-   * @return a [[BlockingObservable]] version of this Observable
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Blocking-Observable-Operators">Blocking Observable Operators</a>
-   */
-  @deprecated("Use `toBlocking` instead", "0.19")
-  def toBlockingObservable: BlockingObservable[T] = {
-    new BlockingObservable[T](this)
-  }
-
-  /**
    * Converts an Observable into a [[BlockingObservable]] (an Observable with blocking
    * operators).
    *
@@ -4540,27 +4529,6 @@ object Observable {
    */
   def empty: Observable[Nothing] = {
     toScalaObservable(rx.Observable.empty[Nothing]())
-  }
-
-  /**
-   * Converts a sequence of values into an Observable.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/from.png">
-   *
-   * Implementation note: the entire array will be immediately emitted each time an [[rx.lang.scala.Observer]] subscribes.
-   * Since this occurs before the [[rx.lang.scala.Subscription]] is returned,
-   * it in not possible to unsubscribe from the sequence before it completes.
-   *
-   * @param items
-   *            the source Array
-   * @tparam T
-   *            the type of items in the Array, and the type of items to be emitted by the
-   *            resulting Observable
-   * @return an Observable that emits each item in the source Array
-   */
-  @deprecated("Use `just` instead", "0.20")
-  def items[T](items: T*): Observable[T] = {
-    toScalaObservable[T](rx.Observable.from(items.toIterable.asJava))
   }
 
   /**
