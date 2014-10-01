@@ -1140,6 +1140,42 @@ class RxScalaDemo extends JUnitSuite {
     }).toBlocking.foreach(s => println(s))
   }
 
+  @Test def retryWhenDifferentExceptionsExample(): Unit = {
+    var observableCreateCount = 1 // Just to support switching which Exception is produced
+    Observable[String]({ subscriber =>
+      println("subscribing")
+      if (observableCreateCount <= 2) {
+        subscriber.onError(new IOException("IO Fail"))
+      } else {
+        subscriber.onError(new RuntimeException("Other failure"))
+      }
+      observableCreateCount += 1
+    }).retryWhen({ notificationObservable =>
+      notificationObservable.zip(Observable.from(1 to 3)).flatMap({ case (notification, retryCount) =>
+        notification match {
+          case Notification.OnError(error) =>
+            error match {
+              // Only retry 2 times if we get a IOException and then error out with the third IOException.
+              // Let the other Exception's pass through and complete the Observable.
+              case _:IOException =>
+                if (retryCount <= 3) {
+                  println("IOException delay retry by " + retryCount + " second(s)")
+                  Observable.timer(Duration(retryCount, TimeUnit.SECONDS))
+                } else {
+                  Observable.error(error)
+                }
+
+              case _ =>
+                println("got error " + error + ", will stop retrying")
+                Observable.empty
+            }
+
+          case _ => Observable.empty
+        }
+      })
+    }).toBlocking.foreach(s => println(s))
+  }
+
   @Test def repeatWhenExample(): Unit = {
     Observable[String]({ subscriber =>
       println("subscribing")
