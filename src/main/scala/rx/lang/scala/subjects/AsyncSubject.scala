@@ -17,7 +17,36 @@ package rx.lang.scala.subjects
 
 import rx.lang.scala.Subject
 
+/**
+ * Subject that publishes only the last item observed to each `Observer` that has subscribed, when the
+ * source `Observable}` completes.
+ * <p>
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.AsyncSubject.png" alt="">
+ * <p>
+ * Example usage:
+ * <p>
+ * <pre>
+  // observer will receive no onNext events because the subject.onCompleted() isn't called.
+  val subject = AsyncSubject[String]()
+  subject.subscribe(observer)
+  subject.onNext("one")
+  subject.onNext("two")
+  subject.onNext("three")
+
+  // observer will receive "three" as the only onNext event.
+  val subject = AsyncSubject[String]()
+  subject.subscribe(observer)
+  subject.onNext("one")
+  subject.onNext("two")
+  subject.onNext("three")
+  subject.onCompleted()
+  </pre>
+ */
 object AsyncSubject {
+  /**
+   * Creates and returns a new `AsyncSubject`
+   * @return the new `AsyncSubject`
+   */
   def apply[T](): AsyncSubject[T] = {
     new AsyncSubject[T](rx.subjects.AsyncSubject.create())
   }

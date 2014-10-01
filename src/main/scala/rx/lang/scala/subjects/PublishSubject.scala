@@ -17,7 +17,32 @@ package rx.lang.scala.subjects
 
 import rx.lang.scala.Subject
 
+/**
+ * Subject that, once an `Observer` has subscribed, emits all subsequently observed items to the
+ * subscriber.
+ * <p>
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
+ * <p>
+ * Example usage:
+ * <p>
+ * <pre>
+  val subject = PublishSubject[String]()
+  // observer1 will receive all onNext and onCompleted events
+  subject.subscribe(observer1)
+  subject.onNext("one")
+  subject.onNext("two")
+  // observer2 will only receive "three" and onCompleted
+  subject.subscribe(observer2)
+  subject.onNext("three")
+  subject.onCompleted()
+  </pre>
+ */
 object PublishSubject {
+  /**
+   * Creates and returns a new `PublishSubject`.
+   *
+   * @return the new `PublishSubject`
+   */
   def apply[T](): PublishSubject[T] =  new PublishSubject[T](rx.subjects.PublishSubject.create[T]())
 }
 
