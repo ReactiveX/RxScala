@@ -110,8 +110,8 @@ Example for Maven:
 
 ```xml
 <dependency>
-    <groupId>com.netflix.rxjava</groupId>
-    <artifactId>rxjava-scala</artifactId>
+    <groupId>io.reactivex</groupId>
+    <artifactId>rxscala_${scala.compat.version}</artifactId>
     <version>x.y.z</version>
 </dependency>
 ```
@@ -119,14 +119,14 @@ Example for Maven:
 and for Ivy:
 
 ```xml
-<dependency org="com.netflix.rxjava" name="rxjava-scala" rev="x.y.z" />
+<dependency org="io.reactivex" name="rxscala_${scala.compat.version}" rev="x.y.z" />
 ```
 
 and for sbt:
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.netflix.rxjava" % "rxjava-scala" % "x.y.z"
+  "io.reactivex" %% "rxscala" % "x.y.z"
 )
 ```
 
