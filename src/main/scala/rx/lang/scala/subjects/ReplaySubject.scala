@@ -24,8 +24,8 @@ import scala.concurrent.duration.Duration
  * <p>
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.ReplaySubject.png" alt="">
  * <p>
- * Example usage:
- * {{{
+ * @example
+ {{{
   val subject = ReplaySubject[String]()
   subject.onNext("one")
   subject.onNext("two")

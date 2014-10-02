@@ -23,8 +23,8 @@ import rx.lang.scala.Subject
  * <p>
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
  * <p>
- * Example usage:
- * {{{
+ * @example
+ {{{
   val subject = PublishSubject[String]()
   // observer1 will receive all onNext and onCompleted events
   subject.subscribe(observer1)
