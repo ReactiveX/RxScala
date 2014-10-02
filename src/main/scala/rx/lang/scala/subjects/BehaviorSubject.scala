@@ -24,8 +24,7 @@ import rx.lang.scala.Subject
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorSubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
- * <pre>
+ * {{{
   // observer will receive all events.
   val subject = BehaviorSubject[String]("default")
   subject.subscribe(observer)
@@ -54,7 +53,7 @@ import rx.lang.scala.Subject
   subject.onNext("one")
   subject.onError(new RuntimeException("error"))
   subject.subscribe(observer)
-  </pre>
+  }}}
  */
 object BehaviorSubject {
   /**

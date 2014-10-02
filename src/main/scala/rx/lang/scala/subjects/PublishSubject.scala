@@ -24,8 +24,7 @@ import rx.lang.scala.Subject
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
- * <pre>
+ * {{{
   val subject = PublishSubject[String]()
   // observer1 will receive all onNext and onCompleted events
   subject.subscribe(observer1)
@@ -35,7 +34,7 @@ import rx.lang.scala.Subject
   subject.subscribe(observer2)
   subject.onNext("three")
   subject.onCompleted()
-  </pre>
+  }}}
  */
 object PublishSubject {
   /**

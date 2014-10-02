@@ -24,8 +24,7 @@ import rx.lang.scala.Subject
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.AsyncSubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
- * <pre>
+ * {{{
   // observer will receive no onNext events because the subject.onCompleted() isn't called.
   val subject = AsyncSubject[String]()
   subject.subscribe(observer)
@@ -40,7 +39,7 @@ import rx.lang.scala.Subject
   subject.onNext("two")
   subject.onNext("three")
   subject.onCompleted()
-  </pre>
+  }}}
  */
 object AsyncSubject {
   /**

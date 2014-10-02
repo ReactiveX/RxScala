@@ -36,8 +36,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
- * <pre>
+ * {{{
   val subject = Subject[String]()
   // observer1 will receive all onNext and onCompleted events
   subject.subscribe(observer1)
@@ -47,7 +46,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   subject.subscribe(observer2)
   subject.onNext("three")
   subject.onCompleted()
-  </pre>
+  }}}
  */
 object Subject {
   /**

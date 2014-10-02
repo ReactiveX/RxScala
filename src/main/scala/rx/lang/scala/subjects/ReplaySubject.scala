@@ -25,8 +25,7 @@ import scala.concurrent.duration.Duration
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.ReplaySubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
- * <pre>
+ * {{{
   val subject = ReplaySubject[String]()
   subject.onNext("one")
   subject.onNext("two")
@@ -36,7 +35,7 @@ import scala.concurrent.duration.Duration
   // both of the following will get the onNext/onCompleted calls from above
   subject.subscribe(observer1)
   subject.subscribe(observer2)
-  </pre>
+  }}}
  */
 object ReplaySubject {
   /**
