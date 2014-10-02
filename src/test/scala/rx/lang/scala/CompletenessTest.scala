@@ -375,8 +375,8 @@ class CompletenessTest extends JUnitSuite {
       bad += 1
       println(s"Warning: $m is NOT present in $tp")
     }
-    val status = if (bad == 0) "SUCCESS" else "FAILURE"
-    println(s"$status: $good out of ${bad+good} methods were found in $tp")
+
+    printMethodPresenceStatus(good, bad, tp)
   }
 
   @Test def checkScalaMethodPresenceVerbose(): Unit = {
@@ -396,8 +396,13 @@ class CompletenessTest extends JUnitSuite {
         println(s"$javaM is the method in Java Observable generating this warning")
       }
     }
-    val status = if (bad == 0) "SUCCESS" else "FAILURE"
-    println(s"\n$status: $good out of ${bad+good} methods were found in Scala Observable")
+    
+    printMethodPresenceStatus(good, bad, "Scala Observable")
+  }
+
+  def printMethodPresenceStatus(goodCount: Int, badCount: Int, instance: Any): Unit = {
+    val status = if (badCount == 0) "SUCCESS:" else "FAILURE: Only"
+    println(s"\n$status $goodCount out of ${badCount+goodCount} methods were found in $instance")
   }
 
   def setTodoForMissingMethods(corresp: Map[String, String]): Map[String, String] = {
