@@ -269,7 +269,7 @@ class CompletenessTest extends JUnitSuite {
     for (member <- members; alt <- member.asTerm.alternatives) yield {
       val m = alt.asMethod
       // multiple parameter lists in case of curried functions
-      val paramListStrs = for (paramList <- m.paramLists) yield {
+      val paramListStrs = for (paramList <- m.paramss) yield {
         paramList.map(
             symb => removePackage(symb.typeSignature.toString.replaceAll(",(\\S)", ", $1"))
         ).mkString("(", ", ", ")")
@@ -282,7 +282,7 @@ class CompletenessTest extends JUnitSuite {
   def getPublicInstanceMethods(tp: Type): Iterable[String] = {
     // declarations: => only those declared in Observable
     // members => also those of superclasses
-    methodMembersToMethodStrings(tp.decls.filter {
+    methodMembersToMethodStrings(tp.declarations.filter {
       m =>
         m.isMethod && m.isPublic &&
           m.annotations.forall(_.toString != "java.lang.Deprecated") // don't check deprecated classes
@@ -297,7 +297,7 @@ class CompletenessTest extends JUnitSuite {
   // also applicable for Java types
   def getPublicInstanceAndCompanionMethods(tp: Type): Iterable[String] =
     getPublicInstanceMethods(tp) ++
-      getPublicInstanceMethods(tp.typeSymbol.companion.typeSignature)
+      getPublicInstanceMethods(tp.typeSymbol.companionSymbol.typeSignature)
 
   def printMethodSet(title: String, tp: Type) {
     println("\n" + title)
@@ -320,7 +320,7 @@ class CompletenessTest extends JUnitSuite {
   @Ignore // because spams output
   @Test def printJavaStaticMethods(): Unit = {
     printMethodSet("Static methods of rx.Observable",
-                   typeOf[rx.Observable[_]].typeSymbol.companion.typeSignature)
+                   typeOf[rx.Observable[_]].typeSymbol.companionSymbol.typeSignature)
   }
 
   @Ignore // because spams output
