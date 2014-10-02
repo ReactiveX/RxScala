@@ -17,15 +17,11 @@ package rx.lang.scala
 
 import java.util.Calendar
 
-import scala.collection.SortedMap
-import scala.reflect.runtime.universe
-import scala.reflect.runtime.universe.Symbol
-import scala.reflect.runtime.universe.Type
-import scala.reflect.runtime.universe.typeOf
-
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.{Ignore, Test}
 import org.scalatest.junit.JUnitSuite
+
+import scala.collection.SortedMap
+import scala.reflect.runtime.universe.{Symbol, Type, typeOf}
 
 /**
  * These tests can be used to check if all methods of the Java Observable have a corresponding
@@ -226,8 +222,6 @@ class CompletenessTest extends JUnitSuite {
       "merge(Iterable[_ <: Observable[_ <: T]], Int)" -> "[use `Observable.from(iter).flatten(n)`]",
       "mergeDelayError(Observable[_ <: T], Observable[_ <: T])" -> "mergeDelayError(Observable[U])",
       "mergeDelayError(Observable[_ <: Observable[_ <: T]])" -> "flattenDelayError(<:<[Observable[T], Observable[Observable[U]]])",
-      "parallelMerge(Observable[Observable[T]], Int)" -> "parallelMerge(Int)(<:<[Observable[T], Observable[Observable[U]]])",
-      "parallelMerge(Observable[Observable[T]], Int, Scheduler)" -> "parallelMerge(Int, Scheduler)(<:<[Observable[T], Observable[Observable[U]]])",
       "sequenceEqual(Observable[_ <: T], Observable[_ <: T])" -> "sequenceEqual(Observable[U])",
       "sequenceEqual(Observable[_ <: T], Observable[_ <: T], Func2[_ >: T, _ >: T, Boolean])" -> "sequenceEqualWith(Observable[U])((U, U) => Boolean)",
       "range(Int, Int)" -> "[use `(start until (start + count)).toObservable` instead of `range(start, count)`]",
@@ -275,12 +269,12 @@ class CompletenessTest extends JUnitSuite {
     for (member <- members; alt <- member.asTerm.alternatives) yield {
       val m = alt.asMethod
       // multiple parameter lists in case of curried functions
-      val paramListStrs = for (paramList <- m.paramss) yield {
+      val paramListStrs = for (paramList <- m.paramLists) yield {
         paramList.map(
             symb => removePackage(symb.typeSignature.toString.replaceAll(",(\\S)", ", $1"))
         ).mkString("(", ", ", ")")
       }
-      val name = alt.asMethod.name.decoded
+      val name = alt.asMethod.name.decodedName.toString
       name + paramListStrs.mkString("")
     }
   }
@@ -288,7 +282,7 @@ class CompletenessTest extends JUnitSuite {
   def getPublicInstanceMethods(tp: Type): Iterable[String] = {
     // declarations: => only those declared in Observable
     // members => also those of superclasses
-    methodMembersToMethodStrings(tp.declarations.filter {
+    methodMembersToMethodStrings(tp.decls.filter {
       m =>
         m.isMethod && m.isPublic &&
           m.annotations.forall(_.toString != "java.lang.Deprecated") // don't check deprecated classes
@@ -303,7 +297,7 @@ class CompletenessTest extends JUnitSuite {
   // also applicable for Java types
   def getPublicInstanceAndCompanionMethods(tp: Type): Iterable[String] =
     getPublicInstanceMethods(tp) ++
-      getPublicInstanceMethods(tp.typeSymbol.companionSymbol.typeSignature)
+      getPublicInstanceMethods(tp.typeSymbol.companion.typeSignature)
 
   def printMethodSet(title: String, tp: Type) {
     println("\n" + title)
@@ -326,7 +320,7 @@ class CompletenessTest extends JUnitSuite {
   @Ignore // because spams output
   @Test def printJavaStaticMethods(): Unit = {
     printMethodSet("Static methods of rx.Observable",
-                   typeOf[rx.Observable[_]].typeSymbol.companionSymbol.typeSignature)
+                   typeOf[rx.Observable[_]].typeSymbol.companion.typeSignature)
   }
 
   @Ignore // because spams output
@@ -381,8 +375,8 @@ class CompletenessTest extends JUnitSuite {
       bad += 1
       println(s"Warning: $m is NOT present in $tp")
     }
-    val status = if (bad == 0) "SUCCESS" else "BAD"
-    println(s"$status: $bad out of ${bad+good} methods were not found in $tp")
+    val status = if (bad == 0) "SUCCESS" else "FAILURE"
+    println(s"$status: $good out of ${bad+good} methods were found in $tp")
   }
 
   @Test def checkScalaMethodPresenceVerbose(): Unit = {
@@ -402,8 +396,8 @@ class CompletenessTest extends JUnitSuite {
         println(s"$javaM is the method in Java Observable generating this warning")
       }
     }
-    val status = if (bad == 0) "SUCCESS" else "BAD"
-    println(s"\n$status: $bad out of ${bad+good} methods were not found in Scala Observable")
+    val status = if (bad == 0) "SUCCESS" else "FAILURE"
+    println(s"\n$status: $good out of ${bad+good} methods were found in Scala Observable")
   }
 
   def setTodoForMissingMethods(corresp: Map[String, String]): Map[String, String] = {
@@ -441,7 +435,7 @@ class CompletenessTest extends JUnitSuite {
     def groupingKey(p: (String, String)): (String, String) =
       (if (p._1.startsWith("average")) "average" else p._1.takeWhile(_ != '('), p._2)
     def formatJavaCol(name: String, alternatives: Iterable[String]): String = {
-      alternatives.toList.sorted.map(scalaToJavaSignature(_)).map(s => {
+      alternatives.toList.sorted.map(scalaToJavaSignature).map(s => {
         if (s.length > 64) {
           val toolTip = escapeJava(s)
           "<span title=\"" + toolTip + "\"><code>" + name + "(...)</code></span>"
@@ -471,7 +465,7 @@ Note:
 
     val ps = setTodoForMissingMethods(correspondence)
 
-    (for (((javaName, scalaCol), pairs) <- ps.groupBy(groupingKey(_)).toList.sortBy(_._1._1)) yield {
+    (for (((javaName, scalaCol), pairs) <- ps.groupBy(groupingKey).toList.sortBy(_._1._1)) yield {
       "| " + formatJavaCol(javaName, pairs.map(_._1)) + " | " + formatScalaCol(scalaCol) + " |"
     }).foreach(println(_))
     println(s"\nThis table was generated on ${Calendar.getInstance().getTime}.")
