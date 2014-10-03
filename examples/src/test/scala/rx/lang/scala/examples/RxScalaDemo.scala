@@ -554,7 +554,7 @@ class RxScalaDemo extends JUnitSuite {
     println(doubleAverage(Observable.empty).toBlocking.single)
     println(doubleAverage(List(0.0).toObservable).toBlocking.single)
     println(doubleAverage(List(4.44).toObservable).toBlocking.single)
-    println(doubleAverage(List(1, 2, 3.5).toObservable).toBlocking.single)
+    println(doubleAverage(List(1.0, 2.0, 3.5).toObservable).toBlocking.single)
   }
 
   @Test def testSum() {
@@ -1132,10 +1132,41 @@ class RxScalaDemo extends JUnitSuite {
     Observable[String]({ subscriber =>
       println("subscribing")
       subscriber.onError(new RuntimeException("always fails"))
-    }).retryWhen(attempts => {
-      attempts.zipWith(Observable.from(1 to 3))((n, i) => i).flatMap(i => {
+    }).retryWhen({ throwableObservable =>
+      throwableObservable.zipWith(Observable.from(1 to 3))((t, i) => i).flatMap(i => {
         println("delay retry by " + i + " second(s)")
         Observable.timer(Duration(i, TimeUnit.SECONDS))
+      })
+    }).toBlocking.foreach(s => println(s))
+  }
+
+  @Test def retryWhenDifferentExceptionsExample(): Unit = {
+    var observableCreateCount = 1 // Just to support switching which Exception is produced
+    Observable[String]({ subscriber =>
+      println("subscribing")
+      if (observableCreateCount <= 2) {
+        subscriber.onError(new IOException("IO Fail"))
+      } else {
+        subscriber.onError(new RuntimeException("Other failure"))
+      }
+      observableCreateCount += 1
+    }).retryWhen({ throwableObservable =>
+      throwableObservable.zip(Observable.from(1 to 3)).flatMap({ case (error, retryCount) =>
+        error match {
+          // Only retry 2 times if we get a IOException and then error out with the third IOException.
+          // Let the other Exception's pass through and complete the Observable.
+          case _: IOException =>
+            if (retryCount <= 3) {
+              println("IOException delay retry by " + retryCount + " second(s)")
+              Observable.timer(Duration(retryCount, TimeUnit.SECONDS))
+            } else {
+              Observable.error(error)
+            }
+
+          case _ =>
+            println("got error " + error + ", will stop retrying")
+            Observable.empty
+        }
       })
     }).toBlocking.foreach(s => println(s))
   }
@@ -1144,8 +1175,8 @@ class RxScalaDemo extends JUnitSuite {
     Observable[String]({ subscriber =>
       println("subscribing")
       subscriber.onCompleted()
-    }).repeatWhen(attempts => {
-      attempts.zipWith(Observable.from(1 to 3))((n, i) => i).flatMap(i => {
+    }).repeatWhen({ unitObservable =>
+      unitObservable.zipWith(Observable.from(1 to 3))((u, i) => i).flatMap(i => {
         println("delay repeat by " + i + " second(s)")
         Observable.timer(Duration(i, TimeUnit.SECONDS))
       })
