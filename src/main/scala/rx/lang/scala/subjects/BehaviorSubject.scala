@@ -17,14 +17,65 @@ package rx.lang.scala.subjects
 
 import rx.lang.scala.Subject
 
+/**
+ * Subject that emits the most recent item it has observed and all subsequent observed items to each subscribed
+ * `Observer`.
+ * <p>
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorSubject.png" alt="">
+ * <p>
+ * @example
+ {{{
+  // observer will receive all events.
+  val subject = BehaviorSubject[String]("default")
+  subject.subscribe(observer)
+  subject.onNext("one")
+  subject.onNext("two")
+  subject.onNext("three")
+
+  // observer will receive the "one", "two" and "three" events, but not "zero"
+  val subject = BehaviorSubject[String]("default")
+  subject.onNext("zero")
+  subject.onNext("one")
+  subject.subscribe(observer)
+  subject.onNext("two")
+  subject.onNext("three")
+
+  // observer will receive only onCompleted
+  val subject = BehaviorSubject[String]("default")
+  subject.onNext("zero")
+  subject.onNext("one")
+  subject.onCompleted()
+  subject.subscribe(observer)
+
+  // observer will receive only onError
+  val subject = BehaviorSubject[String]("default")
+  subject.onNext("zero")
+  subject.onNext("one")
+  subject.onError(new RuntimeException("error"))
+  subject.subscribe(observer)
+  }}}
+ */
 object BehaviorSubject {
-  def apply[T](value: T): BehaviorSubject[T] = {
-    new BehaviorSubject[T](rx.subjects.BehaviorSubject.create(value))
+  /**
+   * Creates a `BehaviorSubject` without a default item.
+   *
+   * @return the constructed `BehaviorSubject`
+   */
+  def apply[T](): BehaviorSubject[T] = {
+    new BehaviorSubject[T](rx.subjects.BehaviorSubject.create())
+  }
+
+  /**
+   * Creates a `BehaviorSubject` that emits the last item it observed and all subsequent items to each
+   * `Observer` that subscribes to it.
+   *
+   * @param defaultValue the item that will be emitted first to any `Observer` as long as the
+   * `BehaviorSubject` has not yet observed any items from its source `Observable`
+   * @return the constructed `BehaviorSubject`
+   */
+  def apply[T](defaultValue: T): BehaviorSubject[T] = {
+    new BehaviorSubject[T](rx.subjects.BehaviorSubject.create(defaultValue))
   }
 }
 
 class BehaviorSubject[T] private[scala] (val asJavaSubject: rx.subjects.BehaviorSubject[T]) extends Subject[T]  {}
-
-
-
-
