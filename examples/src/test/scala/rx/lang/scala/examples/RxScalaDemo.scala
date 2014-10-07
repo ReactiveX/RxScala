@@ -689,23 +689,6 @@ class RxScalaDemo extends JUnitSuite {
     x*x
   }
 
-  def work(o1: Observable[Int]): Observable[String] = {
-    println(s"map() is being called on thread ${Thread.currentThread().getId}")
-    o1.map(i => s"The square of $i is ${square(i)}")
-  }
-
-  @Test def parallelExample() {
-    val t0 = System.currentTimeMillis()
-    Observable.from(1 to 10).parallel(work(_)).toBlocking.foreach(println(_))
-    println(s"Work took ${System.currentTimeMillis()-t0} ms")
-  }
-
-  @Test def exampleWithoutParallel() {
-    val t0 = System.currentTimeMillis()
-    work(Observable.from(1 to 10)).toBlocking.foreach(println(_))
-    println(s"Work took ${System.currentTimeMillis()-t0} ms")
-  }
-
   @Test def toSortedList() {
     assertEquals(Seq(7, 8, 9, 10), List(10, 7, 8, 9).toObservable.toSeq.map(_.sorted).toBlocking.single)
     val f = (a: Int, b: Int) => b < a
