@@ -29,11 +29,30 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   override def onCompleted() { asJavaObserver.onCompleted() }
 }
 
+/**
+ * Subject that, once an `Observer` has subscribed, emits all subsequently observed items to the
+ * subscriber.
+ * <p>
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
+ * <p>
+ * @example
+ {{{
+  val subject = Subject[String]()
+  // observer1 will receive all onNext and onCompleted events
+  subject.subscribe(observer1)
+  subject.onNext("one")
+  subject.onNext("two")
+  // observer2 will only receive "three" and onCompleted
+  subject.subscribe(observer2)
+  subject.onNext("three")
+  subject.onCompleted()
+  }}}
+ */
 object Subject {
+  /**
+   * Creates and returns a new `Subject`.
+   *
+   * @return the new `Subject`
+   */
   def apply[T](): Subject[T] = new rx.lang.scala.subjects.PublishSubject[T](rx.subjects.PublishSubject.create())
 }
-
-
-
-
-

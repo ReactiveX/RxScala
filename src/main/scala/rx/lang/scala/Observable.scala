@@ -3521,35 +3521,6 @@ trait Observable[+T]
     new BlockingObservable[T](this)
   }
 
-  /**
-   * Perform work in parallel by sharding an `Observable[T]` on a 
-   * [[rx.lang.scala.schedulers.ComputationScheduler]] and return an `Observable[R]` with the output.
-   *
-   * @param f
-   *            a function that applies Observable operators to `Observable[T]` in parallel and returns an `Observable[R]`
-   * @return an Observable with the output of the function executed on a [[rx.lang.scala.Scheduler]]
-   */
-  def parallel[R](f: Observable[T] => Observable[R]): Observable[R] = {
-    val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
-      (jo: rx.Observable[T]) => f(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    toScalaObservable(asJavaObservable.asInstanceOf[rx.Observable[T]].parallel[R](fJava))
-  }
-
-  /**
-   * Perform work in parallel by sharding an `Observable[T]` on a [[rx.lang.scala.Scheduler]] and return an `Observable[R]` with the output.
-   *
-   * @param f
-   *            a function that applies Observable operators to `Observable[T]` in parallel and returns an `Observable[R]`
-   * @param scheduler
-   *            a [[rx.lang.scala.Scheduler]] to perform the work on.
-   * @return an Observable with the output of the function executed on a [[rx.lang.scala.Scheduler]]
-   */
-  def parallel[R](f: Observable[T] => Observable[R], scheduler: Scheduler): Observable[R] = {
-    val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
-      (jo: rx.Observable[T]) => f(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    toScalaObservable(asJavaObservable.asInstanceOf[rx.Observable[T]].parallel[R](fJava, scheduler))
-  }
-
   /** Tests whether a predicate holds for some of the elements of this `Observable`.
     *
     *  @param   p     the predicate used to test elements.
