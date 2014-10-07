@@ -2261,57 +2261,6 @@ trait Observable[+T]
   }
 
   /**
-   * Groups the items emitted by this Observable according to a specified discriminator function and terminates these groups
-   * according to a function.
-   *
-   * @param f
-   *            a function that extracts the key from an item
-   * @param closings
-   *            the function that accepts the key of a given group and an observable representing that group, and returns
-   *            an observable that emits a single Closing when the group should be closed.
-   * @tparam K 
-   *            the type of the keys returned by the discriminator function.
-   * @return an Observable that emits `(key, observable)` pairs, where `observable`
-   *         contains all items for which `f` returned `key` before `closings` emits a value.
-   */
-  def groupByUntil[K](f: T => K)(closings: (K, Observable[T])=>Observable[Any]): Observable[(K, Observable[T])] = {
-    val fclosing: Func1[_ >: rx.observables.GroupedObservable[K, _ <: T], _ <: rx.Observable[_ <: Any]] =
-      (jGrObs: rx.observables.GroupedObservable[K, _ <: T]) => closings(jGrObs.getKey, toScalaObservable[T](jGrObs)).asJavaObservable
-    val o1 = asJavaObservable.groupByUntil[K, Any](f, fclosing) : rx.Observable[_ <: rx.observables.GroupedObservable[K, _ <: T]]
-    val func = (o: rx.observables.GroupedObservable[K, _ <: T]) => (o.getKey, toScalaObservable[T](o))
-    toScalaObservable[(K, Observable[T])](o1.map[(K, Observable[T])](func))
-  }
-
-  /**
-   * Groups the items emitted by an [[Observable]] (transformed by a selector) according to a specified key selector function
-   * until the duration Observable expires for the key.
-   *
-   * <img width="640" height="375" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupByUntil.png">
-   *
-   * <em>Note:</em> The `Observable` in the pair `(K, Observable[V])` will cache the items it is to emit until such time as it
-   * is subscribed to. For this reason, in order to avoid memory leaks, you should not simply ignore those `Observable` that
-   * do not concern you. Instead, you can signal to them that they may discard their buffers by applying an operator like `take(0)` to them.
-   *
-   * @param keySelector a function to extract the key for each item
-   * @param valueSelector a function to map each item emitted by the source [[Observable]] to an item emitted by one
-   *                      of the resulting `Observable[V]`s
-   * @param closings a function to signal the expiration of a group
-   * @return an [[Observable]] that emits pairs of key and `Observable[V]`, each of which corresponds to a key
-   *         value and each of which emits all items emitted by the source [[Observable]] during that
-   *         key's duration that share that same key value, transformed by the value selector
-   */
-  def groupByUntil[K, V](keySelector: T => K, valueSelector: T => V)(closings: (K, Observable[V]) => Observable[Any]): Observable[(K, Observable[V])] = {
-    val jKeySelector: Func1[_ >: T, _ <: K] = keySelector
-    val jValueSelector: Func1[_ >: T, _ <: V] = valueSelector
-    val jDurationSelector = new Func1[rx.observables.GroupedObservable[_ <: K, _ <: V], rx.Observable[_ <: Any]] {
-      override def call(jgo: rx.observables.GroupedObservable[_ <: K, _ <: V]): rx.Observable[_ <: Any] = closings(jgo.getKey, toScalaObservable[V](jgo))
-    }
-    val f = (o: rx.observables.GroupedObservable[K, _ <: V]) => (o.getKey, toScalaObservable[V](o))
-    val jo = asJavaObservable.groupByUntil[K, V, Any](jKeySelector, jValueSelector, jDurationSelector).map[(K, Observable[V])](f)
-    toScalaObservable[(K, Observable[V])](jo)
-  }
-
-  /**
    * Correlates the items emitted by two Observables based on overlapping durations.
    * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/join_.png">
@@ -3317,10 +3266,10 @@ trait Observable[+T]
    * @since 0.20
    */
   def retryWhen(notificationHandler: Observable[Throwable] => Observable[Any]): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on.map({ case Notification.OnError(error) => error })).asJavaObservable
+    val f: Func1[_ >: rx.Observable[_ <: Throwable], _ <: rx.Observable[_ <: Any]] =
+      (jOt: rx.Observable[_ <: Throwable]) => {
+        val ot = toScalaObservable[Throwable](jOt)
+        notificationHandler(ot).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.retryWhen(f))
@@ -3348,10 +3297,10 @@ trait Observable[+T]
    * @since 0.20
    */
   def retryWhen(notificationHandler: Observable[Throwable] => Observable[Any], scheduler: Scheduler): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on.map({ case Notification.OnError(error) => error })).asJavaObservable
+    val f: Func1[_ >: rx.Observable[_ <: Throwable], _ <: rx.Observable[_ <: Any]] =
+      (jOt: rx.Observable[_ <: Throwable]) => {
+        val ot = toScalaObservable[Throwable](jOt)
+        notificationHandler(ot).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.retryWhen(f, scheduler))
@@ -3441,10 +3390,10 @@ trait Observable[+T]
    * @since 0.20
    */
   def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any], scheduler: Scheduler): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on.map( _ => Unit )).asJavaObservable
+    val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
+      (jOv: rx.Observable[_ <: Void]) => {
+        val ov = toScalaObservable[Void](jOv)
+        notificationHandler(ov.map( _ => Unit )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f, scheduler))
@@ -3500,10 +3449,10 @@ trait Observable[+T]
    * @since 0.20
    */
   def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any]): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on.map( _ => Unit )).asJavaObservable
+    val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
+      (jOv: rx.Observable[_ <: Void]) => {
+        val ov = toScalaObservable[Void](jOv)
+        notificationHandler(ov.map( _ => Unit )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f))
