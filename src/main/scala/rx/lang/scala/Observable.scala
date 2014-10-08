@@ -2261,57 +2261,6 @@ trait Observable[+T]
   }
 
   /**
-   * Groups the items emitted by this Observable according to a specified discriminator function and terminates these groups
-   * according to a function.
-   *
-   * @param f
-   *            a function that extracts the key from an item
-   * @param closings
-   *            the function that accepts the key of a given group and an observable representing that group, and returns
-   *            an observable that emits a single Closing when the group should be closed.
-   * @tparam K 
-   *            the type of the keys returned by the discriminator function.
-   * @return an Observable that emits `(key, observable)` pairs, where `observable`
-   *         contains all items for which `f` returned `key` before `closings` emits a value.
-   */
-  def groupByUntil[K](f: T => K)(closings: (K, Observable[T])=>Observable[Any]): Observable[(K, Observable[T])] = {
-    val fclosing: Func1[_ >: rx.observables.GroupedObservable[K, _ <: T], _ <: rx.Observable[_ <: Any]] =
-      (jGrObs: rx.observables.GroupedObservable[K, _ <: T]) => closings(jGrObs.getKey, toScalaObservable[T](jGrObs)).asJavaObservable
-    val o1 = asJavaObservable.groupByUntil[K, Any](f, fclosing) : rx.Observable[_ <: rx.observables.GroupedObservable[K, _ <: T]]
-    val func = (o: rx.observables.GroupedObservable[K, _ <: T]) => (o.getKey, toScalaObservable[T](o))
-    toScalaObservable[(K, Observable[T])](o1.map[(K, Observable[T])](func))
-  }
-
-  /**
-   * Groups the items emitted by an [[Observable]] (transformed by a selector) according to a specified key selector function
-   * until the duration Observable expires for the key.
-   *
-   * <img width="640" height="375" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupByUntil.png">
-   *
-   * <em>Note:</em> The `Observable` in the pair `(K, Observable[V])` will cache the items it is to emit until such time as it
-   * is subscribed to. For this reason, in order to avoid memory leaks, you should not simply ignore those `Observable` that
-   * do not concern you. Instead, you can signal to them that they may discard their buffers by applying an operator like `take(0)` to them.
-   *
-   * @param keySelector a function to extract the key for each item
-   * @param valueSelector a function to map each item emitted by the source [[Observable]] to an item emitted by one
-   *                      of the resulting `Observable[V]`s
-   * @param closings a function to signal the expiration of a group
-   * @return an [[Observable]] that emits pairs of key and `Observable[V]`, each of which corresponds to a key
-   *         value and each of which emits all items emitted by the source [[Observable]] during that
-   *         key's duration that share that same key value, transformed by the value selector
-   */
-  def groupByUntil[K, V](keySelector: T => K, valueSelector: T => V)(closings: (K, Observable[V]) => Observable[Any]): Observable[(K, Observable[V])] = {
-    val jKeySelector: Func1[_ >: T, _ <: K] = keySelector
-    val jValueSelector: Func1[_ >: T, _ <: V] = valueSelector
-    val jDurationSelector = new Func1[rx.observables.GroupedObservable[_ <: K, _ <: V], rx.Observable[_ <: Any]] {
-      override def call(jgo: rx.observables.GroupedObservable[_ <: K, _ <: V]): rx.Observable[_ <: Any] = closings(jgo.getKey, toScalaObservable[V](jgo))
-    }
-    val f = (o: rx.observables.GroupedObservable[K, _ <: V]) => (o.getKey, toScalaObservable[V](o))
-    val jo = asJavaObservable.groupByUntil[K, V, Any](jKeySelector, jValueSelector, jDurationSelector).map[(K, Observable[V])](f)
-    toScalaObservable[(K, Observable[V])](jo)
-  }
-
-  /**
    * Correlates the items emitted by two Observables based on overlapping durations.
    * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/join_.png">
@@ -3265,7 +3214,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an
    * `onError`. An `onError` notification from the source will result in the emission of a
-   * [[Notification]] to the Observable provided as an argument to the `notificationHandler`
+   * [[Throwable]] to the Observable provided as an argument to the `notificationHandler`
    * function. If the Observable returned `onCompletes` or `onErrors` then `retry` will call
    * `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable.
@@ -3276,21 +3225,25 @@ trait Observable[+T]
    *
    * This retries 3 times, each time incrementing the number of seconds it waits.
    *
-   * <pre>
+   * @example
+   *
+   * This retries 3 times, each time incrementing the number of seconds it waits.
+   *
+   * {{{
    * Observable[String]({ subscriber =>
    *   println("subscribing")
    *   subscriber.onError(new RuntimeException("always fails"))
-   * }).retryWhen(attempts => {
-   *   attempts.zipWith(Observable.from(1 to 3))((n, i) => i).flatMap(i => {
+   * }).retryWhen({ throwableObservable =>
+   *   throwableObservable.zipWith(Observable.from(1 to 3))((t, i) => i).flatMap(i => {
    *     println("delay retry by " + i + " second(s)")
    *     Observable.timer(Duration(i, TimeUnit.SECONDS))
    *   })
    * }).toBlocking.foreach(s => println(s))
-   * </pre>
+   * }}}
    *
    * Output is:
    *
-   * <pre>
+   * {{{
    * subscribing
    * delay retry by 1 second(s)
    * subscribing
@@ -3298,23 +3251,25 @@ trait Observable[+T]
    * subscribing
    * delay retry by 3 second(s)
    * subscribing
-   * </pre>
+   * }}}
+   *
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>`retryWhen` operates by default on the `trampoline` [[Scheduler]].</dd>
    * </dl>
    *
-   * @param notificationHandler receives an Observable of notifications with which a user can complete or error, aborting the
+   * @param notificationHandler receives an Observable of a Throwable with which a user can complete or error, aborting the
    *            retry
    * @return the source Observable modified with retry logic
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Error-Handling-Operators#retrywhen">RxJava Wiki: retryWhen()</a>
+   * @see RxScalaDemo.retryWhenDifferentExceptionsExample for a more intricate example
    * @since 0.20
    */
-  def retryWhen(notificationHandler: Observable[Notification[Any]] => Observable[Any]): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on).asJavaObservable
+  def retryWhen(notificationHandler: Observable[Throwable] => Observable[Any]): Observable[T] = {
+    val f: Func1[_ >: rx.Observable[_ <: Throwable], _ <: rx.Observable[_ <: Any]] =
+      (jOt: rx.Observable[_ <: Throwable]) => {
+        val ot = toScalaObservable[Throwable](jOt)
+        notificationHandler(ot).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.retryWhen(f))
@@ -3322,8 +3277,8 @@ trait Observable[+T]
 
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an `onError`.
-   * An onError will emit a [[Notification]] to the observable provided as an argument to the notificationHandler
-   * func. If the observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
+   * An onError will emit a [[Throwable]] to the Observable provided as an argument to the notificationHandler
+   * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
    * or `onError` on the child subscription. Otherwise, this observable will resubscribe to the source observable, on a particular Scheduler.
    * <p>
    * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="">
@@ -3333,18 +3288,19 @@ trait Observable[+T]
    *  <dd>you specify which [[Scheduler]] this operator will use</dd>
    * </dl>
    *
-   * @param notificationHandler receives an Observable of notifications with which a user can complete or error, aborting the
-   *            retry
+   * @param notificationHandler receives an Observable of a Throwable with which a user can complete or error, aborting
+   *                            the retry
    * @param scheduler the Scheduler on which to subscribe to the source Observable
    * @return the source Observable modified with retry logic
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Error-Handling-Operators#retrywhen">RxJava Wiki: retryWhen()</a>
+   * @see RxScalaDemo.retryWhenDifferentExceptionsExample for a more intricate example
    * @since 0.20
    */
-  def retryWhen(notificationHandler: Observable[Notification[Any]] => Observable[Any], scheduler: Scheduler): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on).asJavaObservable
+  def retryWhen(notificationHandler: Observable[Throwable] => Observable[Any], scheduler: Scheduler): Observable[T] = {
+    val f: Func1[_ >: rx.Observable[_ <: Throwable], _ <: rx.Observable[_ <: Any]] =
+      (jOt: rx.Observable[_ <: Throwable]) => {
+        val ot = toScalaObservable[Throwable](jOt)
+        notificationHandler(ot).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.retryWhen(f, scheduler))
@@ -3415,7 +3371,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source Observable with the exception of an
    * `onCompleted`. An `onCompleted` notification from the source will result in the emission of
-   * a [[Notification]] to the Observable provided as an argument to the `notificationHandler`
+   * a [[scala.Unit]] to the Observable provided as an argument to the `notificationHandler`
    * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable, on a particular Scheduler.
@@ -3426,18 +3382,18 @@ trait Observable[+T]
    *  <dd>you specify which [[Scheduler]] this operator will use</dd>
    * </dl>
    *
-   * @param notificationHandler receives an Observable of notifications with which a user can complete or error, aborting the repeat.
+   * @param notificationHandler receives an Observable of a Unit with which a user can complete or error, aborting the repeat.
    * @param scheduler the Scheduler to emit the items on
    * @return the source Observable modified with repeat logic
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#repeatwhen">RxJava Wiki: repeatWhen()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
    * @since 0.20
    */
-  def repeatWhen(notificationHandler: Observable[Notification[Any]] => Observable[Any], scheduler: Scheduler): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on).asJavaObservable
+  def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any], scheduler: Scheduler): Observable[T] = {
+    val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
+      (jOv: rx.Observable[_ <: Void]) => {
+        val ov = toScalaObservable[Void](jOv)
+        notificationHandler(ov.map( _ => Unit )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f, scheduler))
@@ -3446,28 +3402,57 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source Observable with the exception of an
    * `onCompleted`. An `onCompleted` notification from the source will result in the emission of
-   * a [[Notification]] to the Observable provided as an argument to the `notificationHandler`
+   * a [[scala.Unit]] to the Observable provided as an argument to the `notificationHandler`
    * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source observable.
    * <p>
    * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
+   *
+   * @example
+   *
+   * This repeats 3 times, each time incrementing the number of seconds it waits.
+   *
+   * {{{
+   * Observable[String]({ subscriber =>
+   *   println("subscribing")
+   *   subscriber.onCompleted()
+   * }).repeatWhen({ unitObservable =>
+   *   unitObservable.zipWith(Observable.from(1 to 3))((u, i) => i).flatMap(i => {
+   *     println("delay repeat by " + i + " second(s)")
+   *     Observable.timer(Duration(i, TimeUnit.SECONDS))
+   *   })
+   * }).toBlocking.foreach(s => println(s))
+   * }}}
+   *
+   * Output is:
+   *
+   * {{{
+   * subscribing
+   * delay repeat by 1 second(s)
+   * subscribing
+   * delay repeat by 2 second(s)
+   * subscribing
+   * delay repeat by 3 second(s)
+   * subscribing
+   * }}}
+   *
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>`repeatWhen` operates by default on the `trampoline` [[Scheduler]].</dd>
    * </dl>
    *
-   * @param notificationHandler receives an Observable of notifications with which a user can complete or error, aborting the repeat.
+   * @param notificationHandler receives an Observable of a Unit with which a user can complete or error, aborting the repeat.
    * @return the source Observable modified with repeat logic
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#repeatwhen">RxJava Wiki: repeatWhen()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
    * @since 0.20
    */
-  def repeatWhen(notificationHandler: Observable[Notification[Any]] => Observable[Any]): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: rx.Notification[_ <: Any]], _ <: rx.Observable[_ <: Any]] =
-      (jOn: rx.Observable[_ <: rx.Notification[_ <: Any]]) => {
-        val on = toScalaObservable[rx.Notification[_ <: Any]](jOn).map({ jN => toScalaNotification[Any](jN) })
-        notificationHandler(on).asJavaObservable
+  def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any]): Observable[T] = {
+    val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
+      (jOv: rx.Observable[_ <: Void]) => {
+        val ov = toScalaObservable[Void](jOv)
+        notificationHandler(ov.map( _ => Unit )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f))
