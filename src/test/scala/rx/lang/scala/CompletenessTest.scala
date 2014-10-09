@@ -68,11 +68,11 @@ class CompletenessTest extends JUnitSuite {
       "asObservable()" -> unnecessary,
       "buffer(Int)" -> "tumblingBuffer(Int)",
       "buffer(Int, Int)" -> "slidingBuffer(Int, Int)",
-      "buffer(Long, TimeUnit)" -> "tumblingBuffer(Duration)",
+      "buffer(Long, TimeUnit)" -> "tumblingBuffer(Duration, Scheduler)",
       "buffer(Long, TimeUnit, Int)" -> "tumblingBuffer(Duration, Int)",
       "buffer(Long, TimeUnit, Int, Scheduler)" -> "tumblingBuffer(Duration, Int, Scheduler)",
       "buffer(Long, TimeUnit, Scheduler)" -> "tumblingBuffer(Duration, Scheduler)",
-      "buffer(Long, Long, TimeUnit)" -> "slidingBuffer(Duration, Duration)",
+      "buffer(Long, Long, TimeUnit)" -> "slidingBuffer(Duration, Duration, Scheduler)",
       "buffer(Long, Long, TimeUnit, Scheduler)" -> "slidingBuffer(Duration, Duration, Scheduler)",
       "buffer(Func0[_ <: Observable[_ <: TClosing]])" -> "tumblingBuffer(=> Observable[Any])",
       "buffer(Observable[B])" -> "tumblingBuffer(=> Observable[Any])",
@@ -85,9 +85,12 @@ class CompletenessTest extends JUnitSuite {
       "contains(Any)" -> "contains(U)",
       "count()" -> "length",
       "debounce(Func1[_ >: T, _ <: Observable[U]])" -> "debounce(T => Observable[Any])",
+      "debounce(Long, TimeUnit)" -> "debounce(Duration, Scheduler)",
       "defaultIfEmpty(T)" -> "orElse(=> U)",
       "delay(Func0[_ <: Observable[U]], Func1[_ >: T, _ <: Observable[V]])" -> "delay(() => Observable[Any], T => Observable[Any])",
       "delay(Func1[_ >: T, _ <: Observable[U]])" -> "delay(T => Observable[Any])",
+      "delay(Long, TimeUnit)" -> "delay(Duration, Scheduler)",
+      "delaySubscription(Long, TimeUnit)" -> "delaySubscription(Duration, Scheduler)",
       "dematerialize()" -> "dematerialize(<:<[Observable[T], Observable[Notification[U]]])",
       "doOnCompleted(Action0)" -> "doOnCompleted(=> Unit)",
       "doOnEach(Action1[Notification[_ >: T]])" -> "[use `doOnEach(T => Unit, Throwable => Unit, () => Unit)`]",
@@ -104,6 +107,7 @@ class CompletenessTest extends JUnitSuite {
       "forEach(Action1[_ >: T], Action1[Throwable], Action0)" -> "foreach(T => Unit, Throwable => Unit, () => Unit)",
       "groupJoin(Observable[T2], Func1[_ >: T, _ <: Observable[D1]], Func1[_ >: T2, _ <: Observable[D2]], Func2[_ >: T, _ >: Observable[T2], _ <: R])" -> "groupJoin(Observable[S])(T => Observable[Any], S => Observable[Any], (T, Observable[S]) => R)",
       "ignoreElements()" -> "[use `filter(_ => false)`]",
+      "interval(Long, TimeUnit)" -> "interval(Duration, Scheduler)",
       "join(Observable[TRight], Func1[T, Observable[TLeftDuration]], Func1[TRight, Observable[TRightDuration]], Func2[T, TRight, R])" -> "join(Observable[S])(T => Observable[Any], S => Observable[Any], (T, S) => R)",
       "last(Func1[_ >: T, Boolean])" -> "[use `filter(predicate).last`]",
       "lastOrDefault(T)" -> "lastOrElse(=> U)",
@@ -126,11 +130,12 @@ class CompletenessTest extends JUnitSuite {
       "publishLast(Func1[_ >: Observable[T], _ <: Observable[R]])" -> "publishLast(Observable[T] => Observable[R])",
       "reduce(Func2[T, T, T])" -> "reduce((U, U) => U)",
       "reduce(R, Func2[R, _ >: T, R])" -> "foldLeft(R)((R, T) => R)",
-      "repeatWhen(Func1[_ >: Observable[_ <: Void], _ <: Observable[_]])" -> "repeatWhen(Observable[Unit] => Observable[Any])",
+      "repeat(Long)" -> "repeat(Long, Scheduler)",
+      "repeatWhen(Func1[_ >: Observable[_ <: Void], _ <: Observable[_]])" -> "repeatWhen(Observable[Unit] => Observable[Any], Scheduler)",
       "repeatWhen(Func1[_ >: Observable[_ <: Void], _ <: Observable[_]], Scheduler)" -> "repeatWhen(Observable[Unit] => Observable[Any], Scheduler)",
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]])" -> "replay(Observable[T] => Observable[R])",
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Int)" -> "replay(Observable[T] => Observable[R], Int)",
-      "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Int, Long, TimeUnit)" -> "replay(Observable[T] => Observable[R], Int, Duration)",
+      "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Int, Long, TimeUnit)" -> "replay(Observable[T] => Observable[R], Int, Duration, Scheduler)",
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Int, Long, TimeUnit, Scheduler)" -> "replay(Observable[T] => Observable[R], Int, Duration, Scheduler)",
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Int, Scheduler)" -> "replay(Observable[T] => Observable[R], Int, Scheduler)",
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Long, TimeUnit)" -> "replay(Observable[T] => Observable[R], Duration)",
@@ -138,7 +143,8 @@ class CompletenessTest extends JUnitSuite {
       "replay(Func1[_ >: Observable[T], _ <: Observable[R]], Scheduler)" -> "replay(Observable[T] => Observable[R], Scheduler)",
       "retry(Func2[Integer, Throwable, Boolean])" -> "retry((Int, Throwable) => Boolean)",
       "retryWhen(Func1[_ >: Observable[_ <: Throwable], _ <: Observable[_]], Scheduler)" -> "retryWhen(Observable[Throwable] => Observable[Any], Scheduler)",
-      "retryWhen(Func1[_ >: Observable[_ <: Throwable], _ <: Observable[_]])" -> "retryWhen(Observable[Throwable] => Observable[Any])",
+      "retryWhen(Func1[_ >: Observable[_ <: Throwable], _ <: Observable[_]])" -> "retryWhen(Observable[Throwable] => Observable[Any], Scheduler)",
+      "sample(Long, TimeUnit)" -> "sample(Duration, Scheduler)",
       "sample(Observable[U])" -> "sample(Observable[Any])",
       "scan(Func2[T, T, T])" -> unnecessary,
       "scan(R, Func2[R, _ >: T, R])" -> "scan(R)((R, T) => R)",
@@ -146,7 +152,7 @@ class CompletenessTest extends JUnitSuite {
       "singleOrDefault(T)" -> "singleOrElse(=> U)",
       "singleOrDefault(T, Func1[_ >: T, Boolean])" -> "[use `filter(predicate).singleOrElse(default)`]",
       "skip(Int)" -> "drop(Int)",
-      "skip(Long, TimeUnit)" -> "drop(Duration)",
+      "skip(Long, TimeUnit)" -> "drop(Duration, Scheduler)",
       "skip(Long, TimeUnit, Scheduler)" -> "drop(Duration, Scheduler)",
       "skipWhile(Func1[_ >: T, Boolean])" -> "dropWhile(T => Boolean)",
       "skipWhileWithIndex(Func2[_ >: T, Integer, Boolean])" -> unnecessary,
@@ -155,12 +161,12 @@ class CompletenessTest extends JUnitSuite {
       "startWith(Iterable[T])" -> "[use `Observable.from(iterable) ++ o`]",
       "startWith(Observable[T])" -> "[use `++`]",
       "skipLast(Int)" -> "dropRight(Int)",
-      "skipLast(Long, TimeUnit)" -> "dropRight(Duration)",
+      "skipLast(Long, TimeUnit)" -> "dropRight(Duration, Scheduler)",
       "skipLast(Long, TimeUnit, Scheduler)" -> "dropRight(Duration, Scheduler)",
       "subscribe()" -> "subscribe()",
       "takeFirst(Func1[_ >: T, Boolean])" -> "[use `filter(condition).take(1)`]",
       "takeLast(Int)" -> "takeRight(Int)",
-      "takeLast(Long, TimeUnit)" -> "takeRight(Duration)",
+      "takeLast(Long, TimeUnit)" -> "takeRight(Duration, Scheduler)",
       "takeLast(Long, TimeUnit, Scheduler)" -> "takeRight(Duration, Scheduler)",
       "takeLast(Int, Long, TimeUnit)" -> "takeRight(Int, Duration)",
       "takeLast(Int, Long, TimeUnit, Scheduler)" -> "takeRight(Int, Duration, Scheduler)",
@@ -184,16 +190,21 @@ class CompletenessTest extends JUnitSuite {
       "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> "toMultimap(T => K, T => V, () => M, K => B)",
       "toSortedList()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
       "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
+      "throttleLast(Long, TimeUnit)" -> "throttleLast(Duration, Scheduler)",
+      "timeInterval()" -> "timeInterval(Scheduler)",
+      "timeout(Long, TimeUnit)" -> "timeout(Duration, Scheduler)",
+      "timer(Long, TimeUnit)" -> "timer(Duration, Scheduler)",
+      "timestamp()" -> "timestamp(Scheduler)",
       "window(Int)" -> "tumbling(Int)",
       "window(Int, Int)" -> "sliding(Int, Int)",
-      "window(Long, TimeUnit)" -> "tumbling(Duration)",
+      "window(Long, TimeUnit)" -> "tumbling(Duration, Scheduler)",
       "window(Long, TimeUnit, Int)" -> "tumbling(Duration, Int)",
       "window(Long, TimeUnit, Int, Scheduler)" -> "tumbling(Duration, Int, Scheduler)",
       "window(Long, TimeUnit, Scheduler)" -> "tumbling(Duration, Scheduler)",
       "window(Observable[U])" -> "tumbling(=> Observable[Any])",
       "window(Func0[_ <: Observable[_ <: TClosing]])" -> "tumbling(=> Observable[Any])",
       "window(Observable[_ <: TOpening], Func1[_ >: TOpening, _ <: Observable[_ <: TClosing]])" -> "sliding(Observable[Opening])(Opening => Observable[Any])",
-      "window(Long, Long, TimeUnit)" -> "sliding(Duration, Duration)",
+      "window(Long, Long, TimeUnit)" -> "sliding(Duration, Duration, Scheduler)",
       "window(Long, Long, TimeUnit, Scheduler)" -> "sliding(Duration, Duration, Scheduler)",
       "window(Long, Long, TimeUnit, Int, Scheduler)" -> "sliding(Duration, Duration, Int, Scheduler)",
 
@@ -372,7 +383,7 @@ class CompletenessTest extends JUnitSuite {
       println(s"Warning: $m is NOT present in $tp")
     }
 
-    printMethodPresenceStatus(good, bad, tp)
+    checkMethodPresenceStatus(good, bad, tp)
   }
 
   @Test def checkScalaMethodPresenceVerbose(): Unit = {
@@ -393,12 +404,15 @@ class CompletenessTest extends JUnitSuite {
       }
     }
     
-    printMethodPresenceStatus(good, bad, "Scala Observable")
+    checkMethodPresenceStatus(good, bad, "Scala Observable")
   }
 
-  def printMethodPresenceStatus(goodCount: Int, badCount: Int, instance: Any): Unit = {
-    val status = if (badCount == 0) "SUCCESS:" else "FAILURE: Only"
-    println(s"\n$status $goodCount out of ${badCount+goodCount} methods were found in $instance")
+  def checkMethodPresenceStatus(goodCount: Int, badCount: Int, instance: Any): Unit = {
+    if (badCount == 0) {
+      println(s"SUCCESS: $goodCount out of ${badCount+goodCount} methods were found in $instance")
+    } else {
+      fail(s"FAILURE: Only $goodCount out of ${badCount+goodCount} methods were found in $instance")
+    }
   }
 
   def setTodoForMissingMethods(corresp: Map[String, String]): Map[String, String] = {
