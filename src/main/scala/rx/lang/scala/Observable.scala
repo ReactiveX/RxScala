@@ -344,18 +344,6 @@ trait Observable[+T]
   }
 
   /**
-   * Wraps each item emitted by a source Observable in a timestamped tuple.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/timestamp.png">
-   *
-   * @return an Observable that emits timestamped items from the source Observable
-   */
-  def timestamp: Observable[(Long, T)] = {
-    toScalaObservable[rx.schedulers.Timestamped[_ <: T]](asJavaObservable.timestamp())
-      .map((t: rx.schedulers.Timestamped[_ <: T]) => (t.getTimestampMillis, t.getValue))
-  }
-
-  /**
    * Wraps each item emitted by a source Observable in a timestamped tuple
    * with timestamps provided by the given Scheduler.
    * <p>
@@ -554,26 +542,6 @@ trait Observable[+T]
    *            replaced with a new buffer.
    * @param count
    *            The maximum size of each buffer before it should be emitted.
-   * @return
-   *         An [[rx.lang.scala.Observable]] which produces connected non-overlapping buffers which are emitted after
-   *         a fixed duration or when the buffer has reached maximum capacity (which ever occurs first).
-   */
-  def tumblingBuffer(timespan: Duration, count: Int): Observable[Seq[T]] = {
-    val oJava: rx.Observable[_ <: java.util.List[_]] = asJavaObservable.buffer(timespan.length, timespan.unit, count)
-    Observable.jObsOfListToScObsOfSeq(oJava.asInstanceOf[rx.Observable[_ <: java.util.List[T]]])
-  }
-
-  /**
-   * Creates an Observable which produces buffers of collected values. This Observable produces connected
-   * non-overlapping buffers, each of a fixed duration specified by the `timespan` argument or a maximum size
-   * specified by the `count` argument (which ever is reached first). When the source Observable completes
-   * or encounters an error, the current buffer is emitted and the event is propagated.
-   *
-   * @param timespan
-   *            The period of time each buffer is collecting values before it should be emitted, and
-   *            replaced with a new buffer.
-   * @param count
-   *            The maximum size of each buffer before it should be emitted.
    * @param scheduler
    *            The [[rx.lang.scala.Scheduler]] to use when determining the end and start of a buffer.
    * @return
@@ -582,28 +550,6 @@ trait Observable[+T]
    */
   def tumblingBuffer(timespan: Duration, count: Int, scheduler: Scheduler): Observable[Seq[T]] = {
     val oJava: rx.Observable[_ <: java.util.List[_]] = asJavaObservable.buffer(timespan.length, timespan.unit, count, scheduler)
-    Observable.jObsOfListToScObsOfSeq(oJava.asInstanceOf[rx.Observable[_ <: java.util.List[T]]])
-  }
-
-  /**
-   * Creates an Observable which produces buffers of collected values. This Observable starts a new buffer
-   * periodically, which is determined by the `timeshift` argument. Each buffer is emitted after a fixed timespan
-   * specified by the `timespan` argument. When the source Observable completes or encounters an error, the
-   * current buffer is emitted and the event is propagated.
-   *
-   * @param timespan
-   *            The period of time each buffer is collecting values before it should be emitted.
-   * @param timeshift
-   *            The period of time after which a new buffer will be created.
-   * @return
-   *         An [[rx.lang.scala.Observable]] which produces new buffers periodically, and these are emitted after
-   *         a fixed timespan has elapsed.
-   */
-  def slidingBuffer(timespan: Duration, timeshift: Duration): Observable[Seq[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
-    val oJava: rx.Observable[_ <: java.util.List[_]] = asJavaObservable.buffer(span, shift, unit)
     Observable.jObsOfListToScObsOfSeq(oJava.asInstanceOf[rx.Observable[_ <: java.util.List[T]]])
   }
 
@@ -756,22 +702,6 @@ trait Observable[+T]
    * @param timespan
    *            The period of time each window is collecting values before it should be emitted, and
    *            replaced with a new window.
-   * @return
-   *         An [[rx.lang.scala.Observable]] which produces connected non-overlapping windows with a fixed duration.
-   */
-  def tumbling(timespan: Duration): Observable[Observable[T]] = {
-    Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(timespan.length, timespan.unit))
-      : Observable[Observable[T]] // SI-7818
-  }
-
-  /**
-   * Creates an Observable which produces windows of collected values. This Observable produces connected
-   * non-overlapping windows, each of a fixed duration specified by the `timespan` argument. When the source
-   * Observable completes or encounters an error, the current window is emitted and the event is propagated.
-   *
-   * @param timespan
-   *            The period of time each window is collecting values before it should be emitted, and
-   *            replaced with a new window.
    * @param scheduler
    *            The [[rx.lang.scala.Scheduler]] to use when determining the end and start of a window.
    * @return
@@ -821,28 +751,6 @@ trait Observable[+T]
    */
   def tumbling(timespan: Duration, count: Int, scheduler: Scheduler): Observable[Observable[T]] = {
     Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(timespan.length, timespan.unit, count, scheduler))
-      : Observable[Observable[T]] // SI-7818
-  }
-
-  /**
-   * Creates an Observable which produces windows of collected values. This Observable starts a new window
-   * periodically, which is determined by the `timeshift` argument. Each window is emitted after a fixed timespan
-   * specified by the `timespan` argument. When the source Observable completes or encounters an error, the
-   * current window is emitted and the event is propagated.
-   *
-   * @param timespan
-   *            The period of time each window is collecting values before it should be emitted.
-   * @param timeshift
-   *            The period of time after which a new window will be created.
-   * @return
-   *         An [[rx.lang.scala.Observable]] which produces new windows periodically, and these are emitted after
-   *         a fixed timespan has elapsed.
-   */
-  def sliding(timespan: Duration, timeshift: Duration): Observable[Observable[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
-    Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(span, shift, unit))
       : Observable[Observable[T]] // SI-7818
   }
 
@@ -1337,28 +1245,6 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying no more than `bufferSize` items that were emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnt.png">
-   *
-   * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
-   *                  causing multiple subscriptions to the Observable
-   * @param bufferSize the buffer size that limits the number of items the connectable observable can replay
-   * @param time the duration of the window in which the replayed items must have been emitted
-   * @return an Observable that emits items that are the results of invoking the selector on items emitted by
-   *         a `ConnectableObservable` that shares a single subscription to the source Observable, and
-   *         replays no more than `bufferSize` items that were emitted within the window defined by `time`
-   */
-  def replay[R](selector: Observable[T] => Observable[R], bufferSize: Int, time: Duration): Observable[R] = {
-    val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
-      (jo: rx.Observable[T]) => selector(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    toScalaObservable[R](thisJava.replay(fJava, bufferSize, time.length, time.unit))
-  }
-
-  /**
-   * Returns an Observable that emits items that are the results of invoking a specified selector on items
-   * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
-   * replaying no more than `bufferSize` items that were emitted within a specified time window.
-   * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnts.png">
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
@@ -1471,27 +1357,6 @@ trait Observable[+T]
    */
   def replay(bufferSize: Int, time: Duration, scheduler: Scheduler): ConnectableObservable[T] = {
     new ConnectableObservable[T](asJavaObservable.replay(bufferSize, time.length, time.unit, scheduler))
-  }
-
-  /**
-   * Returns an Observable that emits items that are the results of invoking a specified selector on items
-   * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
-   * replaying all items that were emitted within a specified time window.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ft.png">
-   *
-   * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
-   *                  causing multiple subscriptions to the Observable
-   * @param time the duration of the window in which the replayed items must have been emitted
-   * @return an Observable that emits items that are the results of invoking the selector on items emitted by
-   *         a `ConnectableObservable` that shares a single subscription to the source Observable,
-   *         replaying all items that were emitted within the window defined by `time`
-   */
-  def replay[R](selector: Observable[T] => Observable[R], time: Duration): Observable[R] = {
-    val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
-      (jo: rx.Observable[T]) => selector(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    toScalaObservable[R](thisJava.replay(fJava, time.length, time.unit))
   }
 
   /**
@@ -1794,20 +1659,6 @@ trait Observable[+T]
    * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png">
    *
    * @param duration the sampling rate
-   * @return an Observable that emits the results of sampling the items emitted by the source
-   *         Observable at the specified time interval
-   */
-  def sample(duration: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.sample(duration.length, duration.unit))
-  }
-
-  /**
-   * Returns an Observable that emits the results of sampling the items emitted by the source
-   * Observable at a specified time interval.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png">
-   *
-   * @param duration the sampling rate
    * @param scheduler
    *            the [[rx.lang.scala.Scheduler]] to use when sampling
    * @return an Observable that emits the results of sampling the items emitted by the source
@@ -1920,20 +1771,6 @@ trait Observable[+T]
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png">
    *
    * @param time the length of the time window to drop
-   * @return an Observable that drops values emitted by the source Observable before the time window defined
-   *         by `time` elapses and emits the remainder
-   */
-  def drop(time: Duration): Observable[T] = {
-    toScalaObservable(asJavaObservable.skip(time.length, time.unit))
-  }
-
-  /**
-   * Returns an Observable that drops values emitted by the source Observable before a specified time window
-   * elapses.
-   *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png">
-   *
-   * @param time the length of the time window to drop
    * @param scheduler the `Scheduler` on which the timed wait happens
    * @return an Observable that drops values emitted by the source Observable before the time window defined
    *         by `time` elapses and emits the remainder
@@ -1974,22 +1811,6 @@ trait Observable[+T]
    */
   def dropRight(n: Int): Observable[T] = {
     toScalaObservable(asJavaObservable.skipLast(n))
-  }
-
-  /**
-   * Returns an Observable that drops items emitted by the source Observable during a specified time window
-   * before the source completes.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.t.png">
-   *
-   * Note: this action will cache the latest items arriving in the specified time window.
-   *
-   * @param time the length of the time window
-   * @return an Observable that drops those items emitted by the source Observable in a time window before the
-   *         source completes defined by `time`
-   */
-  def dropRight(time: Duration): Observable[T] = {
-    toScalaObservable(asJavaObservable.skipLast(time.length, time.unit))
   }
 
   /**
@@ -2046,18 +1867,6 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that emits those items emitted by source Observable before a specified time runs out.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.t.png">
-   *
-   * @param time the length of the time window
-   * @return an Observable that emits those items emitted by the source Observable before the time runs out
-   */
-  def take(time: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.take(time.length, time.unit))
-  }
-
-  /**
    * Returns an Observable that emits those items emitted by source Observable before a specified time (on
    * specified Scheduler) runs out
    * <p>
@@ -2102,20 +1911,6 @@ trait Observable[+T]
    */
   def takeRight(count: Int): Observable[T] = {
     toScalaObservable[T](asJavaObservable.takeLast(count))
-  }
-
-  /**
-   * Return an Observable that emits the items from the source Observable that were emitted in a specified
-   * window of `time` before the Observable completed.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.t.png">
-   *
-   * @param time the length of the time window
-   * @return an Observable that emits the items from the source Observable that were emitted in the window of
-   *         time before the Observable completed specified by `time`
-   */
-  def takeRight(time: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.takeLast(time.length, time.unit))
   }
 
   /**
@@ -2518,25 +2313,6 @@ trait Observable[+T]
   }
 
   /**
-   * Debounces by dropping all values that are followed by newer values before the timeout value expires. The timer resets on each `onNext` call.
-   *
-   * NOTE: If events keep firing faster than the timeout then no data will be emitted.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleWithTimeout.png">
-   *
-   * $debounceVsThrottle
-   *
-   * @param timeout
-   *            The time each value has to be 'the most recent' of the [[rx.lang.scala.Observable]] to ensure that it's not dropped.
-   *
-   * @return An [[rx.lang.scala.Observable]] which filters out values which are too quickly followed up with newer values.
-   * @see `Observable.debounce`
-   */
-  def throttleWithTimeout(timeout: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.throttleWithTimeout(timeout.length, timeout.unit))
-  }
-
-  /**
    * Return an Observable that mirrors the source Observable, except that it drops items emitted by the source
    * Observable that are followed by another item within a computed debounce duration.
    *
@@ -2551,25 +2327,6 @@ trait Observable[+T]
       override def call(t: T) = debounceSelector(t).asJavaObservable.asInstanceOf[rx.Observable[Any]]
     }
     toScalaObservable[T](asJavaObservable.debounce[Any](fJava))
-  }
-
-  /**
-   * Debounces by dropping all values that are followed by newer values before the timeout value expires. The timer resets on each `onNext` call.
-   *
-   * NOTE: If events keep firing faster than the timeout then no data will be emitted.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/debounce.png">
-   *
-   * $debounceVsThrottle
-   *
-   * @param timeout
-   *            The time each value has to be 'the most recent' of the [[rx.lang.scala.Observable]] to ensure that it's not dropped.
-   *
-   * @return An [[rx.lang.scala.Observable]] which filters out values which are too quickly followed up with newer values.
-   * @see `Observable.throttleWithTimeout`
-   */
-  def debounce(timeout: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.debounce(timeout.length, timeout.unit))
   }
 
   /**
@@ -2653,39 +2410,8 @@ trait Observable[+T]
    *            Duration of windows within with the last value will be chosen.
    * @return Observable which performs the throttle operation.
    */
-  def throttleLast(intervalDuration: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.throttleLast(intervalDuration.length, intervalDuration.unit))
-  }
-
-  /**
-   * Throttles by returning the last value of each interval defined by 'intervalDuration'.
-   *
-   * This differs from `Observable.throttleFirst` in that this ticks along at a scheduled interval whereas `Observable.throttleFirst` does not tick, it just tracks passage of time.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleLast.png">
-   *
-   * @param intervalDuration
-   *            Duration of windows within with the last value will be chosen.
-   * @return Observable which performs the throttle operation.
-   */
   def throttleLast(intervalDuration: Duration, scheduler: Scheduler): Observable[T] = {
     toScalaObservable[T](asJavaObservable.throttleLast(intervalDuration.length, intervalDuration.unit, scheduler))
-  }
-
-  /**
-   * Applies a timeout policy for each item emitted by the Observable, using
-   * the specified scheduler to run timeout timers. If the next item isn't
-   * observed within the specified timeout duration starting from its
-   * predecessor, observers are notified of a `TimeoutException`.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.1.png">
-   *
-   * @param timeout maximum duration between items before a timeout occurs
-   * @return the source Observable modified to notify observers of a
-   *         `TimeoutException` in case of a timeout
-   */
-  def timeout(timeout: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.timeout(timeout.length, timeout.unit))
   }
 
   /**
@@ -3255,36 +2981,6 @@ trait Observable[+T]
    *
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
-   *  <dd>`retryWhen` operates by default on the `trampoline` [[Scheduler]].</dd>
-   * </dl>
-   *
-   * @param notificationHandler receives an Observable of a Throwable with which a user can complete or error, aborting the
-   *            retry
-   * @return the source Observable modified with retry logic
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Error-Handling-Operators#retrywhen">RxJava Wiki: retryWhen()</a>
-   * @see RxScalaDemo.retryWhenDifferentExceptionsExample for a more intricate example
-   * @since 0.20
-   */
-  def retryWhen(notificationHandler: Observable[Throwable] => Observable[Any]): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: Throwable], _ <: rx.Observable[_ <: Any]] =
-      (jOt: rx.Observable[_ <: Throwable]) => {
-        val ot = toScalaObservable[Throwable](jOt)
-        notificationHandler(ot).asJavaObservable
-      }
-
-    toScalaObservable[T](asJavaObservable.retryWhen(f))
-  }
-
-  /**
-   * Returns an Observable that emits the same values as the source observable with the exception of an `onError`.
-   * An onError will emit a [[Throwable]] to the Observable provided as an argument to the notificationHandler
-   * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
-   * or `onError` on the child subscription. Otherwise, this observable will resubscribe to the source observable, on a particular Scheduler.
-   * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="">
-   * <p>
-   * <dl>
-   *  <dt><b>Scheduler:</b></dt>
    *  <dd>you specify which [[Scheduler]] this operator will use</dd>
    * </dl>
    *
@@ -3335,22 +3031,6 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that repeats the sequence of items emitted by the source Observable at most `count` times.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.on.png">
-   *
-   * @param count the number of times the source Observable items are repeated,
-   *              a count of 0 will yield an empty sequence
-   * @return an Observable that repeats the sequence of items emitted by the source Observable at most `count` times
-   * @throws IllegalArgumentException if `count` is less than zero
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#wiki-repeat">RxJava Wiki: repeat()</a>
-   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
-   */
-  def repeat(count: Long): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.repeat(count))
-  }
-
-  /**
    * Returns an Observable that repeats the sequence of items emitted by the source Observable
    * at most `count` times, on a particular Scheduler.
    * <p>
@@ -3375,37 +3055,6 @@ trait Observable[+T]
    * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable, on a particular Scheduler.
-   * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
-   * <dl>
-   *  <dt><b>Scheduler:</b></dt>
-   *  <dd>you specify which [[Scheduler]] this operator will use</dd>
-   * </dl>
-   *
-   * @param notificationHandler receives an Observable of a Unit with which a user can complete or error, aborting the repeat.
-   * @param scheduler the Scheduler to emit the items on
-   * @return the source Observable modified with repeat logic
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#repeatwhen">RxJava Wiki: repeatWhen()</a>
-   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
-   * @since 0.20
-   */
-  def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any], scheduler: Scheduler): Observable[T] = {
-    val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
-      (jOv: rx.Observable[_ <: Void]) => {
-        val ov = toScalaObservable[Void](jOv)
-        notificationHandler(ov.map( _ => Unit )).asJavaObservable
-      }
-
-    toScalaObservable[T](asJavaObservable.repeatWhen(f, scheduler))
-  }
-
-  /**
-   * Returns an Observable that emits the same values as the source Observable with the exception of an
-   * `onCompleted`. An `onCompleted` notification from the source will result in the emission of
-   * a [[scala.Unit]] to the Observable provided as an argument to the `notificationHandler`
-   * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
-   * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
-   * resubscribe to the source observable.
    * <p>
    * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
    *
@@ -3443,19 +3092,20 @@ trait Observable[+T]
    * </dl>
    *
    * @param notificationHandler receives an Observable of a Unit with which a user can complete or error, aborting the repeat.
+   * @param scheduler the Scheduler to emit the items on
    * @return the source Observable modified with repeat logic
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#repeatwhen">RxJava Wiki: repeatWhen()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
    * @since 0.20
    */
-  def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any]): Observable[T] = {
+  def repeatWhen(notificationHandler: Observable[Unit] => Observable[Any], scheduler: Scheduler): Observable[T] = {
     val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
       (jOv: rx.Observable[_ <: Void]) => {
         val ov = toScalaObservable[Void](jOv)
         notificationHandler(ov.map( _ => Unit )).asJavaObservable
       }
 
-    toScalaObservable[T](asJavaObservable.repeatWhen(f))
+    toScalaObservable[T](asJavaObservable.repeatWhen(f, scheduler))
   }
 
   /**
@@ -3655,19 +3305,6 @@ trait Observable[+T]
    * Returns an Observable that emits the items emitted by the source Observable shifted forward in time by a
    * specified delay. Error notifications from the source Observable are not delayed.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.png">
-   * 
-   * @param delay the delay to shift the source by
-   * @return the source Observable shifted in time by the specified delay
-   */
-  def delay(delay: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.delay(delay.length, delay.unit))
-  }
-
-  /**
-   * Returns an Observable that emits the items emitted by the source Observable shifted forward in time by a
-   * specified delay. Error notifications from the source Observable are not delayed.
-   *
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.s.png">
    * 
    * @param delay the delay to shift the source by
@@ -3727,18 +3364,6 @@ trait Observable[+T]
         itemDelay(t).asJavaObservable.asInstanceOf[rx.Observable[Any]]
     }
     toScalaObservable[T](asJavaObservable.delay[Any, Any](subscriptionDelayJava, itemDelayJava))
-  }
-
-  /**
-   * Return an Observable that delays the subscription to the source Observable by a given amount of time.
-   *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delaySubscription.png">
-   * 
-   * @param delay the time to delay the subscription
-   * @return an Observable that delays the subscription to the source Observable by the given amount
-   */
-  def delaySubscription(delay: Duration): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.delaySubscription(delay.length, delay.unit))
   }
 
   /**
@@ -3886,19 +3511,6 @@ trait Observable[+T]
     val thatJava: rx.Observable[_ <: U] = that.asJavaObservable
     val equalityJava: Func2[_ >: U, _ >: U, java.lang.Boolean] = equality
     toScalaObservable[java.lang.Boolean](rx.Observable.sequenceEqual[U](thisJava, thatJava, equalityJava)).map(_.booleanValue)
-  }
-
-  /**
-   * Returns an Observable that emits records of the time interval between consecutive items emitted by the
-   * source Obsegrvable.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeInterval.png">
-   *
-   * @return an Observable that emits time interval information items
-   */
-  def timeInterval: Observable[(Duration, T)] = {
-    toScalaObservable(asJavaObservable.timeInterval())
-      .map(inv => (Duration(inv.getIntervalInMilliseconds, MILLISECONDS), inv.getValue))
   }
 
   /**
@@ -4631,19 +4243,6 @@ object Observable {
    *
    * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png">
    *
-   * @param duration
-   *            duration between two consecutive numbers
-   * @return An Observable that emits a number each time interval.
-   */
-  def interval(duration: Duration): Observable[Long] = {
-    toScalaObservable[java.lang.Long](rx.Observable.interval(duration.length, duration.unit)).map(_.longValue())
-  }
-
-  /**
-   * Emits `0`, `1`, `2`, `...` with a delay of `duration` between consecutive numbers.
-   *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png">
-   *
    * @param period
    *            duration between two consecutive numbers
    * @param scheduler
@@ -4688,18 +4287,6 @@ object Observable {
    */
   def timer(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
-  }
-
-  /**
-   * Returns an Observable that emits `0L` after a specified delay, and then completes.
-   *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.png">
-   *
-   * @param delay the initial delay before emitting a single `0L`
-   * @return Observable that emits `0L` after a specified delay, and then completes
-   */
-  def timer(delay: Duration): Observable[Long] = {
-    toScalaObservable[java.lang.Long](rx.Observable.timer(delay.length, delay.unit)).map(_.longValue())
   }
 
   /**
