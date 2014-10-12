@@ -88,6 +88,7 @@ class CompletenessTest extends JUnitSuite {
       "defaultIfEmpty(T)" -> "orElse(=> U)",
       "delay(Func0[_ <: Observable[U]], Func1[_ >: T, _ <: Observable[V]])" -> "delay(() => Observable[Any], T => Observable[Any])",
       "delay(Func1[_ >: T, _ <: Observable[U]])" -> "delay(T => Observable[Any])",
+      "delaySubscription(Func0[_ <: Observable[U]])" -> "delaySubscription(() => Observable[Any])",
       "dematerialize()" -> "dematerialize(<:<[Observable[T], Observable[Notification[U]]])",
       "doOnCompleted(Action0)" -> "doOnCompleted(=> Unit)",
       "doOnEach(Action1[Notification[_ >: T]])" -> "[use `doOnEach(T => Unit, Throwable => Unit, () => Unit)`]",
