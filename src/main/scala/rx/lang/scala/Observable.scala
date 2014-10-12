@@ -3757,6 +3757,32 @@ trait Observable[+T]
   }
 
   /**
+   * Returns an Observable that delays the subscription to the source Observable until a second Observable
+   * emits an item.
+   * <p>
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/delaySubscription.o.png" alt="">
+   * <dl>
+   *  <dt><b>Scheduler:</b></dt>
+   *  <dd>This version of `delay` operates by default on the `computation` `Scheduler`.</dd>
+   * </dl>
+   *
+   * @param subscriptionDelay
+   *            a function that returns an Observable that triggers the subscription to the source Observable
+   *            once it emits any item
+   * @return an Observable that delays the subscription to the source Observable until the Observable returned
+   *         by `subscriptionDelay` emits an item
+   * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#delaysubscription">RxJava wiki: delaySubscription</a>
+   */
+  def delaySubscription(subscriptionDelay: () => Observable[Any]): Observable[T] = {
+    val subscriptionDelayJava = new Func0[rx.Observable[Any]] {
+      override def call(): rx.Observable[Any] =
+        subscriptionDelay().asJavaObservable.asInstanceOf[rx.Observable[Any]]
+    }
+
+    toScalaObservable[T](asJavaObservable.delaySubscription(subscriptionDelayJava))
+  }
+
+  /**
    * Returns an Observable that emits the single item at a specified index in a sequence of emissions from a
    * source Observbable.
    * 
