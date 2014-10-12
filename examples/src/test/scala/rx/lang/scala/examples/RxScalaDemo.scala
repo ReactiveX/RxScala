@@ -682,7 +682,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def timestampExample() {
-    val timestamped = Observable.interval(100 millis).take(6).timestamp.toBlocking
+    val timestamped = Observable.interval(100 millis).take(6).timestamp().toBlocking
     for ((millis, value) <- timestamped if value > 0) {
       println(value + " at t = " + millis)
     }
@@ -1284,7 +1284,7 @@ class RxScalaDemo extends JUnitSuite {
     val o = (1 to 10).toObservable
       .zip(Observable.interval(100 millis))
       .map(_._1)
-      .timeInterval
+      .timeInterval()
     println(o.toBlocking.toList)
   }
 
