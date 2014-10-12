@@ -3757,6 +3757,32 @@ trait Observable[+T]
   }
 
   /**
+   * Returns an Observable that delays the subscription to the source Observable until a second Observable
+   * emits an item.
+   * <p>
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/delaySubscription.o.png" alt="">
+   * <dl>
+   *  <dt><b>Scheduler:</b></dt>
+   *  <dd>This version of `delay` operates by default on the `computation` `Scheduler`.</dd>
+   * </dl>
+   *
+   * @param subscriptionDelay
+   *            a function that returns an Observable that triggers the subscription to the source Observable
+   *            once it emits any item
+   * @return an Observable that delays the subscription to the source Observable until the Observable returned
+   *         by `subscriptionDelay` emits an item
+   * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#delaysubscription">RxJava wiki: delaySubscription</a>
+   */
+  def delaySubscription(subscriptionDelay: () => Observable[Any]): Observable[T] = {
+    val subscriptionDelayJava = new Func0[rx.Observable[Any]] {
+      override def call(): rx.Observable[Any] =
+        subscriptionDelay().asJavaObservable.asInstanceOf[rx.Observable[Any]]
+    }
+    
+    toScalaObservable[T](asJavaObservable.delaySubscription(subscriptionDelayJava))
+  }
+
+  /**
    * Returns an Observable that emits the single item at a specified index in a sequence of emissions from a
    * source Observbable.
    * 
@@ -3996,14 +4022,26 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that counts the total number of items emitted by the source Observable and emits this count as a 64-bit Long.
+   * Returns an Observable that counts the total number of items emitted by the source Observable and emits
+   * this count as a 64-bit Long.
+   * <p>
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/longCount.png" alt="">
+   * <dl>
+   * <dt><b>Backpressure Support:</b></dt>
+   * <dd>This operator does not support backpressure because by intent it will receive all values and reduce
+   * them to a single `onNext`.</dd>
+   * <dt><b>Scheduler:</b></dt>
+   * <dd>`countLong` does not operate by default on a particular `Scheduler`.</dd>
+   * </dl>
    *
-   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/longCount.png">
-   *
-   * @return an Observable that emits a single item: the number of items emitted by the source Observable as a 64-bit Long item
+   * @return an Observable that emits a single item: the number of items emitted by the source Observable as a
+   *         64-bit Long item
+   * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Mathematical-and-Aggregate-Operators#count-and-countlong">RxJava wiki: countLong</a>
+   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229120.aspx">MSDN: Observable.LongCount</a>
+   * @see #count()
    */
-  def longCount: Observable[Long] = {
-    toScalaObservable[java.lang.Long](asJavaObservable.longCount()).map(_.longValue())
+  def countLong: Observable[Long] = {
+    toScalaObservable[java.lang.Long](asJavaObservable.countLong()).map(_.longValue())
   }
 
   /**
