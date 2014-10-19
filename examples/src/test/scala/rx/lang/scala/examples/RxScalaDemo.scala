@@ -1594,7 +1594,7 @@ class RxScalaDemo extends JUnitSuite {
   
   @Test def eventBusExample(): Unit = {
     val eventBus = Subject[String]()
-    val threadsafeEventBus = SerializedSubject[String](eventBus)
+    val threadsafeEventBus = eventBus.toSerialized
     
     val event1ProducerSubscription = Observable.interval(10.milliseconds)
       .map(i => s"Event 1 producer: $i")

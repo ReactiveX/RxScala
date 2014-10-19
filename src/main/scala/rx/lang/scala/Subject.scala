@@ -15,6 +15,8 @@
  */
 package rx.lang.scala
 
+import scala.language.implicitConversions
+
 /**
 * A Subject is an Observable and an Observer at the same time.
 */
@@ -55,4 +57,15 @@ object Subject {
    * @return the new `Subject`
    */
   def apply[T](): Subject[T] = new rx.lang.scala.subjects.PublishSubject[T](rx.subjects.PublishSubject.create())
+
+  implicit class SubjectExtensions[T](val subject: Subject[T]) extends AnyVal {
+
+    def toSerialized: rx.lang.scala.subjects.SerializedSubject[T] = {
+      subject match {
+        case s: rx.lang.scala.subjects.SerializedSubject[T] => s
+        case s => rx.lang.scala.subjects.SerializedSubject[T](s)
+      }
+    }
+
+  }
 }
