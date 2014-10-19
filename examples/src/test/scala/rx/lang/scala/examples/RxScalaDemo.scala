@@ -19,6 +19,8 @@ import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+import rx.lang.scala.subjects.SerializedSubject
+
 import scala.concurrent.Await
 import scala.collection.mutable
 import scala.concurrent.duration.Duration
@@ -1588,5 +1590,42 @@ class RxScalaDemo extends JUnitSuite {
       }
     })
     l.await()
+  }
+  
+  @Test def eventBusExample(): Unit = {
+    val eventBus = Subject[String]()
+    val threadsafeEventBus = SerializedSubject[String](eventBus)
+    
+    val event1ProducerSubscription = Observable.interval(10.milliseconds)
+      .map(i => s"Event 1 producer: $i")
+      .subscribeOn(NewThreadScheduler())
+      .subscribe(
+        { ev => threadsafeEventBus.onNext(ev) },
+        (e: Throwable) => { println("Event 1 producer exception: $e") }
+      )
+
+    val event2ProducerSubscription = Observable.interval(10.milliseconds)
+      .map(i => s"Event 2 producer: $i")
+      .subscribeOn(NewThreadScheduler())
+      .subscribe(
+        { ev => threadsafeEventBus.onNext(ev) },
+        (e: Throwable) => { println("Event 2 producer exception: $e") }
+      )
+
+    val l = new CountDownLatch(1)
+    println("Event bus values:")
+    threadsafeEventBus.take(10).subscribe(
+      (ev) => { println(ev) },
+      (e: Throwable) => {
+        println(s"Event bus exception: $e")
+        l.countDown()
+      },
+      () => { l.countDown() }
+    )
+    
+    l.await(2, TimeUnit.SECONDS)
+    
+    event1ProducerSubscription.unsubscribe()
+    event2ProducerSubscription.unsubscribe()
   }
 }
