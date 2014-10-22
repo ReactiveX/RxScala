@@ -2,7 +2,7 @@ RxScala Release Notes
 =====================
 
 This release of the RxScala bindings builds on the previous 0.15 release to make the Rx bindings for Scala
-include all Rx types. In particular this release focuses on fleshing out the bindings for the `Subject` and `Scheduler`
+include all Rx types. In particular, this release focuses on fleshing out the bindings for the `Subject` and `Scheduler`
 types, as well as aligning the constructor functions for `Observable` with those in the RxJava.
 
 Expect to see ongoing additions to make the Scala binding match the equivalent underlying Java API,
@@ -27,13 +27,13 @@ object Observer {...}
 
 To create an instance of a specific `Observer`, say  `Observer[SensorEvent]` in user code, you can create a new instance
 of the `Observer` trait by implementing any of the methods that you care about:
+
 ```scala
-   val printObserver = new Observer[SensorEvent] {
-      override def onNext(value: SensorEvent): Unit = {...value.toString...}
-   }
+val printObserver = new Observer[SensorEvent] {
+  override def onNext(value: SensorEvent): Unit = {...value.toString...}
+}
 ```
- or you can use one of the overloads of the companion `Observer` object by passing in implementations of the `onNext`,
- `onError` or `onCompleted` methods.
+or you can use one of the overloads of the companion `Observer` object by passing in implementations of the `onNext`, `onError` or `onCompleted` methods.
 
 Note that typically you do not need to create an `Observer` since all of the methods that accept an `Observer[T]`
 (for instance `subscribe`) usually come with overloads that accept the individual methods
@@ -71,7 +71,7 @@ All factory methods now have their own name corresponding to the Java and .NET o
 * `def from[T](iterable: Iterable[T]): Observable[T]`,
 * `def error[T](exception: Throwable): Observable[T]`,
 * `def empty[T]: Observable[T]`,
-* `def items[T](items: T*): Observable[T],
+* `def items[T](items: T*): Observable[T]`,
 * Extension method on `toObservable: Observable[T]` on `List[T]`.
 
 In the *pre-release* of this version, we expose both `apply` and `create` for the mother of all creation functions.
@@ -151,7 +151,6 @@ The `Subscription` trait in Scala now has `isUnsubscribed` as a member, effectiv
 and `BooleanSubscription`, and the latter has been removed from the public surface. Pending a bug fix in RxJava,
 `SerialSubscription` implements its own `isUnsubscribed`.
 
-
 ```scala
 trait Subscription {
   def unsubscribe(): Unit = { ... }
@@ -159,17 +158,16 @@ trait Subscription {
 }
 
 object Subscription {...}
- ```
+```
 
- To create a `Subscription` use one of the following factory methods:
+To create a `Subscription` use one of the following factory methods:
 
- * `Subscription{...}`, `Subscription()`,
- * `CompositeSubscription(subscriptions)`,
- * `MultipleAssignmentSubscription()`,
- * `SerialSubscription()`.
+* `Subscription{...}`, `Subscription()`,
+* `CompositeSubscription(subscriptions)`,
+* `MultipleAssignmentSubscription()`,
+* `SerialSubscription()`.
 
- In case you do feel tempted to call `new Subscription{...}` directly make sure you wire up `isUnsubscribed`
- and `unsubscribe()` properly, but for all practical purposes you should just use one of the factory methods.
+In case you do feel tempted to call `new Subscription{...}` directly make sure you wire up `isUnsubscribed` and `unsubscribe()` properly, but for all practical purposes you should just use one of the factory methods.
 
 Notifications
 -------------
