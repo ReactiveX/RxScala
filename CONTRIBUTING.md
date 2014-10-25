@@ -1,4 +1,4 @@
-# Contributing to RxJava
+# Contributing to RxScala
 
 If you would like to contribute code you can do so through GitHub by forking the repository and sending a pull request (on a branch other than `master` or `gh-pages`).
 

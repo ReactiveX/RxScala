@@ -35,13 +35,13 @@ is the same as `rx.Observable<T>`. Because `rx.lang.scala.Observable[T]` is an o
 the Scala programmer only sees the Scala-friendly operators.
 
 However, in the current the illusion of interop is quickly lost when going beyond this simple example.
-For example but type `Notification[T]` and `Scheduler[T]` are defined using wrappers,
-and hence they are not compatible with `Notification<T>` respectively `Scheduler<T>`.
-For instance, when materializing an `Observable[T]` in Scala to an `Observable[Notification[T]]`,
+For example, the types `Notification[T]` and `Scheduler[T]` are defined using wrappers,
+and hence they are not compatible with `Notification<T>` and `Scheduler<T>`, respectively.
+When materializing an `Observable[T]` in Scala to an `Observable[Notification[T]]`,
 we lost the seamless interop with `Observable<Notification<T>>` on the Java side.
 
-However, the real problems with seamless interop show up when we try to creating bindings for other Rx types.
-In particular types that have inheritance or more structure.
+However, the real problems with seamless interop show up when we try to create bindings for other Rx types.
+In particular, types that have inheritance or more structure.
 
 For example, RxScala currently defines a type synonym `type Observer[-T] = rx.Observer[_ >: T]`,
 but no further bindings for observers.
@@ -80,7 +80,7 @@ implicit final def asObserver[T](subject: AsyncSubject[T]): Observer[T] =
   subject.inner
 ```
 The inheritance problem is not just limited to subjects, but also surfaces for subscriptions.
-Rx scala currently defines `type Subscription = rx.Subscription` using a type synonym as well,
+RxScala currently defines `type Subscription = rx.Subscription` using a type synonym as well,
 and we run into exactly the same problems as with subjects when we try to bind the
 various Rx subscriptions `BooleanSubscription`, `SerialSubscription`,  etc.
 
@@ -140,5 +140,5 @@ The obvious thought is that using delegation instead of inheritance (http://c2.c
 will lead to excessive wrapping, since all Scala types wrap and delegate to an underlying RxJava implementation.
 Note however, that the wrapping happens at query generation time and incurs no overhead when messages are flowing
 through the pipeline. Say we have a query `xs.map(f).filter(p).subscribe(o)`. Even though the Scala types are wrappers,
-the callback that is registered with xs is something like `x => { val y = f(x); if(p(y)){ o.asJavaObserver.onNext(y) }}`
+the callback that is registered with `xs` is something like `x => { val y = f(x); if(p(y)){ o.asJavaObserver.onNext(y) }}`
 and hence there is no additional runtime penalty.

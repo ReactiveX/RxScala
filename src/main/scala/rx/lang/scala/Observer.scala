@@ -22,7 +22,7 @@ import scala.language.higherKinds
 *
 * After an Observer calls an [[rx.lang.scala.Observable]]'s `subscribe` method, the Observable
 * calls the Observer's `onNext` method to provide notifications. A well-behaved Observable will
-* call an Observer's `onCompleted` method exactly once or the Observer's `onError` method exactly once.
+* call an Observer's `onCompleted` or `onError` methods exactly once.
 */
 trait Observer[-T] {
 

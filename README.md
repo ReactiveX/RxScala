@@ -87,26 +87,28 @@ As of 1.0.0 semantic versioning will be used.
 
 RxScala: 
 
-- The API documentation can be found [here](http://rxscala.github.io/scaladoc/index.html#rx.lang.scala.Observable). 
+- The API documentation can be found [here](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable). 
 
 Note that starting from version 0.15, `rx.lang.scala.Observable` is not a value class any more.  [./Rationale.md](https://github.com/Netflix/RxJava/blob/master/language-adaptors/rxjava-scala/Rationale.md) explains why.
 
-You can build the API documentation yourself by running `./gradlew scaladoc` in the RxJava root directory.
-
-Then navigate to `RxJava/language-adaptors/rxjava-scala/build/docs/scaladoc/index.html` to display it.
+You can build the API documentation yourself by running `sbt doc` in the RxScala root directory. Open `target/scala-2.11/api/index.html` to display it.
 
 RxJava:
 
 - [Wiki](https://github.com/ReactiveX/RxJava/wiki)
 - [Javadoc](http://reactivex.io/RxJava/javadoc/)
 
-
-
 ## Binaries
 
 Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22rxjava-scala%22).
 
-Example for Maven:
+Example for sbt/activator:
+
+```scala
+libraryDependencies += "io.reactivex" %% "rxscala" % "x.y.z"
+```
+
+and for Maven:
 
 ```xml
 <dependency>
@@ -122,23 +124,17 @@ and for Ivy:
 <dependency org="io.reactivex" name="rxscala_${scala.compat.version}" rev="x.y.z" />
 ```
 
-and for sbt:
-
-```scala
-libraryDependencies ++= Seq(
-  "io.reactivex" %% "rxscala" % "x.y.z"
-)
-```
-
 ## Build
 
-To build (you need [sbt](http://scala-sbt.org)):
+To build you need [sbt](http://scala-sbt.org):
 
 ```
 $ git clone git@github.com:ReactiveX/RxScala.git
-$ cd RxScala/
-$ sbt package
+$ cd RxScala
+$ TRAVIS_TAG=1.0.0-RC1 sbt package
 ```
+
+Use `TRAVIS_TAG` to set the version of the package.
 
 You can also run the examples from within `sbt`:
 
@@ -146,10 +142,23 @@ You can also run the examples from within `sbt`:
 $ sbt examples/run
 ```
 
+When you see the list of available `App` objects pick the one you want to execute.
+
+```
+Multiple main classes detected, select one to run:
+
+ [1] AsyncWikiErrorHandling
+ [2] SyncObservable
+ [3] AsyncObservable
+ [4] AsyncWiki
+ [5] Transforming
+
+Enter number:
+```
+
 ## Bugs and Feedback
 
 For bugs, questions and discussions please use the [Github Issues](https://github.com/ReactiveX/RxScala/issues).
-
 
 ## LICENSE
 
