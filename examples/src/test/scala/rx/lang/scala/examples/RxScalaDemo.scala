@@ -1217,21 +1217,6 @@ class RxScalaDemo extends JUnitSuite {
     }
   }
 
-  @Test def multicastExample1(): Unit = {
-    val unshared = Observable.from(1 to 4)
-    val shared = unshared.multicast(Subject[Int]())
-    shared.subscribe(n => println(s"subscriber 1 gets $n"))
-    shared.subscribe(n => println(s"subscriber 2 gets $n"))
-    shared.connect
-  }
-
-  @Test def multicastExample2(): Unit = {
-    val unshared = Observable.from(1 to 4)
-    val shared = unshared.multicast(() => Subject[Int]())(o => o.map("No. " + _))
-    shared.subscribe(n => println(s"subscriber 1 gets $n"))
-    shared.subscribe(n => println(s"subscriber 2 gets $n"))
-  }
-
   @Test def startWithExample(): Unit = {
     val o1 = List(3, 4).toObservable
     val o2 = 1 +: 2 +: o1
