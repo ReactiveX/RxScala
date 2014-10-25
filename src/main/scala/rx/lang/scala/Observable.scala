@@ -219,38 +219,6 @@ trait Observable[+T]
   }
 
   /**
-   * Returns a [[rx.lang.scala.observables.ConnectableObservable]] that upon calling the `connect` function causes the source Observable to
-   * push results into the specified subject.
-   *
-   * @param subject
-   *            the `rx.lang.scala.subjects.Subject` to push source items into. Note: this is a by-name parameter.
-   * @return a [[rx.lang.scala.observables.ConnectableObservable]] such that when the `connect` function
-   *         is called, the Observable starts to push results into the specified Subject
-   */
-  def multicast[R >: T](subject: => rx.lang.scala.Subject[R]): ConnectableObservable[R] = {
-    val f = new rx.functions.Func0[rx.subjects.Subject[_ >: R, _ <: R]]() {
-      override def call(): rx.subjects.Subject[_ >: R, _ <: R] = subject.asJavaSubject
-    }
-    val thisJava: rx.Observable[_ <: R] = asJavaObservable
-    new ConnectableObservable[R](thisJava.multicast[R](f))
-  }
-
-  /**
-   * Returns an Observable that emits items produced by multicasting the source Observable within a selector function.
-   *
-   * @param subjectFactory the `Subject` factory
-   * @param selector the selector function, which can use the multicasted source Observable subject to the policies
-   *                 enforced by the created `Subject`
-   * @return an Observable that emits the items produced by multicasting the source Observable within a selector function
-   */
-  def multicast[R >: T, U](subjectFactory: () => rx.lang.scala.Subject[R])(selector: Observable[R] => Observable[U]): Observable[U] = {
-    val subjectFactoryJava: Func0[rx.subjects.Subject[_ >: T, _ <: R]] = () => subjectFactory().asJavaSubject
-    val selectorJava: Func1[rx.Observable[R], rx.Observable[U]] =
-      (jo: rx.Observable[R]) => selector(toScalaObservable[R](jo)).asJavaObservable.asInstanceOf[rx.Observable[U]]
-    toScalaObservable[U](asJavaObservable.multicast[R, U](subjectFactoryJava, selectorJava))
-  }
-
-  /**
    * Returns an Observable that first emits the items emitted by `this`, and then `elem`.
    *
    * @param elem the item to be appended
