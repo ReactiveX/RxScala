@@ -80,7 +80,7 @@ class CompletenessTest extends JUnitSuite {
       "buffer(Observable[_ <: TOpening], Func1[_ >: TOpening, _ <: Observable[_ <: TClosing]])" -> "slidingBuffer(Observable[Opening])(Opening => Observable[Any])",
       "cast(Class[R])" -> "[RxJava needs this one because `rx.Observable` is invariant. `Observable` in RxScala is covariant and does not need this operator.]",
       "collect(R, Action2[R, _ >: T])" -> "foldLeft(R)((R, T) => R)",
-      "compose(Transformer[_ >: T, _ <: R])" -> "compose(Observable[T] => Observable[R])",
+      "compose(Transformer[_ >: T, _ <: R])" -> "[use extension methods instead]",
       "concatWith(Observable[_ <: T])" -> "[use `o1 ++ o2`]",
       "contains(Any)" -> "contains(U)",
       "count()" -> "length",

@@ -4287,27 +4287,6 @@ trait Observable[+T]
   }
 
   /**
-   * Transform an Observable by applying a particular Transformer function to it.
-   *
-   * This method operates on the Observable itself whereas [[Observable.lift]] operates on the Observable's
-   * Subscribers or Observers.
-   *
-   * If the operator you are creating is designed to act on the individual items emitted by a source
-   * Observable, use [[Observable.lift]]. If your operator is designed to transform the source Observable as a whole
-   * (for instance, by applying a particular set of existing RxJava operators to it) use `compose`.
-   *
-   * ===Scheduler:===
-   * `compose` does not operate by default on a particular [[Scheduler]].
-   *
-   * @param transformer implements the function that transforms the source Observable
-   * @return the source Observable, transformed by the transformer function
-   * @see <a href="https://github.com/Netflix/RxJava/wiki/Implementing-Your-Own-Operators">RxJava wiki: Implementing Your Own Operators</a>
-   */
-  def compose[R](transformer: Observable[T] => Observable[R]): Observable[R] = {
-    toScalaObservable[R](asJavaObservable.compose(toJavaTransformer(transformer)))
-  }
-
-  /**
    * Instructs an Observable that is emitting items faster than its observer can consume them to buffer these
    * items indefinitely until they can be emitted.
    *
