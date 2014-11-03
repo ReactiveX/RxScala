@@ -1638,20 +1638,6 @@ trait Observable[+T]
     new ConnectableObservable[T](asJavaObservable.publish())
   }
 
-
-  /**
-   * Returns a ConnectableObservable that emits `initialValue` followed by the items emitted by `this` Observable.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishConnect.i.png">
-   *
-   * @param initialValue the initial value to be emitted by the resulting ConnectableObservable
-   * @return a `ConnectableObservable` that shares a single subscription to the underlying Observable and starts with `initialValue`
-   */
-  def publish[T](initialValue: T): ConnectableObservable[T] = {
-    val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    new ConnectableObservable[T](thisJava.publish(initialValue))
-  }
-
   /**
    * Returns an Observable that emits the results of invoking a specified selector on items emitted by a `ConnectableObservable`
    * that shares a single subscription to the underlying sequence.
@@ -1669,61 +1655,6 @@ trait Observable[+T]
     val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
       (jo: rx.Observable[T]) => selector(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
     toScalaObservable[R](thisJava.publish(fJava))
-  }
-
-  /**
-   * Returns an Observable that emits `initialValue` followed by the results of invoking a specified
-   * selector on items emitted by a `ConnectableObservable` that shares a single subscription to the
-   * source Observable.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishConnect.if.png">
-   *
-   * @param selector a function that can use the multicasted source sequence as many times as needed, without
-   *                 causing multiple subscriptions to the source Observable. Subscribers to the source will
-   *                 receive all notifications of the source from the time of the subscription forward
-   * @param initialValue  the initial value of the underlying `BehaviorSubject`
-   * @return an Observable that emits `initialValue` followed by the results of invoking the selector
-   *         on a `ConnectableObservable` that shares a single subscription to the underlying Observable
-   */
-  def publish[R](selector: Observable[T] => Observable[R], initialValue: T @uncheckedVariance): Observable[R] = {
-    val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val fJava: Func1[rx.Observable[T], rx.Observable[R]] =
-      (jo: rx.Observable[T]) => selector(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    toScalaObservable[R](thisJava.publish(fJava, initialValue))
-  }
-
-  /**
-   * Returns a [[ConnectableObservable]] that emits only the last item emitted by the source Observable.
-   * A [[ConnectableObservable]] resembles an ordinary Observable, except that it does not begin emitting items
-   * when it is subscribed to, but only when its `connect` method is called.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishLast.png">
-   *
-   * @return a [[ConnectableObservable]] that emits only the last item emitted by the source Observable
-   */
-  def publishLast: ConnectableObservable[T] = {
-    new ConnectableObservable[T](asJavaObservable.publishLast())
-  }
-
-  /**
-   * Returns an Observable that emits an item that results from invoking a specified selector on the last item
-   * emitted by a [[ConnectableObservable]] that shares a single subscription to the source Observable.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishLast.f.png">
-   *
-   * @param selector a function that can use the multicasted source sequence as many times as needed, without
-   *                 causing multiple subscriptions to the source Observable. Subscribers to the source will only
-   *                 receive the last item emitted by the source.
-   * @return an Observable that emits an item that is the result of invoking the selector on a [[ConnectableObservable]]
-   *         that shares a single subscription to the source Observable
-   */
-  def publishLast[R](selector: Observable[T] => Observable[R]): Observable[R] = {
-    val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val fJava = new rx.functions.Func1[rx.Observable[T], rx.Observable[R]]() {
-      override def call(jo: rx.Observable[T]): rx.Observable[R] =
-        selector(toScalaObservable[T](jo)).asJavaObservable.asInstanceOf[rx.Observable[R]]
-    }
-    toScalaObservable[R](thisJava.publishLast(fJava))
   }
 
   // TODO add Scala-like aggregate function

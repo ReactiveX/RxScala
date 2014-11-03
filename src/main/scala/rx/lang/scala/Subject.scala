@@ -27,6 +27,12 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   override def onNext(value: T): Unit = { asJavaObserver.onNext(value)}
   override def onError(error: Throwable): Unit = { asJavaObserver.onError(error)  }
   override def onCompleted() { asJavaObserver.onCompleted() }
+
+  /**
+   * Indicates whether the [[Subject]] has [[Observer]]s subscribed to it.
+   * @return `true` if there is at least one [[Observer]] subscribed to this [[Subject]], `false` otherwise
+   */
+  def hasObservers: Boolean = asJavaSubject.hasObservers()
 }
 
 /**
