@@ -4,7 +4,11 @@ name := "rxscala"
 
 lazy val root = project in file(".")
 
-lazy val examples = project in file("examples") dependsOn (root % "test->test;compile->compile")
+lazy val examples = project in file("examples") dependsOn (root % "test->test;compile->compile") settings(
+  libraryDependencies ++= Seq(
+    "org.apache.bcel" % "bcel" % "5.2" % "test"
+  )
+)
 
 scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
