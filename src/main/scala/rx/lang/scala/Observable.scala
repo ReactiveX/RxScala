@@ -568,9 +568,9 @@ trait Observable[+T]
    *         a fixed timespan has elapsed.
    */
   def slidingBuffer(timespan: Duration, timeshift: Duration): Observable[Seq[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
+    val span: Long = timespan.toNanos
+    val shift: Long = timespan.toNanos
+    val unit: TimeUnit = duration.NANOSECONDS
     val oJava: rx.Observable[_ <: java.util.List[_]] = asJavaObservable.buffer(span, shift, unit)
     Observable.jObsOfListToScObsOfSeq(oJava.asInstanceOf[rx.Observable[_ <: java.util.List[T]]])
   }
@@ -592,9 +592,9 @@ trait Observable[+T]
    *         a fixed timespan has elapsed.
    */
   def slidingBuffer(timespan: Duration, timeshift: Duration, scheduler: Scheduler): Observable[Seq[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
+    val span: Long = timespan.toNanos
+    val shift: Long = timespan.toNanos
+    val unit: TimeUnit = duration.NANOSECONDS
     val oJava: rx.Observable[_ <: java.util.List[_]] = asJavaObservable.buffer(span, shift, unit, scheduler)
     Observable.jObsOfListToScObsOfSeq(oJava.asInstanceOf[rx.Observable[_ <: java.util.List[T]]])
   }
@@ -807,9 +807,9 @@ trait Observable[+T]
    *         a fixed timespan has elapsed.
    */
   def sliding(timespan: Duration, timeshift: Duration): Observable[Observable[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
+    val span: Long = timespan.toNanos
+    val shift: Long = timespan.toNanos
+    val unit: TimeUnit = duration.NANOSECONDS
     Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(span, shift, unit))
       : Observable[Observable[T]] // SI-7818
   }
@@ -831,9 +831,9 @@ trait Observable[+T]
    *         a fixed timespan has elapsed.
    */
   def sliding(timespan: Duration, timeshift: Duration, scheduler: Scheduler): Observable[Observable[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
+    val span: Long = timespan.toNanos
+    val shift: Long = timespan.toNanos
+    val unit: TimeUnit = duration.NANOSECONDS
     Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(span, shift, unit, scheduler))
       : Observable[Observable[T]] // SI-7818
   }
@@ -863,9 +863,9 @@ trait Observable[+T]
    * @see <a href="http://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.window.aspx">MSDN: Observable.Window</a>
    */
   def sliding(timespan: Duration, timeshift: Duration, count: Int, scheduler: Scheduler): Observable[Observable[T]] = {
-    val span: Long = timespan.length
-    val shift: Long = timespan.unit.convert(timeshift.length, timeshift.unit)
-    val unit: TimeUnit = timespan.unit
+    val span: Long = timespan.toNanos
+    val shift: Long = timespan.toNanos
+    val unit: TimeUnit = duration.NANOSECONDS
     Observable.jObsOfJObsToScObsOfScObs(asJavaObservable.window(span, shift, unit, count, scheduler))
       : Observable[Observable[T]] // SI-7818
   }
