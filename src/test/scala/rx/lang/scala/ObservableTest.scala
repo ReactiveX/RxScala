@@ -17,11 +17,11 @@ package rx.lang.scala
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{Promise, Future, Await}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.junit.Assert._
-import org.junit.{ Ignore, Test }
+import org.junit.{Ignore, Test}
 import org.scalatest.junit.JUnitSuite
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -123,6 +123,41 @@ class ObservableTests extends JUnitSuite {
     val res = Await.result(f, Duration.Inf)
     assertEquals(6, res)
     assertEquals(6, o.toBlocking.single)
+  }
+
+  @Test def futureErrorReSubscription() {
+    val aValue = 77
+
+    var callCount = 0
+    val observable = Observable.from({
+      callCount += 1
+      if (callCount == 1) {
+        Promise.failed(new NullPointerException).future
+      } else {
+        Promise.successful(aValue).future
+      }
+    })
+
+    assertEquals(observable.retry(2).toBlocking.single, aValue)
+    assertEquals(callCount, 2)
+  }
+
+  @Test def futureValueReSubscription() {
+    val aValue = 77
+    val anotherValue = 42
+
+    var callCount = 0
+    val observable = Observable.from({
+      callCount += 1
+      if (callCount == 1) {
+        Promise.successful(anotherValue).future
+      } else {
+        Promise.successful(aValue).future
+      }
+    })
+
+    assertEquals(observable.repeat(2).toBlocking.toList, List(anotherValue, aValue))
+    assertEquals(callCount, 2)
   }
 
   @Test def testJoin() {
