@@ -60,7 +60,7 @@ def never: Observable[Nothing]
 
 Also, the Scala Observable is fully covariant in its type parameter, whereas the Java Observable only achieves partial covariance due to limitations of Java's type system (or if you can fix this, your suggestions are very welcome).
 
-For more examples, see [RxScalaDemo.scala](https://github.com/ReactiveX/RxScala/blob/0.x/src/examples/scala/rx/lang/scala/examples/RxScalaDemo.scala).
+For more examples, see [RxScalaDemo.scala](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/rx/lang/scala/examples/RxScalaDemo.scala).
 
 Scala code using Rx should only import members from `rx.lang.scala` and below.
 
