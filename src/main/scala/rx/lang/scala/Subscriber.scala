@@ -1,16 +1,40 @@
 package rx.lang.scala
 
-trait Subscriber[-T] extends Observer[T] with Subscription {
+abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] with Subscription {
 
   self =>
 
-  private [scala] val asJavaSubscriber: rx.Subscriber[_ >: T] = new rx.Subscriber[T] with SubscriberAdapter[T] {
-    override def onStart(): Unit = self.onStart()
-    override def onNext(value: T): Unit = self.onNext(value)
-    override def onError(error: Throwable): Unit = self.onError(error)
-    override def onCompleted(): Unit = self.onCompleted()
-    override def requestMore(n: Long): Unit = request(n)
+  def this() {
+      this(null)
   }
+
+  private[scala] val asJavaSubscriber: rx.Subscriber[_ >: T] =
+    if (subscriber == null) {
+      new rx.Subscriber[T] with SubscriberAdapter[T] {
+        override def onStart(): Unit = self.onStart()
+
+        override def onNext(value: T): Unit = self.onNext(value)
+
+        override def onError(error: Throwable): Unit = self.onError(error)
+
+        override def onCompleted(): Unit = self.onCompleted()
+
+        override def requestMore(n: Long): Unit = request(n)
+      }
+    }
+    else {
+      new rx.Subscriber[T](subscriber.asJavaSubscriber) with SubscriberAdapter[T] {
+        override def onStart(): Unit = self.onStart()
+
+        override def onNext(value: T): Unit = self.onNext(value)
+
+        override def onError(error: Throwable): Unit = self.onError(error)
+
+        override def onCompleted(): Unit = self.onCompleted()
+
+        override def requestMore(n: Long): Unit = request(n)
+      }
+    }
 
   private [scala] override val asJavaObserver: rx.Observer[_ >: T] = asJavaSubscriber
   private [scala] override val asJavaSubscription: rx.Subscription = asJavaSubscriber
@@ -74,26 +98,24 @@ object Subscriber extends ObserverFactoryMethods[Subscriber] {
 
   def apply[T](onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Subscriber[T] = {
     val n = onNext; val e = onError; val c = onCompleted
-    // Java calls XXX; Scala receives XXX.
-    Subscriber(new rx.Subscriber[T] {
+    new Subscriber[T] {
       override def onNext(value: T): Unit = n(value)
       override def onError(error: Throwable): Unit = e(error)
       override def onCompleted(): Unit = c()
-    })
+    }
   }
 
   def apply[T](subscriber: Subscriber[_], onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Subscriber[T] = {
     val n = onNext; val e = onError; val c = onCompleted
-    // Java calls XXX; Scala receives XXX.
-    Subscriber(new rx.Subscriber[T](subscriber.asJavaSubscriber) {
+    new Subscriber[T](subscriber) {
       override def onNext(value: T): Unit = n(value)
       override def onError(error: Throwable): Unit = e(error)
       override def onCompleted(): Unit = c()
-    })
+    }
   }
 }
 
-sealed trait SubscriberAdapter[T] extends rx.Subscriber[T] {
+private[scala] sealed trait SubscriberAdapter[T] extends rx.Subscriber[T] {
   // Add a method to expose the protected `request` method
   def requestMore(n: Long): Unit
 }
