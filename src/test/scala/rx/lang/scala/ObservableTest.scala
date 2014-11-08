@@ -364,4 +364,23 @@ class ObservableTests extends JUnitSuite {
     assertEquals(false, Observable.empty.nonEmpty.toBlocking.single)
     assertEquals(true, Observable.just(1, 2, 3).nonEmpty.toBlocking.single)
   }
+
+  @Test
+  def testTailWithBackpressure() {
+    val result = mutable.ListBuffer[Int]()
+    var completed = false
+    var error = false
+    Observable.just(1, 2).tail.subscribe(new Subscriber[Int] {
+      override def onStart(): Unit = request(1)
+      override def onNext(v: Int): Unit = {
+        result += v
+        request(1)
+      }
+      override def onError(e: Throwable): Unit = error = true
+      override def onCompleted(): Unit = completed = true
+    })
+    assertEquals(List(2), result)
+    assertTrue(completed)
+    assertFalse(error)
+  }
 }

@@ -2856,13 +2856,29 @@ trait Observable[+T]
   def tail: Observable[T] = {
     lift {
       (subscriber: Subscriber[T]) => {
-        var isFirst = true
-        Subscriber[T](
-          subscriber,
-          (v: T) => if(isFirst) isFirst = false else subscriber.onNext(v),
-          e => subscriber.onError(e),
-          () => if(isFirst) subscriber.onError(new UnsupportedOperationException("tail of empty Observable")) else subscriber.onCompleted
-        )
+        new Subscriber[T](subscriber) {
+          var isFirst = true
+
+          override def onNext(v: T): Unit = {
+            if (isFirst) {
+              isFirst = false
+              request(1)
+            }
+            else {
+              subscriber.onNext(v)
+            }
+          }
+
+          override def onError(e: Throwable): Unit = subscriber.onError(e)
+
+          override def onCompleted(): Unit = {
+            if (isFirst) {
+              subscriber.onError(new UnsupportedOperationException("tail of empty Observable"))
+            } else {
+              subscriber.onCompleted
+            }
+          }
+        }
       }
     }
   }
