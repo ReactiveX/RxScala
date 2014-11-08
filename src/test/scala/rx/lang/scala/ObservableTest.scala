@@ -383,4 +383,49 @@ class ObservableTests extends JUnitSuite {
     assertTrue(completed)
     assertFalse(error)
   }
+
+  @Test
+  def testToListWithBackpressure() {
+    var result: List[Int] = null
+    var completed = false
+    var error = false
+    Observable.just(1, 2).toList.subscribe(new Subscriber[List[Int]] {
+      override def onStart(): Unit = request(1)
+
+      override def onNext(v: List[Int]): Unit = {
+        result = v
+        request(1)
+      }
+
+      override def onError(e: Throwable): Unit = error = true
+
+      override def onCompleted(): Unit = completed = true
+    })
+    assertEquals(List(1, 2), result)
+    assertTrue(completed)
+    assertFalse(error)
+  }
+
+  @Test
+  def testToMultimapWithBackpressure() {
+    var result: scala.collection.Map[Int, scala.collection.Seq[Int]] = null
+    var completed = false
+    var error = false
+    Observable.just(1, 2, 3, 4).toMultimap(_ % 2).subscribe(new Subscriber[scala.collection.Map[Int, scala.collection.Seq[Int]]] {
+      override def onStart(): Unit = request(1)
+
+      override def onNext(v: scala.collection.Map[Int, scala.collection.Seq[Int]]): Unit = {
+        result = v
+        request(1)
+      }
+
+      override def onError(e: Throwable): Unit = error = true
+
+      override def onCompleted(): Unit = completed = true
+    })
+    assertEquals(Map((1, Seq(1, 3)), (0, Seq(2, 4))), result)
+    assertTrue(completed)
+    assertFalse(error)
+  }
+
 }
