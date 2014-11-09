@@ -1673,15 +1673,18 @@ trait Observable[+T]
    * has an `inject` method that does a similar operation on lists.
    *
    * @param initialValue
-   *            the initial (seed) accumulator value
+   *            the initial (seed) accumulator value. Note: this is a by-name parameter.
    * @param accumulator
    *            an accumulator function to be invoked on each item emitted by the source
    *            Observable, the result of which will be used in the next accumulator call
    * @return an Observable that emits a single item that is the result of accumulating the output
    *         from the items emitted by the source Observable
    */
-  def foldLeft[R](initialValue: R)(accumulator: (R, T) => R): Observable[R] = {
-    toScalaObservable[R](asJavaObservable.reduce(initialValue, new Func2[R,T,R]{
+  def foldLeft[R](initialValue: => R)(accumulator: (R, T) => R): Observable[R] = {
+    val func = new rx.functions.Func0[R] {
+      override def call(): R = initialValue
+    }
+    toScalaObservable[R](asJavaObservable.reduce(func, new Func2[R,T,R]{
       def call(t1: R, t2: T): R = accumulator(t1,t2)
     }))
   }
@@ -1745,15 +1748,18 @@ trait Observable[+T]
    * that seed as its first emitted item.
    *
    * @param initialValue
-   *            the initial (seed) accumulator value
+   *            the initial (seed) accumulator value. Note: this is a by-name parameter.
    * @param accumulator
    *            an accumulator function to be invoked on each item emitted by the source
    *            Observable, whose result will be emitted to [[rx.lang.scala.Observer]]s via
    *            [[rx.lang.scala.Observer.onNext onNext]] and used in the next accumulator call.
    * @return an Observable that emits the results of each call to the accumulator function
    */
-  def scan[R](initialValue: R)(accumulator: (R, T) => R): Observable[R] = {
-    toScalaObservable[R](asJavaObservable.scan(initialValue, new Func2[R,T,R]{
+  def scan[R](initialValue: => R)(accumulator: (R, T) => R): Observable[R] = {
+    val func = new rx.functions.Func0[R] {
+      override def call(): R = initialValue
+    }
+    toScalaObservable[R](asJavaObservable.scan(func, new Func2[R,T,R]{
       def call(t1: R, t2: T): R = accumulator(t1,t2)
     }))
   }

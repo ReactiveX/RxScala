@@ -15,6 +15,8 @@
  */
 package rx.lang.scala
 
+import rx.lang.scala.subjects.SerializedSubject
+
 /**
 * A Subject is an Observable and an Observer at the same time.
 */
@@ -33,6 +35,22 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @return `true` if there is at least one [[Observer]] subscribed to this [[Subject]], `false` otherwise
    */
   def hasObservers: Boolean = asJavaSubject.hasObservers()
+
+  /**
+   * Wraps a [[Subject]] so that it is safe to call its various `on` methods from different threads.
+   *
+   * When you use an ordinary [[Subject]] as a [[Subscriber]], you must take care not to call its
+   * `onNext` method (or its other `on` methods) from multiple threads, as this could
+   * lead to non-serialized calls, which violates the [[Observable]] contract and creates an ambiguity in the resulting Subject.
+   *
+   * To protect a [[Subject]] from this danger, you can convert it into a [[SerializedSubject]] with code
+   * like the following:
+   * {{{
+   *   mySafeSubject = myUnsafeSubject.toSerialized
+   * }}}
+   * @return [[SerializedSubject]] wrapping the current [[Subject]]
+   */
+  final def toSerialized: SerializedSubject[T] = SerializedSubject(this)
 }
 
 /**
