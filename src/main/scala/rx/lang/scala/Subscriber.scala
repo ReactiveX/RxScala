@@ -105,14 +105,6 @@ object Subscriber extends ObserverFactoryMethods[Subscriber] {
     }
   }
 
-  def apply[T](subscriber: Subscriber[_], onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Subscriber[T] = {
-    val n = onNext; val e = onError; val c = onCompleted
-    new Subscriber[T](subscriber) {
-      override def onNext(value: T): Unit = n(value)
-      override def onError(error: Throwable): Unit = e(error)
-      override def onCompleted(): Unit = c()
-    }
-  }
 }
 
 private[scala] sealed trait SubscriberAdapter[T] extends rx.Subscriber[T] {
