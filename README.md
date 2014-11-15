@@ -79,7 +79,8 @@ Since RxScala is part of the RxJava family the communication channels are simila
 
 ## Versioning
 
-RxScala 0.x is based on RxJava 0.x. RxScala 1.0 will be released when RxJava 1.0 is released.
+Before 0.21, RxScala 0.x was based on RxJava 0.x.
+From 0.21, RxScala is based on RxJava 1.0.
 
 As of 1.0.0 semantic versioning will be used.
 
@@ -100,7 +101,7 @@ RxJava:
 
 ## Binaries
 
-Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22rxjava-scala%22).
+Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22).
 
 Example for sbt/activator:
 
