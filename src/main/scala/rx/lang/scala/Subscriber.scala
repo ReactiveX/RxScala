@@ -115,7 +115,7 @@ abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] wit
     // do nothing by default
   }
 
-  protected final def request(n: Long): Unit = {
+  protected[this] final def request(n: Long): Unit = {
     asJavaSubscriber match {
       case s: SubscriberAdapter[T] => s.requestMore(n)
       case _ => throw new rx.exceptions.MissingBackpressureException()
@@ -142,6 +142,12 @@ object Subscriber extends ObserverFactoryMethods[Subscriber] {
     override def onNext(value: T): Unit = asJavaSubscriber.onNext(value)
     override def onError(error: Throwable): Unit = asJavaSubscriber.onError(error)
     override def onCompleted(): Unit = asJavaSubscriber.onCompleted()
+
+    // Calling the `request` method of this `Subscriber` will crash. Fortunately, the visibility of
+    // `Subscriber.request` is `protected[this]`, users can only call it in Subscriber or its
+    // subclasses. Therefore the `request` method of the Subscriber returned by `apply[T](subscriber: rx.Subscriber[T])`
+    // won't be called. In addition, `scala.Observable` will pass `subscriber.asJavaSubscriber`
+    // to `rx.Observable`, so if `rx.Subscriber` supports backpressure, it will still work.
   }
 
   def apply[T](onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Subscriber[T] = {
