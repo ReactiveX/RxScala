@@ -1,5 +1,41 @@
 package rx.lang.scala
 
+/**
+ * An extension of the `Observer` trait which adds subscription handling
+ * (`unsubscribe`, `isUnsubscribed`, and `add` methods) and backpressure handling
+ * (`onStart` and `request` methods).
+ * 
+ * Similarly to the RxJava Subscriber, this class has two constructors:
+ * 
+ * The first constructor takes as argument the child Subscriber from further down the pipeline
+ * and is usually only needed together with `lift`:
+ * 
+ * {{{
+ * myObservable.lift((subscriber: Subscriber[T]) => new Subscriber[T](subscriber) {
+ *   override def onStart(): Unit = ...
+ *   override def onNext(n: T): Unit = ...
+ *   override def onError(e: Throwable): Unit = ...
+ *   override def onCompleted(): Unit = ...
+ * })
+ * }}}
+ * 
+ * The second constructor takes no arguments and is typically used with the subscribe method:
+ * 
+ * {{{
+ * myObservable.subscribe(new Subscriber[T] {
+ *   override def onStart(): Unit = ...
+ *   override def onNext(n: T): Unit = ...
+ *   override def onError(e: Throwable): Unit = ...
+ *   override def onCompleted(): Unit = ...
+ * })
+ * }}}
+ * 
+ * Notice that these two constructors are not (as usually in Scala) in the companion object,
+ * because if they were, we couldn't create anonymous classes implementing
+ * `onStart`/`onNext`/`onError`/`onCompleted` as in the examples above.
+ * However, there are more constructors in the companion object, which allow you to construct
+ * Subscribers from given `onNext`/`onError`/`onCompleted` lambdas.
+ */
 abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] with Subscription {
 
   self =>
@@ -8,6 +44,18 @@ abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] wit
       this(null)
   }
 
+  // Implementation note:
+  // If the Subscriber() constructor was used, we have to call the rx.Subscriber() constructor 
+  // to construct the asJavaSubscriber, and if the Subscriber(Subscriber) constructor was used, we have
+  // to call the rx.Subscriber(rx.Subscriber) constructor.
+  // The obvious way to achieve this would be to have a primary constructor which takes an
+  // underlying rx.Subscriber, and add two secondary constructors, Subscriber() and Subscriber(Subscriber),
+  // which call the primary constructor with the right rx.Subscriber.
+  // But this does not work because a secondary constructor does not have access to self before it
+  // calls the primary constructor, and we need `self` to create the rx.Subscriber.
+  // So we have to construct the asJavaSubscriber in the primary constructor (=class body) of Subscriber,
+  // and we model the Subscriber() constructor as Subscriber(null).
+  // Notice that the apply(rx.Subscriber) constructor in the companion object will override this asJavaSubscriber.
   private[scala] val asJavaSubscriber: rx.Subscriber[_ >: T] =
     if (subscriber == null) {
       new rx.Subscriber[T] with SubscriberAdapter[T] {
