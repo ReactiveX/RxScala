@@ -2856,13 +2856,29 @@ trait Observable[+T]
   def tail: Observable[T] = {
     lift {
       (subscriber: Subscriber[T]) => {
-        var isFirst = true
-        Subscriber[T](
-          subscriber,
-          (v: T) => if(isFirst) isFirst = false else subscriber.onNext(v),
-          e => subscriber.onError(e),
-          () => if(isFirst) subscriber.onError(new UnsupportedOperationException("tail of empty Observable")) else subscriber.onCompleted
-        )
+        new Subscriber[T](subscriber) {
+          var isFirst = true
+
+          override def onNext(v: T): Unit = {
+            if (isFirst) {
+              isFirst = false
+              request(1)
+            }
+            else {
+              subscriber.onNext(v)
+            }
+          }
+
+          override def onError(e: Throwable): Unit = subscriber.onError(e)
+
+          override def onCompleted(): Unit = {
+            if (isFirst) {
+              subscriber.onError(new UnsupportedOperationException("tail of empty Observable"))
+            } else {
+              subscriber.onCompleted
+            }
+          }
+        }
       }
     }
   }
@@ -4009,10 +4025,12 @@ trait Observable[+T]
     // Choosing `mutable.Buffer/Map` is because `append/update` is necessary to implement an efficient `toMultimap`.
     lift {
       (subscriber: Subscriber[M]) => {
-        val map = mapFactory()
-        Subscriber[T](
-          subscriber,
-          (t: T) => {
+        new Subscriber[T](subscriber) {
+          val map = mapFactory()
+
+          override def onStart(): Unit = request(Long.MaxValue)
+
+          override def onNext(t: T): Unit = {
             val key = keySelector(t)
             val values = map.get(key) match {
               case Some(v) => v
@@ -4020,13 +4038,17 @@ trait Observable[+T]
             }
             values += valueSelector(t)
             map += key -> values: Unit
-          },
-          e => subscriber.onError(e),
-          () => {
+          }
+
+          override def onError(e: Throwable): Unit = {
+            subscriber.onError(e)
+          }
+
+          override def onCompleted(): Unit = {
             subscriber.onNext(map)
             subscriber.onCompleted()
           }
-        )
+        }
       }
     }
   }
@@ -4045,18 +4067,20 @@ trait Observable[+T]
   def to[Col[_]](implicit cbf: CanBuildFrom[Nothing, T, Col[T @uncheckedVariance]]): Observable[Col[T @uncheckedVariance]] = {
     lift {
       (subscriber: Subscriber[Col[T]]) => {
-        val b = cbf()
-        Subscriber[T](
-          subscriber,
-          (t: T) => {
-            b += t: Unit
-          },
-          e => subscriber.onError(e),
-          () => {
+        new Subscriber[T](subscriber) {
+          val b = cbf()
+
+          override def onStart(): Unit = request(Long.MaxValue)
+
+          override def onNext(t: T): Unit = b += t
+
+          override def onError(e: Throwable): Unit = subscriber.onError(e)
+
+          override def onCompleted(): Unit = {
             subscriber.onNext(b.result)
             subscriber.onCompleted()
           }
-        )
+        }
       }
     }
   }

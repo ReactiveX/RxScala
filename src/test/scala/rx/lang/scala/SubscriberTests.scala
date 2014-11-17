@@ -15,6 +15,8 @@
  */
 package rx.lang.scala
 
+import scala.collection.mutable
+
 import org.junit.Test
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -124,5 +126,60 @@ class SubscriberTests extends JUnitSuite {
     })
     assertEquals(List(1, 2, 3), items)
     assertTrue("Subscriber.onCompleted should be called", calledOnCompleted)
+  }
+
+  @Test def testApplyWithRxSubscriber(): Unit = {
+     val l = mutable.ListBuffer[Int]()
+     var completed = false
+
+    // A special rx.Subscriber to make sure backpressure works
+     val rxSubscriber = new rx.Subscriber[Int]() {
+       override def onStart() {
+         request(1)
+       }
+
+       override def onNext(v: Int) {
+         l += v
+         request(1)
+       }
+
+       override def onError(e: Throwable) {
+         e.printStackTrace()
+       }
+
+       override def onCompleted() {
+         completed = true
+       }
+     }
+
+    // A special Observable to make sure backpressure works
+    var requestOne = true
+    Observable {
+      (subscriber: Subscriber[Int]) => {
+        var count = 0
+        subscriber.setProducer(
+          n => {
+            if (count < 10) {
+              if (n != 1) {
+                requestOne = false
+                subscriber.onError(new AssertionError("backpressure does not work"))
+              }
+              else {
+                count += 1
+                subscriber.onNext(0)
+                if (count == 10) {
+                  subscriber.onCompleted()
+                }
+              }
+            }
+        })
+      }
+    }.subscribe(Subscriber(rxSubscriber))
+
+    assertTrue("backpressure does not work", requestOne)
+    assertTrue("onCompleted isn't called", completed)
+    assertTrue("onCompleted isn't called", completed)
+    val zeros = new Array[Int](10).toList
+    assertEquals(zeros, l)
   }
 }
