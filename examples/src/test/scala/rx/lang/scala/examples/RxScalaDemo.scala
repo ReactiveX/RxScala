@@ -756,15 +756,18 @@ class RxScalaDemo extends JUnitSuite {
   @Test def createExampleGood2() {
     import scala.io.{Codec, Source}
 
+    val rxscalaURL = "http://reactivex.io/rxscala/"
     val rxscala = Observable[String](subscriber => {
       try {
-        val input = new java.net.URL("http://rxscala.github.io/").openStream()
+        val input = new java.net.URL(rxscalaURL).openStream()
         subscriber.add(Subscription {
           input.close()
         })
-        Source.fromInputStream(input)(Codec.UTF8).getLines()
-          .takeWhile(_ => !subscriber.isUnsubscribed)
-          .foreach(subscriber.onNext(_))
+        val iter = Source.fromInputStream(input)(Codec.UTF8).getLines()
+        while(iter.hasNext && !subscriber.isUnsubscribed) {
+          val line = iter.next()
+          subscriber.onNext(line)
+        }
         if (!subscriber.isUnsubscribed) {
           subscriber.onCompleted()
         }
@@ -778,7 +781,7 @@ class RxScalaDemo extends JUnitSuite {
       .map(_.toLowerCase)
       .filter(_ == "rxscala")
       .size
-    println(s"RxScala appears ${count.toBlocking.single} times in http://rxscala.github.io/")
+    println(s"RxScala appears ${count.toBlocking.single} times in ${rxscalaURL}")
   }
 
   @Test def createExampleWithBackpressure() {
@@ -787,12 +790,11 @@ class RxScalaDemo extends JUnitSuite {
         var emitted = 0
         subscriber.setProducer(n => {
             val intN = if (n >= 10) 10 else n.toInt
-            (0 until intN)
-              .takeWhile(_ => emitted < 10 && !subscriber.isUnsubscribed)
-              .foreach {
-              i =>
-                emitted += 1
-                subscriber.onNext(s"item ${emitted}")
+            var i = 0
+            while(i < intN && emitted < 10 && !subscriber.isUnsubscribed) {
+              emitted += 1
+              subscriber.onNext(s"item ${emitted}")
+              i += 1
             }
             if (emitted == 10 && !subscriber.isUnsubscribed) {
               subscriber.onCompleted()
@@ -1513,8 +1515,14 @@ class RxScalaDemo extends JUnitSuite {
   def createFastObservable: Observable[Int] = {
     Observable {
       subscriber: Subscriber[Int] => {
-        (0 to 2000).takeWhile(_ => !subscriber.isUnsubscribed).foreach(subscriber.onNext(_))
-        subscriber.onCompleted()
+        var i = 0
+        while (i < 2000 && !subscriber.isUnsubscribed) {
+          subscriber.onNext(i)
+          i += 1
+        }
+        if (!subscriber.isUnsubscribed) {
+          subscriber.onCompleted()
+        }
       }
     }
   }
