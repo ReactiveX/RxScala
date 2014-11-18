@@ -29,15 +29,6 @@ trait Scheduler {
   private [scala] val asJavaScheduler: rx.Scheduler
 
   /**
-   * Parallelism available to a Scheduler.
-   *
-   * This defaults to `Runtime.getRuntime().availableProcessors()` but can be overridden for use cases such as scheduling work on a computer cluster.
-   *
-   * @return the scheduler's available degree of parallelism.
-   */
-  def parallelism: Int =  asJavaScheduler.parallelism()
-
-  /**
    * @return the scheduler's notion of current absolute time in milliseconds.
    */
   def now: Long = this.asJavaScheduler.now()
