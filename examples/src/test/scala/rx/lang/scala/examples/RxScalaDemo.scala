@@ -993,15 +993,6 @@ class RxScalaDemo extends JUnitSuite {
     println(m.toBlocking.single)
   }
 
-  @Test def toMapExample3(): Unit = {
-    val o : Observable[String] = List("alice", "bob", "carol").toObservable
-    val keySelector = (s: String) => s.head
-    val valueSelector = (s: String) => s.tail
-    val mapFactory = () => Map(('s',"tart"))
-    val m = o.toMap(keySelector, valueSelector, mapFactory)
-    println(m.toBlocking.single)
-  }
-
   @Test def toMultimapExample1(): Unit = {
     val o : Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
