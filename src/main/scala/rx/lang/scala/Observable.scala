@@ -3776,6 +3776,19 @@ trait Observable[+T]
   }
 
   /**
+   * Return an Observable that emits a single `Map` containing all pairs emitted by the source Observable.
+   * This method is unavailable unless the elements are members of `(K, V)`. Each `(K, V)` becomes a key-value
+   * pair in the map. If more than one pairs have the same key, the `Map` will contain the latest of
+   * those items.
+   *
+   * @return an Observable that emits a single item: an `Map` containing all pairs from the source Observable
+   */
+  def toMap[K, V](implicit ev: Observable[T] <:< Observable[(K, V)]): Observable[Map[K, V]] = {
+    val o: Observable[(K, V)] = this
+    o.toMap(_._1, _._2)
+  }
+
+  /**
    * Return an Observable that emits a single `Map` containing all items emitted by the source Observable,
    * mapped by the keys returned by a specified `keySelector` function.
    * <p>
