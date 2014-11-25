@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit
 import rx.lang.scala.subjects.SerializedSubject
 
 import scala.concurrent.Await
+import scala.collection.immutable.HashMap
 import scala.collection.mutable
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration.DurationInt
@@ -990,6 +991,22 @@ class RxScalaDemo extends JUnitSuite {
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
     val m = o.toMap(keySelector, valueSelector)
+    println(m.toBlocking.single)
+  }
+
+  @Test def toMapExample3(): Unit = {
+    val o : Observable[String] = List("alice", "bob", "carol").toObservable
+    val keySelector = (s: String) => s.head
+    val valueSelector = (s: String) => s.tail
+    val m: Observable[HashMap[Char, String]] = o.to(keySelector, valueSelector)
+    println(m.toBlocking.single)
+  }
+
+  @Test def toMapExample4(): Unit = {
+    val o : Observable[String] = List("alice", "bob", "carol").toObservable
+    val keySelector = (s: String) => s.head
+    val valueSelector = (s: String) => s.tail
+    val m = o.to[Char, String, HashMap](keySelector, valueSelector)
     println(m.toBlocking.single)
   }
 
