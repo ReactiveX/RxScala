@@ -443,25 +443,4 @@ class ObservableTests extends JUnitSuite {
     assertEquals(expectedMap3, m3.toBlocking.single)
   }
 
-  @Test
-  def testToMutableMap() {
-    val expectedMap1 = (0 to 100).map(i => (i % 2, i)).toMap
-    val m1 = (0 to 100).toObservable.toMutableMap(_ % 2)
-    assertEquals(expectedMap1, m1.toBlocking.single)
-
-    val expectedMap2 = (0 to 100).map(i => (i % 2, i * 100)).toMap
-    val m2 = (0 to 100).toObservable.toMutableMap(_ % 2, _ * 100)
-    assertEquals(expectedMap2, m2.toBlocking.single)
-  }
-
-  @Test
-  def testToTreeMap() {
-    val expectedMap1 = (0 to 100).map(i => (i % 2, i)).toMap
-    val m1 = (0 to 100).toObservable.toTreeMap(_ % 2)
-    assertEquals(expectedMap1, m1.toBlocking.single)
-
-    val expectedMap2 = (0 to 100).map(i => (i % 2, i * 100)).toMap
-    val m2 = (0 to 100).toObservable.toTreeMap(_ % 2, _ * 100)
-    assertEquals(expectedMap2, m2.toBlocking.single)
-  }
 }
