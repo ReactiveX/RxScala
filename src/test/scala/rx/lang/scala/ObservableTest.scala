@@ -231,43 +231,27 @@ class ObservableTests extends JUnitSuite {
   }
 
   @Test
-  def testToMultimap() {
-    val o = Observable.just("a", "b", "cc", "dd").toMultimap(_.length)
-    val expected = Map(1 -> List("a", "b"), 2 -> List("cc", "dd"))
+  def testToMultiMap() {
+    val o = Observable.just("a", "b", "cc", "dd").toMultiMap(_.length)
+    val expected = Map(1 -> Set("a", "b"), 2 -> Set("cc", "dd"))
     assertEquals(expected, o.toBlocking.single)
   }
 
   @Test
-  def testToMultimapWithValueSelector() {
-    val o = Observable.just("a", "b", "cc", "dd").toMultimap(_.length, s => s + s)
-    val expected = Map(1 -> List("aa", "bb"), 2 -> List("cccc", "dddd"))
+  def testToMultiMapWithValueSelector() {
+    val o = Observable.just("a", "b", "cc", "dd").toMultiMap(_.length, s => s + s)
+    val expected = Map(1 -> Set("aa", "bb"), 2 -> Set("cccc", "dddd"))
     assertEquals(expected, o.toBlocking.single)
   }
 
   @Test
-  def testToMultimapWithMapFactory() {
-    val m = mutable.Map[Int, mutable.Buffer[String]]()
-    val o = Observable.just("a", "b", "cc", "dd").toMultimap(_.length, s => s, () => m)
-    val expected = Map(1 -> List("a", "b"), 2 -> List("cc", "dd"))
+  def testToMultiMapWithMapFactory() {
+    val m = new mutable.LinkedHashMap[Int, mutable.Set[String]] with mutable.MultiMap[Int, String]
+    val o = Observable.just("a", "b", "cc", "dd").toMultiMap(_.length, s => s, () => m)
+    val expected = Map(1 -> Set("a", "b"), 2 -> Set("cc", "dd"))
     val r = o.toBlocking.single
-    // r should be the same instance created by the `mapFactory`
+    // r should be the same instance created by the `multiMapFactory`
     assertTrue(m eq r)
-    assertEquals(expected, r)
-  }
-
-  @Test
-  def testToMultimapWithBufferFactory() {
-    val m = mutable.Map[Int, mutable.Buffer[String]]()
-    val ls = List(mutable.Buffer[String](), mutable.Buffer[String]())
-    val o = Observable.just("a", "b", "cc", "dd").toMultimap(_.length, s => s, () => m, (i: Int) => ls(i - 1))
-    val expected = Map(1 -> List("a", "b"), 2 -> List("cc", "dd"))
-    val r = o.toBlocking.single
-    // r should be the same instance created by the `mapFactory`
-    assertTrue(m eq r)
-    // r(1) should be the same instance created by the first calling `bufferFactory`
-    assertTrue(ls(0) eq r(1))
-    // r(2) should be the same instance created by the second calling `bufferFactory`
-    assertTrue(ls(1) eq r(2))
     assertEquals(expected, r)
   }
 
@@ -408,13 +392,13 @@ class ObservableTests extends JUnitSuite {
 
   @Test
   def testToMultimapWithBackpressure() {
-    var result: scala.collection.Map[Int, scala.collection.Seq[Int]] = null
+    var result: mutable.MultiMap[Int, Int] = null
     var completed = false
     var error = false
-    Observable.just(1, 2, 3, 4).toMultimap(_ % 2).subscribe(new Subscriber[scala.collection.Map[Int, scala.collection.Seq[Int]]] {
+    Observable.just(1, 2, 3, 4).toMultiMap(_ % 2).subscribe(new Subscriber[mutable.MultiMap[Int, Int]] {
       override def onStart(): Unit = request(1)
 
-      override def onNext(v: scala.collection.Map[Int, scala.collection.Seq[Int]]): Unit = {
+      override def onNext(v: mutable.MultiMap[Int, Int]): Unit = {
         result = v
         request(1)
       }
@@ -423,7 +407,8 @@ class ObservableTests extends JUnitSuite {
 
       override def onCompleted(): Unit = completed = true
     })
-    assertEquals(Map((1, Seq(1, 3)), (0, Seq(2, 4))), result)
+    val expected = Map(0 -> Set(2, 4), 1 -> Set(1, 3))
+    assertEquals(expected, result)
     assertTrue(completed)
     assertFalse(error)
   }

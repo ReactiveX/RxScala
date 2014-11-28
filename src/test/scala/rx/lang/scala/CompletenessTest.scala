@@ -42,6 +42,8 @@ class CompletenessTest extends JUnitSuite {
   val fromFuture = "[TODO: Decide how Scala Futures should relate to Observables. Should there be a " +
      "common base interface for Future and Observable? And should Futures also have an unsubscribe method?]"
   val commentForTakeLastBuffer = "[use `takeRight(...).toSeq`]"
+  val commentForToMultimapWithCollectionFactory = "[`toMultiMap` in RxScala returns `mutable.MultiMap`. It's a" +
+    " `Map[A, mutable.Set[B]]`. You can override `def makeSet: Set[B]` to create a custom Set.]"
 
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
@@ -175,8 +177,10 @@ class CompletenessTest extends JUnitSuite {
       "timer(Long, Long, TimeUnit)" -> "timer(Duration, Duration)",
       "timer(Long, Long, TimeUnit, Scheduler)" -> "timer(Duration, Duration, Scheduler)",
       "toList()" -> "toSeq",
-      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultimap(T => K, T => V, () => M)",
-      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> "toMultimap(T => K, T => V, () => M, K => B)",
+      "toMultimap(Func1[_ >: T, _ <: K])" -> "toMultiMap(T => K)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V])" -> "toMultiMap(T => K, T => V)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultiMap(T => K, T => V, () => M)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> commentForToMultimapWithCollectionFactory,
       "toSortedList()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
       "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
       "window(Int)" -> "tumbling(Int)",
