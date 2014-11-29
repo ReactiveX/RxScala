@@ -1021,8 +1021,9 @@ class RxScalaDemo extends JUnitSuite {
     val o: Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val mapFactory = () => new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] addBinding('d', "oug")
-    val m = o.toMultiMap(keySelector, valueSelector, mapFactory)
+    val m = o.toMultiMap(keySelector, valueSelector, {
+      new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] addBinding('d', "oug")
+    })
     println(m.toBlocking.single.mapValues(_.toList))
   }
 
@@ -1030,10 +1031,11 @@ class RxScalaDemo extends JUnitSuite {
     val o : Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val mapFactory = () => new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] {
-      override def makeSet = new mutable.TreeSet[String]
-    }
-    val m = o.toMultiMap(keySelector, valueSelector, mapFactory)
+    val m = o.toMultiMap(keySelector, valueSelector, {
+      new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] {
+        override def makeSet = new mutable.TreeSet[String]
+      }
+    })
     println(m.toBlocking.single)
   }
 

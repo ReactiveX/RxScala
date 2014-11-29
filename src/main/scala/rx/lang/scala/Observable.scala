@@ -3987,7 +3987,7 @@ trait Observable[+T]
    *         the source Observable
    */
   def toMultiMap[K, V](keySelector: T => K, valueSelector: T => V): Observable[mutable.MultiMap[K, V]] = {
-    toMultiMap(keySelector, valueSelector, () => new mutable.HashMap[K, mutable.Set[V]] with mutable.MultiMap[K, V])
+    toMultiMap(keySelector, valueSelector, new mutable.HashMap[K, mutable.Set[V]] with mutable.MultiMap[K, V])
   }
 
   /**
@@ -3999,14 +3999,14 @@ trait Observable[+T]
    *
    * @param keySelector the function that extracts a key from the source items to be used as the key in the `mutable.MultiMap`
    * @param valueSelector the function that extracts a value from the source items to be used as the value in the `mutable.MultiMap`
-   * @param multiMapFactory the function that returns a `mutable.MultiMap` instance to be used
+   * @param multiMapFactory a `mutable.MultiMap` instance to be used. Note: tis is a by-name parameter.
    * @return an Observable that emits a single item: a `mutable.MultiMap` that contains keys and values mapped from the source Observable.
    */
-  def toMultiMap[K, V, M <: mutable.MultiMap[K, V]](keySelector: T => K, valueSelector: T => V, multiMapFactory: () => M): Observable[M] = {
+  def toMultiMap[K, V, M <: mutable.MultiMap[K, V]](keySelector: T => K, valueSelector: T => V, multiMapFactory: => M): Observable[M] = {
     lift {
       (subscriber: Subscriber[M]) => {
         new Subscriber[T](subscriber) {
-          val mm = multiMapFactory()
+          val mm = multiMapFactory
 
           override def onStart(): Unit = request(Long.MaxValue)
 

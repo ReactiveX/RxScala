@@ -247,7 +247,7 @@ class ObservableTests extends JUnitSuite {
   @Test
   def testToMultiMapWithMapFactory() {
     val m = new mutable.LinkedHashMap[Int, mutable.Set[String]] with mutable.MultiMap[Int, String]
-    val o = Observable.just("a", "b", "cc", "dd").toMultiMap(_.length, s => s, () => m)
+    val o = Observable.just("a", "b", "cc", "dd").toMultiMap(_.length, s => s, m)
     val expected = Map(1 -> Set("a", "b"), 2 -> Set("cc", "dd"))
     val r = o.toBlocking.single
     // r should be the same instance created by the `multiMapFactory`
