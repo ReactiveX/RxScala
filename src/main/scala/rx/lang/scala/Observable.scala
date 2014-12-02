@@ -232,7 +232,7 @@ trait Observable[+T]
    * Returns an Observable that first emits the items emitted by `this`, and then the items emitted
    * by `that`.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/concat.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/concat.png" alt="" />
    *
    * @param that
    *            an Observable to be appended
@@ -248,7 +248,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits a specified item before it begins to emit items emitted by the source Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/startWith.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/startWith.png" alt="" />
    *
    * @param elem the item to emit
    * @return an Observable that emits the specified item before it begins to emit items emitted by the source Observable
@@ -280,7 +280,7 @@ trait Observable[+T]
    * emitted by the source Observable, where that function returns an Observable, and then emitting the items
    * that result from concatinating those resulting Observables.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/concatMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/concatMap.png" alt="" />
    *
    * @param f a function that, when applied to an item emitted by the source Observable, returns an Observable
    * @return an Observable that emits the result of applying the transformation function to each item emitted
@@ -298,7 +298,7 @@ trait Observable[+T]
    * Wraps this Observable in another Observable that ensures that the resulting
    * Observable is chronologically well-behaved.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/synchronize.png">
+   * <img width="640" height="400" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/synchronize.png" alt="" />
    *
    * A well-behaved Observable does not interleave its invocations of the [[rx.lang.scala.Observer.onNext onNext]], [[rx.lang.scala.Observer.onCompleted onCompleted]], and [[rx.lang.scala.Observer.onError onError]] methods of
    * its [[rx.lang.scala.Observer]]s; it invokes `onCompleted` or `onError` only once; and it never invokes `onNext` after invoking either `onCompleted` or `onError`.
@@ -314,7 +314,7 @@ trait Observable[+T]
   /**
    * Wraps each item emitted by a source Observable in a timestamped tuple.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/timestamp.png">
+   * <img width="640" height="310" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/timestamp.png" alt="" />
    *
    * @return an Observable that emits timestamped items from the source Observable
    */
@@ -327,7 +327,7 @@ trait Observable[+T]
    * Wraps each item emitted by a source Observable in a timestamped tuple
    * with timestamps provided by the given Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timestamp.s.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timestamp.s.png" alt="" />
    * 
    * @param scheduler [[rx.lang.scala.Scheduler]] to use as a time source.
    * @return an Observable that emits timestamped items from the source
@@ -355,7 +355,7 @@ trait Observable[+T]
    * Returns an Observable formed from `this` Observable and `other` Iterable by combining
    * corresponding elements in pairs.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/zip.i.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/zip.i.png" alt="" />
    * <p>
    * Note that the `other` Iterable is evaluated as items are observed from the source Observable; it is
    * not pre-consumed. This allows you to zip infinite streams on either side.
@@ -371,7 +371,7 @@ trait Observable[+T]
    * Returns an Observable that emits items that are the result of applying a specified function to pairs of
    * values, one each from the source Observable and a specified Iterable sequence.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/zip.i.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/zip.i.png" alt="" />
    * <p>
    * Note that the `other` Iterable is evaluated as items are observed from the source Observable; it is
    * not pre-consumed. This allows you to zip infinite streams on either side.
@@ -603,7 +603,7 @@ trait Observable[+T]
    * Returns an Observable that emits non-overlapping buffered items from the source Observable each time the
    * specified boundary Observable emits an item.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/buffer8.png">
+   * <img width="640" height="395" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/buffer8.png" alt="" />
    * <p>
    * Completion of either the source or the boundary Observable causes the returned Observable to emit the
    * latest buffer and complete.
@@ -624,7 +624,7 @@ trait Observable[+T]
    * Returns an Observable that emits non-overlapping buffered items from the source Observable each time the
    * specified boundary Observable emits an item.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/buffer8.png">
+   * <img width="640" height="395" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/buffer8.png" alt="" />
    * <p>
    * Completion of either the source or the boundary Observable causes the returned Observable to emit the
    * latest buffer and complete.
@@ -644,7 +644,7 @@ trait Observable[+T]
    * non-overlapping windows. The boundary of each window is determined by the items emitted from a specified
    * boundary-governing Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/window8.png" />
+   * <img width="640" height="475" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/window8.png" alt="" />
    *
    * @param boundary an Observable whose emitted items close and open windows. Note: This is a by-name parameter,
    *                 so it is only evaluated when someone subscribes to the returned Observable.
@@ -846,7 +846,7 @@ trait Observable[+T]
    * Observable completes or Observable completes or encounters an error, the resulting Observable emits the
    * current window and propagates the notification from the source Observable.
    *
-   * <img width="640" height="335" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/window7.s.png" alt="">
+   * <img width="640" height="335" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/window7.s.png" alt="" />
    *
    * ===Backpressure Support:===
    * This operator does not support backpressure as it uses time to control data flow.
@@ -873,7 +873,7 @@ trait Observable[+T]
   /**
    * Returns an Observable which only emits those items for which a given predicate holds.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/filter.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/filter.png" alt="" />
    *
    * @param predicate
    *            a function that evaluates the items emitted by the source Observable, returning `true` if they pass the filter
@@ -887,7 +887,7 @@ trait Observable[+T]
   /**
    * Registers an function to be called when this Observable invokes [[rx.lang.scala.Observer.onCompleted onCompleted]] or [[rx.lang.scala.Observer.onError onError]].
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/finallyDo.png">
+   * <img width="640" height="310" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/finallyDo.png" alt="" />
    *
    * @param action
    *            an function to be invoked when the source Observable finishes
@@ -902,7 +902,7 @@ trait Observable[+T]
    * the source Observable, where that function returns an Observable, and then merging those
    * resulting Observables and emitting the results of this merger.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/flatMap.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/flatMap.png" alt="" />
    *
    * @param f
    *            a function that, when applied to an item emitted by the source Observable, returns
@@ -921,7 +921,7 @@ trait Observable[+T]
    * Returns an Observable that applies a function to each item emitted or notification raised by the source
    * Observable and then flattens the Observables returned from these functions and emits the resulting items.
    *
-   * <img width="640" height="410" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMap.nce.png">
+   * <img width="640" height="410" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMap.nce.png" alt="" />
    *
    * @tparam R the result type
    * @param onNext a function that returns an Observable to merge for each item emitted by the source Observable
@@ -949,7 +949,7 @@ trait Observable[+T]
    * Returns an Observable that emits the results of a specified function to the pair of values emitted by the
    * source Observable and a specified collection Observable.
    *
-   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMap.r.png">
+   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMap.r.png" alt="" />
    *
    * @tparam U the type of items emitted by the collection Observable
    * @tparam R the type of items emitted by the resulting Observable
@@ -970,7 +970,7 @@ trait Observable[+T]
    * Returns an Observable that merges each item emitted by the source Observable with the values in an
    * Iterable corresponding to that item that is generated by a selector.
    *
-   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMapIterable.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMapIterable.png" alt="" />
    *
    * @tparam R the type of item emitted by the resulting Observable
    * @param collectionSelector a function that returns an Iterable sequence of values for when given an item emitted by the
@@ -989,7 +989,7 @@ trait Observable[+T]
    * Returns an Observable that emits the results of applying a function to the pair of values from the source
    * Observable and an Iterable corresponding to that item that is generated by a selector.
    *
-   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMapIterable.r.png">
+   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeMapIterable.r.png" alt="" />
    *
    * @tparam U the collection element type
    * @tparam R the type of item emited by the resulting Observable
@@ -1010,7 +1010,7 @@ trait Observable[+T]
    * Returns an Observable that applies the given function to each item emitted by an
    * Observable and emits the result.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/map.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/map.png" alt="" />
    *
    * @param func
    *            a function to apply to each item emitted by the Observable
@@ -1027,7 +1027,7 @@ trait Observable[+T]
    * Turns all of the notifications from a source Observable into [[rx.lang.scala.Observer.onNext onNext]] emissions,
    * and marks them with their original notification types within [[rx.lang.scala.Notification]] objects.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/materialize.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/materialize.png" alt="" />
    *
    * @return an Observable whose items are the result of materializing the items and
    *         notifications of the source Observable
@@ -1039,7 +1039,7 @@ trait Observable[+T]
   /**
    * Asynchronously subscribes and unsubscribes Observers on the specified [[rx.lang.scala.Scheduler]].
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/subscribeOn.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/subscribeOn.png" alt="" />
    *
    * @param scheduler
    *            the [[rx.lang.scala.Scheduler]] to perform subscription and unsubscription actions on
@@ -1064,7 +1064,7 @@ trait Observable[+T]
   /**
    * Asynchronously notify [[rx.lang.scala.Observer]]s on the specified [[rx.lang.scala.Scheduler]].
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/observeOn.png">
+   * <img width="640" height="308" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/observeOn.png" alt="" />
    *
    * @param scheduler
    *            the [[rx.lang.scala.Scheduler]] to notify [[rx.lang.scala.Observer]]s on
@@ -1083,7 +1083,7 @@ trait Observable[+T]
    * This operation is only available if `this` is of type `Observable[Notification[U]]` for some `U`, 
    * otherwise you will get a compilation error.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/dematerialize.png">
+   * <img width="640" height="335" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/dematerialize.png" alt="" />
    *
    * @return an Observable that emits the items and notifications embedded in the [[rx.lang.scala.Notification]] objects emitted by the source Observable
    *
@@ -1102,7 +1102,7 @@ trait Observable[+T]
   /**
    * Instruct an Observable to pass control to another Observable rather than invoking [[rx.lang.scala.Observer.onError onError]] if it encounters an error.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png" alt="" />
    *
    * By default, when an Observable encounters an error that prevents it from emitting the
    * expected item to its [[rx.lang.scala.Observer]], the Observable invokes its Observer's
@@ -1133,7 +1133,7 @@ trait Observable[+T]
   /**
    * Instruct an Observable to pass control to another Observable rather than invoking [[rx.lang.scala.Observer.onError onError]] if it encounters an error.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png" alt="" />
    *
    * By default, when an Observable encounters an error that prevents it from emitting the
    * expected item to its [[rx.lang.scala.Observer]], the Observable invokes its Observer's
@@ -1166,7 +1166,7 @@ trait Observable[+T]
    *
    * This differs from `Observable.onErrorResumeNext` in that this one does not handle `java.lang.Throwable` or `java.lang.Error` but lets those continue through.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/onErrorResumeNext.png" alt="" />
    *
    * By default, when an Observable encounters an error that prevents it from emitting the
    * expected item to its [[rx.lang.scala.Observer]], the Observable invokes its Observer's
@@ -1198,7 +1198,7 @@ trait Observable[+T]
    * Instruct an Observable to emit an item (returned by a specified function) rather than
    * invoking [[rx.lang.scala.Observer.onError onError]] if it encounters an error.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/onErrorReturn.png">
+   * <img width="640" height="310" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/onErrorReturn.png" alt="" />
    *
    * By default, when an Observable encounters an error that prevents it from emitting the
    * expected item to its [[rx.lang.scala.Observer]], the Observable invokes its Observer's
@@ -1230,7 +1230,7 @@ trait Observable[+T]
    * by the source Observable, and emits the final result from the final call to your function as
    * its sole item.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/reduce.png">
+   * <img width="640" height="320" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/reduce.png" alt="" />
    *
    * This technique, which is called "reduce" or "aggregate" here, is sometimes called "fold,"
    * "accumulate," "compress," or "inject" in other programming contexts. Groovy, for instance,
@@ -1252,7 +1252,7 @@ trait Observable[+T]
    * Returns a [[rx.lang.scala.observables.ConnectableObservable]] that shares a single subscription to the underlying
    * Observable that will replay all of its items and notifications to any future [[rx.lang.scala.Observer]].
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.png" alt="" />
    *
    * @return a [[rx.lang.scala.observables.ConnectableObservable]] such that when the `connect` function
    *         is called, the [[rx.lang.scala.observables.ConnectableObservable]] starts to emit items to its [[rx.lang.scala.Observer]]s
@@ -1265,7 +1265,7 @@ trait Observable[+T]
    * Returns an Observable that emits items that are the results of invoking a specified selector on the items
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.f.png">
+   * <img width="640" height="450" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.f.png" alt="" />
    *
    * @param selector the selector function, which can use the multicasted sequence as many times as needed, without
    *                 causing multiple subscriptions to the Observable
@@ -1284,7 +1284,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying `bufferSize` notifications.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fn.png">
+   * <img width="640" height="440" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fn.png" alt="" />
    *
    * @param selector the selector function, which can use the multicasted sequence as many times as needed, without
    *                 causing multiple subscriptions to the Observable
@@ -1305,7 +1305,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying no more than `bufferSize` items that were emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnt.png">
+   * <img width="640" height="445" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnt.png" alt="" />
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
    *                  causing multiple subscriptions to the Observable
@@ -1327,7 +1327,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying no more than `bufferSize` items that were emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnts.png">
+   * <img width="640" height="445" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fnts.png" alt="" />
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
    *                  causing multiple subscriptions to the Observable
@@ -1351,7 +1351,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying a maximum of `bufferSize` items.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fns.png">
+   * <img width="640" height="440" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fns.png" alt="" />
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
    *                  causing multiple subscriptions to the Observable
@@ -1373,7 +1373,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying all items that were emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ft.png">
+   * <img width="640" height="435" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ft.png" alt="" />
    *
    * @param selector   a selector function, which can use the multicasted sequence as many times as needed, without
    *                   causing multiple subscriptions to the Observable
@@ -1393,7 +1393,7 @@ trait Observable[+T]
    * Returns an Observable that emits items that are the results of invoking a specified selector on items
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fs.png">
+   * <img width="640" height="445" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.fs.png" alt="" />
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
    *                  causing multiple subscriptions to the Observable
@@ -1413,7 +1413,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable and
    * replays at most `bufferSize` items that were emitted during a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.nt.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.nt.png" alt="" />
    *
    * @param bufferSize the buffer size that limits the number of items that can be replayed
    * @param time the duration of the window in which the replayed items must have been emitted
@@ -1428,7 +1428,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable and
    * that replays a maximum of `bufferSize` items that are emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.nts.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.nts.png" alt="" />
    *
    * @param bufferSize the buffer size that limits the number of items that can be replayed
    * @param time the duration of the window in which the replayed items must have been emitted
@@ -1446,7 +1446,7 @@ trait Observable[+T]
    * emitted by a `ConnectableObservable` that shares a single subscription to the source Observable,
    * replaying all items that were emitted within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ft.png">
+   * <img width="640" height="435" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ft.png" alt="" />
    *
    * @param selector  a selector function, which can use the multicasted sequence as many times as needed, without
    *                  causing multiple subscriptions to the Observable
@@ -1466,7 +1466,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable that
    * replays at most `bufferSize` items emitted by that Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.n.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.n.png" alt="" />
    *
    * @param bufferSize the buffer size that limits the number of items that can be replayed
    * @return a `ConnectableObservable` that shares a single subscription to the source Observable and
@@ -1480,7 +1480,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable and
    * replays at most `bufferSize` items emitted by that Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ns.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ns.png" alt="" />
    *
    * @param bufferSize the buffer size that limits the number of items that can be replayed
    * @param scheduler the scheduler on which the Observers will observe the emitted items
@@ -1495,7 +1495,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable and
    * replays all items emitted by that Observable within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.t.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.t.png" alt="" />
    *
    * @param time  the duration of the window in which the replayed items must have been emitted
    * @return a `ConnectableObservable` that shares a single subscription to the source Observable and
@@ -1509,7 +1509,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable and
    * replays all items emitted by that Observable within a specified time window.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ts.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.ts.png" alt="" />
    *
    * @param time the duration of the window in which the replayed items must have been emitted
    * @param scheduler the Scheduler that is the time source for the window
@@ -1524,7 +1524,7 @@ trait Observable[+T]
    * Returns a `ConnectableObservable` that shares a single subscription to the source Observable that
    * will replay all of its items and notifications to any future `Observer` on the given `Scheduler`.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.s.png">
+   * <img width="640" height="515" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/replay.s.png" alt="" />
    *
    * @param scheduler the Scheduler on which the Observers will observe the emitted items
    * @return a `ConnectableObservable` that shares a single subscription to the source Observable that
@@ -1538,7 +1538,7 @@ trait Observable[+T]
    * This method has similar behavior to [[rx.lang.scala.Observable.replay]] except that this auto-subscribes to
    * the source Observable rather than returning a start function and an Observable.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/cache.png">
+   * <img width="640" height="410" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/cache.png" alt="" />
    *
    * This is useful when you want an Observable to cache responses and you can't control the
    * subscribe/unsubscribe behavior of all the [[rx.lang.scala.Observer]]s.
@@ -1564,7 +1564,7 @@ trait Observable[+T]
    * Observable rather than returning a [[ConnectableObservable]] for which you must call
    * `connect` to activate the subscription.
    * <p>
-   * <img width="640" height="410" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/cache.png" alt="">
+   * <img width="640" height="410" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/cache.png" alt="" />
    * <p>
    * This is useful when you want an Observable to cache responses and you can't control the
    * `subscribe/unsubscribe` behavior of all the [[Subscriber]]s.
@@ -1600,7 +1600,7 @@ trait Observable[+T]
    *
    * This is an alias for `publish().refCount()`
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishRefCount.png">
+   * <img width="640" height="510" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishRefCount.png" alt="" />
    *
    * @return a [[Observable]] that upon connection causes the source Observable to emit items to its [[Subscriber]]s
    * @since 0.19
@@ -1615,7 +1615,7 @@ trait Observable[+T]
    *
    * Note: this method uses `==` to compare elements. It's a bit different from RxJava which uses `Object.equals`.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/contains.png">
+   * <img width="640" height="320" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/contains.png" alt="" />
    *
    *@param elem the item to search for in the emissions from the source Observable
    * @return an Observable that emits `true` if the specified item is emitted by the source Observable,
@@ -1630,7 +1630,7 @@ trait Observable[+T]
    * before it begins emitting items from `this` [[rx.lang.scala.Observable]] to those [[rx.lang.scala.Observer]]s that
    * have subscribed to it.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/publishConnect.png">
+   * <img width="640" height="510" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/publishConnect.png" alt="" />
    *
    * @return an [[rx.lang.scala.observables.ConnectableObservable]].
    */
@@ -1642,7 +1642,7 @@ trait Observable[+T]
    * Returns an Observable that emits the results of invoking a specified selector on items emitted by a `ConnectableObservable`
    * that shares a single subscription to the underlying sequence.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishConnect.f.png">
+   * <img width="640" height="510" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/publishConnect.f.png" alt="" />
    *
    * @param selector a function that can use the multicasted source sequence as many times as needed, without
    *                 causing multiple subscriptions to the source sequence. Subscribers to the given source will
@@ -1666,7 +1666,7 @@ trait Observable[+T]
    * source Observable, emitting the final result from the final call to your function as its sole
    * item.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/reduceSeed.png">
+   * <img width="640" height="325" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/reduceSeed.png" alt="" />
    *
    * This technique, which is called "reduce" or "aggregate" here, is sometimes called "fold,"
    * "accumulate," "compress," or "inject" in other programming contexts. Groovy, for instance,
@@ -1690,7 +1690,7 @@ trait Observable[+T]
    * Returns an Observable that emits the results of sampling the items emitted by the source
    * Observable at a specified time interval.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png" alt="" />
    *
    * @param duration the sampling rate
    * @return an Observable that emits the results of sampling the items emitted by the source
@@ -1704,7 +1704,7 @@ trait Observable[+T]
    * Returns an Observable that emits the results of sampling the items emitted by the source
    * Observable at a specified time interval.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/sample.png" alt="" />
    *
    * @param duration the sampling rate
    * @param scheduler
@@ -1720,7 +1720,7 @@ trait Observable[+T]
    * Return an Observable that emits the results of sampling the items emitted by the source Observable
    * whenever the specified sampler Observable emits an item or completes.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sample.o.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sample.o.png" alt="" />
    *
    * @param sampler
    *            the Observable to use for sampling the source Observable
@@ -1737,7 +1737,7 @@ trait Observable[+T]
    * by an Observable into the same function, and so on until all items have been emitted by the
    * source Observable, emitting the result of each of these iterations.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/scanSeed.png">
+   * <img width="640" height="320" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/scanSeed.png" alt="" />
    *
    * This sort of function is sometimes called an accumulator.
    *
@@ -1765,7 +1765,7 @@ trait Observable[+T]
    * same function, and so on until all items have been emitted by the source
    * Observable, emitting the result of each of these iterations.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/scan.png">
+   * <img width="640" height="320" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/scan.png" alt="" />
    * <p>
    *
    * @param accumulator
@@ -1786,7 +1786,7 @@ trait Observable[+T]
    * Returns an Observable that emits a Boolean that indicates whether all of the items emitted by
    * the source Observable satisfy a condition.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/all.png">
+   * <img width="640" height="315" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/all.png" alt="" />
    *
    * @param predicate
    *            a function that evaluates an item and returns a Boolean
@@ -1801,7 +1801,7 @@ trait Observable[+T]
    * Returns an Observable that skips the first `num` items emitted by the source
    * Observable and emits the remainder.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.png" alt="" />
    *
    * @param n
    *            the number of items to skip
@@ -1816,7 +1816,7 @@ trait Observable[+T]
    * Returns an Observable that drops values emitted by the source Observable before a specified time window
    * elapses.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png" alt="" />
    *
    * @param time the length of the time window to drop
    * @return an Observable that drops values emitted by the source Observable before the time window defined
@@ -1830,7 +1830,7 @@ trait Observable[+T]
    * Returns an Observable that drops values emitted by the source Observable before a specified time window
    * elapses.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skip.t.png" alt="" />
    *
    * @param time the length of the time window to drop
    * @param scheduler the `Scheduler` on which the timed wait happens
@@ -1845,7 +1845,7 @@ trait Observable[+T]
    * Returns an Observable that bypasses all items from the source Observable as long as the specified
    * condition holds true. Emits all further source items as soon as the condition becomes false.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipWhile.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipWhile.png" alt="" />
    *
    * @param predicate
    *            A function to test each item emitted from the source Observable for a condition.
@@ -1860,7 +1860,7 @@ trait Observable[+T]
    * Returns an Observable that drops a specified number of items from the end of the sequence emitted by the
    * source Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.png" alt="" />
    * <p>
    * This Observer accumulates a queue long enough to store the first `n` items. As more items are
    * received, items are taken from the front of the queue and emitted by the returned Observable. This causes
@@ -1879,7 +1879,7 @@ trait Observable[+T]
    * Returns an Observable that drops items emitted by the source Observable during a specified time window
    * before the source completes.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.t.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.t.png" alt="" />
    *
    * Note: this action will cache the latest items arriving in the specified time window.
    *
@@ -1895,7 +1895,7 @@ trait Observable[+T]
    * Returns an Observable that drops items emitted by the source Observable during a specified time window
    * (defined on a specified scheduler) before the source completes.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.ts.png">
+   * <img width="640" height="340" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipLast.ts.png" alt="" />
    *
    * Note: this action will cache the latest items arriving in the specified time window.
    *
@@ -1911,7 +1911,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that skips items emitted by the source Observable until a second Observable emits an item.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipUntil.png">
+   * <img width="640" height="375" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/skipUntil.png" alt="" />
    *
    * @param other the second Observable that has to emit an item before the source Observable's elements begin
    *              to be mirrored by the resulting Observable
@@ -1928,7 +1928,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the first `num` items emitted by the source
    * Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.png" alt="" />
    *
    * This method returns an Observable that will invoke a subscribing [[rx.lang.scala.Observer]]'s 
    * [[rx.lang.scala.Observer.onNext onNext]] function a maximum of `num` times before invoking
@@ -1947,7 +1947,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits those items emitted by source Observable before a specified time runs out.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.t.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.t.png" alt="" />
    *
    * @param time the length of the time window
    * @return an Observable that emits those items emitted by the source Observable before the time runs out
@@ -1960,7 +1960,7 @@ trait Observable[+T]
    * Returns an Observable that emits those items emitted by source Observable before a specified time (on
    * specified Scheduler) runs out
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.ts.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/take.ts.png" alt="" />
    *
    * @param time the length of the time window
    * @param scheduler the Scheduler used for time source
@@ -1975,7 +1975,7 @@ trait Observable[+T]
    * Returns an Observable that emits items emitted by the source Observable so long as a
    * specified condition is true.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/takeWhile.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/takeWhile.png" alt="" />
    *
    * @param predicate
    *            a function that evaluates an item emitted by the source Observable and returns a
@@ -1991,7 +1991,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the last `count` items emitted by the source
    * Observable.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/last.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/last.png" alt="" />
    *
    * @param count
    *            the number of items to emit from the end of the sequence emitted by the source
@@ -2007,7 +2007,7 @@ trait Observable[+T]
    * Return an Observable that emits the items from the source Observable that were emitted in a specified
    * window of `time` before the Observable completed.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.t.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.t.png" alt="" />
    *
    * @param time the length of the time window
    * @return an Observable that emits the items from the source Observable that were emitted in the window of
@@ -2022,7 +2022,7 @@ trait Observable[+T]
    * window of `time` before the Observable completed, where the timing information is provided by a specified
    * Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.ts.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.ts.png" alt="" />
    *
    * @param time the length of the time window
    * @param scheduler the Scheduler that provides the timestamps for the Observed items
@@ -2038,7 +2038,7 @@ trait Observable[+T]
    * Return an Observable that emits at most a specified number of items from the source Observable that were
    * emitted in a specified window of time before the Observable completed.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.tn.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.tn.png" alt="" />
    *
    * @param count the maximum number of items to emit
    * @param time the length of the time window
@@ -2055,7 +2055,7 @@ trait Observable[+T]
    * emitted in a specified window of `time` before the Observable completed, where the timing information is
    * provided by a given Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.tns.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/takeLast.tns.png" alt="" />
    *
    * @param count the maximum number of items to emit
    * @param time the length of the time window
@@ -2073,7 +2073,7 @@ trait Observable[+T]
    * Returns an Observable that emits the items from the source Observable only until the
    * `other` Observable emits an item.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/takeUntil.png">
+   * <img width="640" height="380" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/takeUntil.png" alt="" />
    *
    * @param that
    *            the Observable whose first emitted item will cause `takeUntil` to stop
@@ -2089,7 +2089,7 @@ trait Observable[+T]
    * Returns an Observable that emits a single item, a list composed of all the items emitted by
    * the source Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toList.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toList.png" alt="" />
    *
    * Normally, an Observable that returns multiple items will do so by invoking its [[rx.lang.scala.Observer]]'s 
    * [[rx.lang.scala.Observer.onNext onNext]] method for each such item. You can change
@@ -2128,7 +2128,7 @@ trait Observable[+T]
    * Groups the items emitted by an [[Observable]] according to a specified criterion, and emits these
    * grouped items as `(key, observable)` pairs.
    *
-   * <img width="640" height="360" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupBy.png" alt="">
+   * <img width="640" height="360" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupBy.png" alt="" />
    *
    * Note: A `(key, observable)` will cache the items it is to emit until such time as it
    * is subscribed to. For this reason, in order to avoid memory leaks, you should not simply ignore those
@@ -2162,7 +2162,7 @@ trait Observable[+T]
   /**
    * Correlates the items emitted by two Observables based on overlapping durations.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/join_.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/join_.png" alt="" />
    *
    * @param other
    *          the second Observable to join items from
@@ -2200,7 +2200,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that correlates two Observables when they overlap in time and groups the results.
    *
-   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupJoin.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/groupJoin.png" alt="" />
    *
    * @param other the other Observable to correlate items from the source Observable with
    * @param leftDuration a function that returns an Observable whose emissions indicate the duration of the values of
@@ -2232,7 +2232,7 @@ trait Observable[+T]
    * Observable that returns an Observable, and then emitting the items emitted by the most recently emitted
    * of these Observables.
    *
-   * <img width="640" height="350" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/switchMap.png">
+   * <img width="640" height="350" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/switchMap.png" alt="" />
    *
    * @param f a function that, when applied to an item emitted by the source Observable, returns an Observable
    * @return an Observable that emits the items emitted by the Observable returned from applying a function to
@@ -2248,7 +2248,7 @@ trait Observable[+T]
    * Given an Observable that emits Observables, creates a single Observable that
    * emits the items emitted by the most recently published of those Observables.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/switchDo.png">
+   * <img width="640" height="370" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/switchDo.png" alt="" />
    *
    * This operation is only available if `this` is of type `Observable[Observable[U]]` for some `U`,
    * otherwise you'll get a compilation error.
@@ -2271,7 +2271,7 @@ trait Observable[+T]
   /**
    * Flattens two Observables into one Observable, without any transformation.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.png" alt="" />
    *
    * You can combine items emitted by two Observables so that they act like a single
    * Observable by using the `merge` method.
@@ -2293,7 +2293,7 @@ trait Observable[+T]
    * refrain from propagating that error notification until all of the merged Observables have
    * finished emitting items.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeDelayError.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeDelayError.png" alt="" />
    *
    * Even if multiple merged Observables send `onError` notifications, `mergeDelayError` will only invoke the `onError` method of its
    * Observers once.
@@ -2314,7 +2314,7 @@ trait Observable[+T]
    * Flattens the sequence of Observables emitted by `this` into one Observable, without any
    * transformation.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.png" alt="" />
    *
    * You can combine the items emitted by multiple Observables so that they act like a single
    * Observable by using this method.
@@ -2341,7 +2341,7 @@ trait Observable[+T]
    * those Observables, without any transformation, while limiting the maximum number of concurrent
    * subscriptions to these Observables.
    *
-   * <img width="640" height="370" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.oo.png">
+   * <img width="640" height="370" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/merge.oo.png" alt="" />
    *
    * You can combine the items emitted by multiple Observables so that they appear as a single Observable, by
    * using the `flatten` method.
@@ -2364,7 +2364,7 @@ trait Observable[+T]
    * refrain from propagating that error notification until all of the merged Observables have
    * finished emitting items.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeDelayError.png">
+   * <img width="640" height="380" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/mergeDelayError.png" alt="" />
    *
    * Even if multiple merged Observables send `onError` notifications, this method will only invoke the `onError` method of its
    * Observers once.
@@ -2421,7 +2421,7 @@ trait Observable[+T]
    *
    * NOTE: If events keep firing faster than the timeout then no data will be emitted.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleWithTimeout.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleWithTimeout.png" alt="" />
    *
    * $debounceVsThrottle
    *
@@ -2439,7 +2439,7 @@ trait Observable[+T]
    * Return an Observable that mirrors the source Observable, except that it drops items emitted by the source
    * Observable that are followed by another item within a computed debounce duration.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/debounce.f.png">
+   * <img width="640" height="425" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/debounce.f.png" alt="" />
    *
    * @param debounceSelector function to retrieve a sequence that indicates the throttle duration for each item
    * @return an Observable that omits items emitted by the source Observable that are followed by another item
@@ -2457,7 +2457,7 @@ trait Observable[+T]
    *
    * NOTE: If events keep firing faster than the timeout then no data will be emitted.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/debounce.png">
+   * <img width="640" height="310" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/debounce.png" alt="" />
    *
    * $debounceVsThrottle
    *
@@ -2476,7 +2476,7 @@ trait Observable[+T]
    *
    * NOTE: If events keep firing faster than the timeout then no data will be emitted.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/debounce.png">
+   * <img width="640" height="310" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/debounce.png" alt="" />
    *
    * $debounceVsThrottle
    *
@@ -2496,7 +2496,7 @@ trait Observable[+T]
    *
    * NOTE: If events keep firing faster than the timeout then no data will be emitted.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleWithTimeout.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleWithTimeout.png" alt="" />
    *
    * @param timeout
    *            The time each value has to be 'the most recent' of the [[rx.lang.scala.Observable]] to ensure that it's not dropped.
@@ -2514,7 +2514,7 @@ trait Observable[+T]
    *
    * This differs from `Observable.throttleLast` in that this only tracks passage of time whereas `Observable.throttleLast` ticks at scheduled intervals.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleFirst.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleFirst.png" alt="" />
    *
    * @param skipDuration
    *            Time to wait before sending another value after emitting last value.
@@ -2531,7 +2531,7 @@ trait Observable[+T]
    *
    * This differs from `Observable.throttleLast` in that this only tracks passage of time whereas `Observable.throttleLast` ticks at scheduled intervals.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleFirst.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleFirst.png" alt="" />
    *
    * @param skipDuration
    *            Time to wait before sending another value after emitting last value.
@@ -2546,7 +2546,7 @@ trait Observable[+T]
    *
    * This differs from `Observable.throttleFirst` in that this ticks along at a scheduled interval whereas `Observable.throttleFirst` does not tick, it just tracks passage of time.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleLast.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleLast.png" alt="" />
    *
    * @param intervalDuration
    *            Duration of windows within with the last value will be chosen.
@@ -2561,7 +2561,7 @@ trait Observable[+T]
    *
    * This differs from `Observable.throttleFirst` in that this ticks along at a scheduled interval whereas `Observable.throttleFirst` does not tick, it just tracks passage of time.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleLast.png">
+   * <img width="640" height="305" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/throttleLast.png" alt="" />
    *
    * @param intervalDuration
    *            Duration of windows within with the last value will be chosen.
@@ -2577,7 +2577,7 @@ trait Observable[+T]
    * observed within the specified timeout duration starting from its
    * predecessor, observers are notified of a `TimeoutException`.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.1.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.1.png" alt="" />
    *
    * @param timeout maximum duration between items before a timeout occurs
    * @return the source Observable modified to notify observers of a
@@ -2594,7 +2594,7 @@ trait Observable[+T]
    * predecessor, a specified fallback Observable produces future items and
    * notifications from that point on.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.2.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.2.png" alt="" />
    *
    * @param timeout maximum duration between items before a timeout occurs
    * @param other fallback Observable to use in case of a timeout
@@ -2613,7 +2613,7 @@ trait Observable[+T]
    * observed within the specified timeout duration starting from its
    * predecessor, the observer is notified of a `TimeoutException`.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.1s.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.1s.png" alt="" />
    *
    * @param timeout maximum duration between items before a timeout occurs
    * @param scheduler Scheduler to run the timeout timers on
@@ -2631,7 +2631,7 @@ trait Observable[+T]
    * predecessor, a specified fallback Observable sequence produces future
    * items and notifications from that point on.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.2s.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout.2s.png" alt="" />
    *
    * @param timeout maximum duration between items before a timeout occurs
    * @param other Observable to use as the fallback in case of a timeout
@@ -2651,7 +2651,7 @@ trait Observable[+T]
    * previous item, where that period of time is measured by an Observable that is a function
    * of the previous item.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout3.png">
+   * <img width="640" height="400" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout3.png" alt="" />
    * </p>
    * Note: The arrival of the first source item is never timed out.
    *
@@ -2672,7 +2672,7 @@ trait Observable[+T]
    * after the emission of the previous item, where that period of time is measured by an
    * Observable that is a function of the previous item.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout4.png">
+   * <img width="640" height="400" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout4.png" alt="" />
    * </p>
    * Note: The arrival of the first source item is never timed out.
    * 
@@ -2697,7 +2697,7 @@ trait Observable[+T]
    * if either the first item emitted by the source Observable or any subsequent item
    * don't arrive within time windows defined by other Observables.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout5.png">
+   * <img width="640" height="400" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout5.png" alt="" />
    * </p>
    * @param firstTimeoutSelector
    *            a function that returns an Observable that determines the timeout window for the
@@ -2720,7 +2720,7 @@ trait Observable[+T]
    * Observable if either the first item emitted by the source Observable or any subsequent item
    * don't arrive within time windows defined by other Observables.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout6.png">
+   * <img width="640" height="400" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeout6.png" alt="" />
    * </p>
    * @param firstTimeoutSelector
    *            a function that returns an Observable which determines the timeout window for the
@@ -2778,7 +2778,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the very first item emitted by the source Observable, or
    * a default value if the source Observable is empty.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png" alt="" />
    *
    * @param default
    *            The default value to emit if the source Observable doesn't emit anything.
@@ -2794,7 +2794,7 @@ trait Observable[+T]
    * Returns an Observable that emits only an `Option` with the very first item emitted by the source Observable,
    * or `None` if the source Observable is empty.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png" alt="" />
    *
    * @return an Observable that emits only an `Option` with the very first item from the source, or `None`
    *         if the source Observable completes without emitting any item.
@@ -2807,7 +2807,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the very first item emitted by the source Observable, or
    * a default value if the source Observable is empty.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/firstOrDefault.png" alt="" />
    *
    * @param default
    *            The default value to emit if the source Observable doesn't emit anything.
@@ -2821,7 +2821,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the very first item emitted by the source Observable, or raises an
    * `NoSuchElementException` if the source Observable is empty.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/first.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/first.png" alt="" />
    * 
    * @return an Observable that emits only the very first item emitted by the source Observable, or raises an
    *         `NoSuchElementException` if the source Observable is empty
@@ -2836,7 +2836,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the very first item emitted by the source Observable, or raises an
    * `NoSuchElementException` if the source Observable is empty.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/first.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/first.png" alt="" />
    * 
    * @return an Observable that emits only the very first item emitted by the source Observable, or raises an
    *         `NoSuchElementException` if the source Observable is empty
@@ -2887,7 +2887,7 @@ trait Observable[+T]
    * Returns an Observable that emits the last item emitted by the source Observable or notifies observers of
    * an `NoSuchElementException` if the source Observable is empty.
    * 
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/last.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/last.png" alt="" />
    * 
    * @return an Observable that emits the last item from the source Observable or notifies observers of an
    *         error
@@ -2902,7 +2902,7 @@ trait Observable[+T]
    * Returns an Observable that emits only an `Option` with the last item emitted by the source Observable,
    * or `None` if the source Observable completes without emitting any items.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/lastOrDefault.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/lastOrDefault.png" alt="" />
    *
    * @return an Observable that emits only an `Option` with the last item emitted by the source Observable,
    *         or `None` if the source Observable is empty
@@ -2915,7 +2915,7 @@ trait Observable[+T]
    * Returns an Observable that emits only the last item emitted by the source Observable, or a default item
    * if the source Observable completes without emitting any items.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/lastOrDefault.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/lastOrDefault.png" alt="" />
    *
    * @param default the default item to emit if the source Observable is empty.
    *                This is a by-name parameter, so it is only evaluated if the source Observable doesn't emit anything.
@@ -2931,7 +2931,7 @@ trait Observable[+T]
    * item. If the source Observable emits more than one item or no items, notify of an `IllegalArgumentException`
    * or `NoSuchElementException` respectively.
    * 
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/single.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/single.png" alt="" />
    * 
    * @return an Observable that emits the single item emitted by the source Observable
    * @throws IllegalArgumentException if the source emits more than one item
@@ -2948,7 +2948,7 @@ trait Observable[+T]
    * with that item; if the source Observable is empty, return an Observable that emits `None`.
    * If the source Observable emits more than one item, throw an `IllegalArgumentException`.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/singleOrDefault.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/singleOrDefault.png" alt="" />
    *
    * @return an Observable that emits an `Option` with the single item emitted by the source Observable, or
    *         `None` if the source Observable is empty
@@ -2964,7 +2964,7 @@ trait Observable[+T]
    * item; if the source Observable is empty, return an Observable that emits a default item. If the source
    * Observable emits more than one item, throw an `IllegalArgumentException`.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/singleOrDefault.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/singleOrDefault.png" alt="" />
    *
    * @param default a default value to emit if the source Observable emits no item.
    *                This is a by-name parameter, so it is only evaluated if the source Observable doesn't emit anything.
@@ -2983,7 +2983,7 @@ trait Observable[+T]
    * Returns an Observable that emits the items emitted by the source Observable or a specified default item
    * if the source Observable is empty.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/defaultIfEmpty.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/defaultIfEmpty.png" alt="" />
    *
    * @param default the item to emit if the source Observable emits no items. This is a by-name parameter, so it is
    *                only evaluated if the source Observable doesn't emit anything.
@@ -3002,7 +3002,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that forwards all sequentially distinct items emitted from the source Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinctUntilChanged.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinctUntilChanged.png" alt="" />
    *
    * @return an Observable of sequentially distinct items
    */
@@ -3014,7 +3014,7 @@ trait Observable[+T]
    * Returns an Observable that forwards all items emitted from the source Observable that are sequentially
    * distinct according to a key selector function.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinctUntilChanged.key.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinctUntilChanged.key.png" alt="" />
    *
    * @param keySelector
    *            a function that projects an emitted item to a key value which is used for deciding whether an item is sequentially
@@ -3028,7 +3028,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that forwards all distinct items emitted from the source Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinct.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinct.png" alt="" />
    *
    * @return an Observable of distinct items
    */
@@ -3040,7 +3040,7 @@ trait Observable[+T]
    * Returns an Observable that forwards all items emitted from the source Observable that are distinct according
    * to a key selector function.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinct.key.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/distinct.key.png" alt="" />
    *
    * @param keySelector
    *            a function that projects an emitted item to a key value which is used for deciding whether an item is
@@ -3054,7 +3054,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that counts the total number of elements in the source Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/count.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/count.png" alt="" />
    *
    * @return an Observable emitting the number of counted elements of the source Observable
    *         as its single item.
@@ -3066,7 +3066,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that counts the total number of elements in the source Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/count.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/count.png" alt="" />
    *
    * @return an Observable emitting the number of counted elements of the source Observable
    *         as its single item.
@@ -3076,7 +3076,7 @@ trait Observable[+T]
   /**
    * Retry subscription to origin Observable upto given retry count.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png" alt="" />
    *
    * If [[rx.lang.scala.Observer.onError]] is invoked the source Observable will be re-subscribed to as many times as defined by retryCount.
    *
@@ -3096,7 +3096,7 @@ trait Observable[+T]
   /**
    * Retry subscription to origin Observable whenever onError is called (infinite retry count).
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png" alt="" />
    *
    * If [[rx.lang.scala.Observer.onError]] is invoked the source Observable will be re-subscribed to.
    *
@@ -3114,7 +3114,7 @@ trait Observable[+T]
    * Returns an Observable that mirrors the source Observable, resubscribing to it if it calls `onError`
    * and the predicate returns true for that specific exception and retry count.
    *
-   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retry.png" alt="" />
    *
    * @param predicate the predicate that determines if a resubscription may happen in case of a specific exception and retry count
    * @return the source Observable modified with retry logic
@@ -3134,7 +3134,7 @@ trait Observable[+T]
    * `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable.
    * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="">
+   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="" />
    *
    * Example:
    *
@@ -3196,7 +3196,7 @@ trait Observable[+T]
    * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
    * or `onError` on the child subscription. Otherwise, this observable will resubscribe to the source observable, on a particular Scheduler.
    * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="">
+   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/retryWhen.f.png" alt="" />
    * <p>
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
@@ -3224,7 +3224,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that repeats the sequence of items emitted by the source Observable indefinitely.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.o.png">
+   * <img width="640" height="309" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.o.png" alt="" />
    *
    * @return an Observable that emits the items emitted by the source Observable repeatedly and in sequence
    * @see <a href="https://github.com/Netflix/RxJava/wiki/Creating-Observables#wiki-repeat">RxJava Wiki: repeat()</a>
@@ -3238,7 +3238,7 @@ trait Observable[+T]
    * Returns an Observable that repeats the sequence of items emitted by the source Observable indefinitely,
    * on a particular Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.os.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.os.png" alt="" />
    *
    * @param scheduler the Scheduler to emit the items on
    * @return an Observable that emits the items emitted by the source Observable repeatedly and in sequence
@@ -3252,7 +3252,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that repeats the sequence of items emitted by the source Observable at most `count` times.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.on.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.on.png" alt="" />
    *
    * @param count the number of times the source Observable items are repeated,
    *              a count of 0 will yield an empty sequence
@@ -3269,7 +3269,7 @@ trait Observable[+T]
    * Returns an Observable that repeats the sequence of items emitted by the source Observable
    * at most `count` times, on a particular Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.ons.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeat.ons.png" alt="" />
    *
    * @param count the number of times the source Observable items are repeated,
    *              a count of 0 will yield an empty sequence
@@ -3291,7 +3291,7 @@ trait Observable[+T]
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable, on a particular Scheduler.
    * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
+   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="" />
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>you specify which [[Scheduler]] this operator will use</dd>
@@ -3322,7 +3322,7 @@ trait Observable[+T]
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source observable.
    * <p>
-   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
+   * <img width="640" height="430" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/repeatWhen.f.png" alt="" />
    *
    * @example
    *
@@ -3497,7 +3497,7 @@ trait Observable[+T]
    * source `Observable` is reference counted, in which case the source `Observable` will invoke
    * the given action for the first subscription.
    * <p>
-   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnSubscribe.png" alt="">
+   * <img width="640" height="390" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnSubscribe.png" alt="" />
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>`onSubscribe` does not operate by default on a particular `Scheduler`.</dd>
@@ -3516,7 +3516,7 @@ trait Observable[+T]
   /**
    * Modifies an Observable so that it invokes an action when it calls `onCompleted` or `onError`.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnTerminate.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnTerminate.png" alt="" />
    * <p>
    * This differs from `finallyDo` in that this happens **before** `onCompleted/onError` are emitted.
    *
@@ -3535,7 +3535,7 @@ trait Observable[+T]
    * source `Observable` is reference counted, in which case the source `Observable` will invoke
    * the given action for the very last un-subscription.
    * <p>
-   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnUnsubscribe.png" alt="">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/doOnUnsubscribe.png" alt="" />
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>`doOnUnsubscribe` does not operate by default on a particular `Scheduler`.</dd>
@@ -3554,7 +3554,7 @@ trait Observable[+T]
   /**
    * Given two Observables, mirror the one that first emits an item.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/amb.png">
+   * <img width="640" height="385" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/amb.png" alt="" />
    *
    * @param that
    *            an Observable competing to react first
@@ -3570,7 +3570,7 @@ trait Observable[+T]
    * Returns an Observable that emits the items emitted by the source Observable shifted forward in time by a
    * specified delay. Error notifications from the source Observable are not delayed.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.png" alt="" />
    * 
    * @param delay the delay to shift the source by
    * @return the source Observable shifted in time by the specified delay
@@ -3583,7 +3583,7 @@ trait Observable[+T]
    * Returns an Observable that emits the items emitted by the source Observable shifted forward in time by a
    * specified delay. Error notifications from the source Observable are not delayed.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.s.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.s.png" alt="" />
    * 
    * @param delay the delay to shift the source by
    * @param scheduler the Scheduler to use for delaying
@@ -3597,7 +3597,7 @@ trait Observable[+T]
    * Returns an Observable that delays the emissions of the source Observable via another Observable on a
    * per-item basis.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.o.png">
+   * <img width="640" height="450" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.o.png" alt="" />
    * <p>
    * Note: the resulting Observable will immediately propagate any `onError` notification
    * from the source Observable.
@@ -3619,7 +3619,7 @@ trait Observable[+T]
    * Returns an Observable that delays the subscription to and emissions from the souce Observable via another
    * Observable on a per-item basis.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.oo.png">
+   * <img width="640" height="450" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delay.oo.png" alt="" />
    * <p>
    * Note: the resulting Observable will immediately propagate any `onError` notification
    * from the source Observable.
@@ -3647,7 +3647,7 @@ trait Observable[+T]
   /**
    * Return an Observable that delays the subscription to the source Observable by a given amount of time.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delaySubscription.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delaySubscription.png" alt="" />
    * 
    * @param delay the time to delay the subscription
    * @return an Observable that delays the subscription to the source Observable by the given amount
@@ -3660,7 +3660,7 @@ trait Observable[+T]
    * Return an Observable that delays the subscription to the source Observable by a given amount of time,
    * both waiting and subscribing on a given Scheduler.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delaySubscription.s.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/delaySubscription.s.png" alt="" />
    * 
    * @param delay the time to delay the subscription
    * @param scheduler the Scheduler on which the waiting and subscription will happen
@@ -3675,7 +3675,7 @@ trait Observable[+T]
    * Returns an Observable that delays the subscription to the source Observable until a second Observable
    * emits an item.
    * <p>
-   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/delaySubscription.o.png" alt="">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/delaySubscription.o.png" alt="" />
    * <dl>
    *  <dt><b>Scheduler:</b></dt>
    *  <dd>This version of `delay` operates by default on the `computation` `Scheduler`.</dd>
@@ -3701,7 +3701,7 @@ trait Observable[+T]
    * Returns an Observable that emits the single item at a specified index in a sequence of emissions from a
    * source Observbable.
    * 
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/elementAt.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/elementAt.png" alt="" />
    * 
    * @param index
    *            the zero-based index of the item to retrieve
@@ -3719,7 +3719,7 @@ trait Observable[+T]
    * Returns an Observable that emits the item found at a specified index in a sequence of emissions from a
    * source Observable, or a default item if that index is out of range.
    * 
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/elementAtOrDefault.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/elementAtOrDefault.png" alt="" />
    * 
    * @param index
    *            the zero-based index of the item to retrieve
@@ -3739,7 +3739,7 @@ trait Observable[+T]
    * Return an Observable that emits a single Map containing all items emitted by the source Observable,
    * mapped by the keys returned by a specified `keySelector` function.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
    * <p>
    * If more than one source item maps to the same key, the Map will contain the latest of those items.
    *
@@ -3758,7 +3758,7 @@ trait Observable[+T]
    * Return an Observable that emits a single Map containing values corresponding to items emitted by the
    * source Observable, mapped by the keys returned by a specified `keySelector` function.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
    * <p>
    * If more than one source item maps to the same key, the Map will contain a single entry that
    * corresponds to the latest of those items.
@@ -3780,7 +3780,7 @@ trait Observable[+T]
    * Return an Observable that emits a single Map, returned by a specified `mapFactory` function, that
    * contains keys and values extracted from the items emitted by the source Observable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
    *
    * @param keySelector
      *            the function that extracts the key from a source item to be used in the Map
@@ -3801,7 +3801,7 @@ trait Observable[+T]
    * Returns an Observable that emits a Boolean value that indicates whether `this` and `that` Observable sequences are the
    * same by comparing the items emitted by each Observable pairwise.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sequenceEqual.png">
+   * <img width="640" height="385" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sequenceEqual.png" alt="" />
    *
    * Note: this method uses `==` to compare elements. It's a bit different from RxJava which uses `Object.equals`.
    *
@@ -3816,7 +3816,7 @@ trait Observable[+T]
    * Returns an Observable that emits a Boolean value that indicates whether `this` and `that` Observable sequences are the
    * same by comparing the items emitted by each Observable pairwise based on the results of a specified `equality` function.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sequenceEqual.png">
+   * <img width="640" height="385" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/sequenceEqual.png" alt="" />
    *
    * @param that the Observable to compare
    * @param equality a function used to compare items emitted by each Observable
@@ -3833,7 +3833,7 @@ trait Observable[+T]
    * Returns an Observable that emits records of the time interval between consecutive items emitted by the
    * source Obsegrvable.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeInterval.png">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeInterval.png" alt="" />
    *
    * @return an Observable that emits time interval information items
    */
@@ -3846,7 +3846,7 @@ trait Observable[+T]
    * Returns an Observable that emits records of the time interval between consecutive items emitted by the
    * source Observable, where this interval is computed on a specified Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeInterval.s.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timeInterval.s.png" alt="" />
    *
    * @param scheduler the [[Scheduler]] used to compute time intervals
    * @return an Observable that emits time interval information items
@@ -3886,7 +3886,7 @@ trait Observable[+T]
   /**
    * Converts the source `Observable[T]` into an `Observable[Observable[T]]` that emits the source Observable as its single emission.
    *
-   * <img width="640" height="350" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/nest.png">
+   * <img width="640" height="350" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/nest.png" alt="" />
    *
    * @return an Observable that emits a single item: the source Observable
    */
@@ -3940,7 +3940,7 @@ trait Observable[+T]
    * Returns an Observable that counts the total number of items emitted by the source Observable and emits
    * this count as a 64-bit Long.
    * <p>
-   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/longCount.png" alt="">
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/longCount.png" alt="" />
    * <dl>
    * <dt><b>Backpressure Support:</b></dt>
    * <dd>This operator does not support backpressure because by intent it will receive all values and reduce
@@ -3963,7 +3963,7 @@ trait Observable[+T]
    * Returns an Observable that emits a single `Map` that contains an `Seq` of items emitted by the
    * source Observable keyed by a specified `keySelector` function.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
    * @param keySelector the function that extracts the key from the source items to be used as key in the HashMap
    * @return an Observable that emits a single item: a `Map` that contains an `Seq` of items mapped from
@@ -3978,7 +3978,7 @@ trait Observable[+T]
    * specified `valueSelector` function from items emitted by the source Observable, keyed by a
    * specified `keySelector` function.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
    * @param keySelector the function that extracts a key from the source items to be used as key in the HashMap
    * @param valueSelector the function that extracts a value from the source items to be used as value in the HashMap
@@ -3994,7 +3994,7 @@ trait Observable[+T]
    * contains values, extracted by a specified `valueSelector` function from items emitted by the source Observable and
    * keyed by the `keySelector` function. `mutable.Map[K, B]` is the same instance create by `mapFactory`.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
    * @param keySelector the function that extracts a key from the source items to be used as the key in the Map
    * @param valueSelector the function that extracts a value from the source items to be used as the value in the Map
@@ -4011,7 +4011,7 @@ trait Observable[+T]
    * contains values extracted by a specified `valueSelector` function from items emitted by the source Observable, and
    * keyed by the `keySelector` function. `mutable.Map[K, B]` is the same instance create by `mapFactory`.
    *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png">
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
    * @param keySelector the function that extracts a key from the source items to be used as the key in the Map
    * @param valueSelector the function that extracts a value from the source items to be used as the value in the Map
@@ -4245,7 +4245,7 @@ trait Observable[+T]
    * Instructs an Observable that is emitting items faster than its observer can consume them to buffer these
    * items indefinitely until they can be emitted.
    *
-   * <img width="640" height="300" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/bp.obp.buffer.png" alt="">
+   * <img width="640" height="300" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/bp.obp.buffer.png" alt="" />
    *
    * ===Scheduler:===
    * `onBackpressureBuffer` does not operate by default on a particular `Scheduler`.
@@ -4261,7 +4261,7 @@ trait Observable[+T]
    * Use this operator when the upstream does not natively support backpressure and you wish to drop
    * `onNext` when unable to handle further events.
    *
-   * <img width="640" height="245" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/bp.obp.drop.png" alt="">
+   * <img width="640" height="245" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/bp.obp.drop.png" alt="" />
    *
    * If the downstream request count hits 0 then `onNext` will be dropped until `request(long n)`
    * is invoked again to increase the request count.
@@ -4318,7 +4318,7 @@ object Observable {
   /**
    * Creates an Observable that will execute the given function when an [[rx.lang.scala.Observer]] subscribes to it.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/create.png">
+   * <img width="640" height="200" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/create.png" alt="" />
    *
    * Write the function you pass to `create` so that it behaves as an Observable: It
    * should invoke the Observer's [[rx.lang.scala.Observer.onNext onNext]], [[rx.lang.scala.Observer.onError onError]], and [[rx.lang.scala.Observer.onCompleted onCompleted]] methods
@@ -4363,7 +4363,7 @@ object Observable {
   /**
    * Returns an Observable that will execute the specified function when someone subscribes to it.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/create.png">
+   * <img width="640" height="200" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/create.png" alt="" />
    *
    * Write the function you pass so that it behaves as an Observable: It should invoke the
    * Subscriber's `onNext`, `onError`, and `onCompleted` methods appropriately.
@@ -4396,7 +4396,7 @@ object Observable {
    * Returns an Observable that invokes an [[rx.lang.scala.Observer]]'s [[rx.lang.scala.Observer.onError onError]]
    * method when the Observer subscribes to it.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/error.png">
+   * <img width="640" height="190" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/error.png" alt="" />
    *
    * @param exception
    *            the particular error to report
@@ -4414,7 +4414,7 @@ object Observable {
    * immediately invokes its [[rx.lang.scala.Observer#onCompleted onCompleted]] method
    * with the specified scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/empty.s.png">
+   * <img width="640" height="190" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/empty.s.png" alt="" />
    *
    * @return an Observable that returns no data to the [[rx.lang.scala.Observer]] and
    *         immediately invokes the [[rx.lang.scala.Observer]]r's
@@ -4430,7 +4430,7 @@ object Observable {
   /**
    * Converts a sequence of values into an Observable.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/from.png">
+   * <img width="640" height="315" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/from.png" alt="" />
    *
    * Implementation note: the entire array will be immediately emitted each time an [[rx.lang.scala.Observer]] subscribes.
    * Since this occurs before the [[rx.lang.scala.Subscription]] is returned,
@@ -4468,7 +4468,7 @@ object Observable {
   /**
    * Converts an `Iterable` into an Observable.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/from.png">
+   * <img width="640" height="315" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/from.png" alt="" />
    *
    * Note: the entire iterable sequence is immediately emitted each time an
    * Observer subscribes. Since this occurs before the
@@ -4490,7 +4490,7 @@ object Observable {
    * new Observer that subscribes. That is, for each subscriber, the actual Observable is determined
    * by the factory function.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/defer.png">
+   * <img width="640" height="340" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/defer.png" alt="" />
    *
    * The defer operator allows you to defer or delay emitting items from an Observable until such
    * time as an Observer subscribes to the Observable. This allows an [[rx.lang.scala.Observer]] to easily
@@ -4511,7 +4511,7 @@ object Observable {
   /**
    * Returns an Observable that never sends any items or notifications to an [[rx.lang.scala.Observer]].
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/never.png">
+   * <img width="640" height="185" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/never.png" alt="" />
    *
    * This Observable is useful primarily for testing purposes.
    *
@@ -4569,7 +4569,7 @@ object Observable {
   /**
    * Emits `0`, `1`, `2`, `...` with a delay of `duration` between consecutive numbers.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png">
+   * <img width="640" height="195" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png" alt="" />
    *
    * @param duration
    *            duration between two consecutive numbers
@@ -4582,7 +4582,7 @@ object Observable {
   /**
    * Emits `0`, `1`, `2`, `...` with a delay of `duration` between consecutive numbers.
    *
-   * <img width="640" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png">
+   * <img width="640" height="195" src="https://github.com/Netflix/RxJava/wiki/images/rx-operators/interval.png" alt="" />
    *
    * @param period
    *            duration between two consecutive numbers
@@ -4598,7 +4598,7 @@ object Observable {
    * Return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, on a specified Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.ps.png">
+   * <img width="640" height="200" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.ps.png" alt="" />
    *
    * @param initialDelay
    * the initial delay time to wait before emitting the first value of 0L
@@ -4615,7 +4615,7 @@ object Observable {
    * Return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, on a specified Scheduler.
    * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.ps.png">
+   * <img width="640" height="200" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.ps.png" alt="" />
    *
    * @param initialDelay
    * the initial delay time to wait before emitting the first value of 0L
@@ -4633,7 +4633,7 @@ object Observable {
   /**
    * Returns an Observable that emits `0L` after a specified delay, and then completes.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.png">
+   * <img width="640" height="200" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.png" alt="" />
    *
    * @param delay the initial delay before emitting a single `0L`
    * @return Observable that emits `0L` after a specified delay, and then completes
@@ -4646,7 +4646,7 @@ object Observable {
    * Returns an Observable that emits `0L` after a specified delay, on a specified Scheduler, and then
    * completes.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.s.png">
+   * <img width="640" height="200" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/timer.s.png" alt="" />
    *
    * @param delay the initial delay before emitting a single `0L`
    * @param scheduler the Scheduler to use for scheduling the item
@@ -4685,7 +4685,7 @@ object Observable {
   /**
    * Mirror the one Observable in an Iterable of several Observables that first emits an item.
    *
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/amb.png">
+   * <img width="640" height="385" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/amb.png" alt="" />
    *
    * @param sources an Iterable of Observable sources competing to react first
    * @return an Observable that emits the same sequence of items as whichever of the source Observables
@@ -4715,9 +4715,4 @@ object Observable {
     toScalaObservable[R](rx.Observable.combineLatest[T, R](jSources, jCombineFunction))
   }
 }
-
-
-
-
-
 

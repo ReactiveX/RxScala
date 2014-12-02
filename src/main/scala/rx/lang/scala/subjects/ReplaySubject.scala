@@ -22,7 +22,7 @@ import scala.concurrent.duration.Duration
 /**
  * Subject that buffers all items it observes and replays them to any `Observer` that subscribes.
  * <p>
- * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.ReplaySubject.png" alt="">
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.ReplaySubject.png" alt="" />
  * <p>
  * @example
  {{{
@@ -153,3 +153,4 @@ object ReplaySubject {
 }
 
 class ReplaySubject[T] private[scala] (val asJavaSubject: rx.subjects.ReplaySubject[T]) extends Subject[T]  {}
+

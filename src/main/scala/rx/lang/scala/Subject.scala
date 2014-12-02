@@ -39,7 +39,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
  * Subject that, once an `Observer` has subscribed, emits all subsequently observed items to the
  * subscriber.
  * <p>
- * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
+ * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="" />
  * <p>
  * @example
  {{{
@@ -62,3 +62,4 @@ object Subject {
    */
   def apply[T](): Subject[T] = new rx.lang.scala.subjects.PublishSubject[T](rx.subjects.PublishSubject.create())
 }
+
