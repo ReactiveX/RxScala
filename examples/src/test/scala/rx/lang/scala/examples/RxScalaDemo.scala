@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit
 import rx.lang.scala.subjects.SerializedSubject
 
 import scala.concurrent.Await
+import scala.collection.immutable.HashMap
 import scala.collection.mutable
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration.DurationInt
@@ -997,15 +998,14 @@ class RxScalaDemo extends JUnitSuite {
     val o : Observable[String] = List("alice", "bob", "carol").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val mapFactory = () => Map(('s',"tart"))
-    val m = o.toMap(keySelector, valueSelector, mapFactory)
+    val m: Observable[HashMap[Char, String]] = o.to[HashMap, Char, String](keySelector, valueSelector)
     println(m.toBlocking.single)
   }
 
   @Test def toMultimapExample1(): Unit = {
     val o : Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
-    val m = o.toMultimap(keySelector)
+    val m = o.toMultiMap(keySelector)
     println(m.toBlocking.single)
   }
 
@@ -1013,7 +1013,7 @@ class RxScalaDemo extends JUnitSuite {
     val o : Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val m = o.toMultimap(keySelector, valueSelector)
+    val m = o.toMultiMap(keySelector, valueSelector)
     println(m.toBlocking.single)
   }
 
@@ -1021,8 +1021,9 @@ class RxScalaDemo extends JUnitSuite {
     val o: Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val mapFactory = () => mutable.Map('d' -> mutable.Buffer("oug"))
-    val m = o.toMultimap(keySelector, valueSelector, mapFactory)
+    val m = o.toMultiMap(keySelector, valueSelector, {
+      new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] addBinding('d', "oug")
+    })
     println(m.toBlocking.single.mapValues(_.toList))
   }
 
@@ -1030,9 +1031,11 @@ class RxScalaDemo extends JUnitSuite {
     val o : Observable[String] = List("alice", "bob", "carol", "allen", "clarke").toObservable
     val keySelector = (s: String) => s.head
     val valueSelector = (s: String) => s.tail
-    val mapFactory = () => mutable.Map('d' -> mutable.ListBuffer("oug"))
-    val bufferFactory = (k: Char) => mutable.ListBuffer[String]()
-    val m = o.toMultimap(keySelector, valueSelector, mapFactory, bufferFactory)
+    val m = o.toMultiMap(keySelector, valueSelector, {
+      new mutable.HashMap[Char, mutable.Set[String]] with mutable.MultiMap[Char, String] {
+        override def makeSet = new mutable.TreeSet[String]
+      }
+    })
     println(m.toBlocking.single)
   }
 

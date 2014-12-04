@@ -3736,65 +3736,90 @@ trait Observable[+T]
   }
 
   /**
-   * Return an Observable that emits a single Map containing all items emitted by the source Observable,
-   * mapped by the keys returned by a specified `keySelector` function.
-   * <p>
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
-   * <p>
-   * If more than one source item maps to the same key, the Map will contain the latest of those items.
-   *
-   * @param keySelector
-     * the function that extracts the key from a source item to be used in the Map
-   * @return an Observable that emits a single item: a Map containing the mapped items from the source
-   *         Observable
-   */
-  def toMap[K] (keySelector: T => K): Observable[Map[K, T]]= {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, T]] = thisJava.toMap[K](keySelector)
-    toScalaObservable[util.Map[K,T]](o).map(m => m.toMap)
-  }
-
-  /**
-   * Return an Observable that emits a single Map containing values corresponding to items emitted by the
+   * Return an Observable that emits a single `Map` containing values corresponding to items emitted by the
    * source Observable, mapped by the keys returned by a specified `keySelector` function.
    * <p>
    * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
    * <p>
-   * If more than one source item maps to the same key, the Map will contain a single entry that
-   * corresponds to the latest of those items.
    *
-   * @param keySelector
-     *            the function that extracts the key from a source item to be used in the Map
-   * @param valueSelector
-     *            the function that extracts the value from a source item to be used in the Map
-   * @return an Observable that emits a single item: a HashMap containing the mapped items from the source
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @param valueSelector the function that extracts the value from a source item to be used in the `Map`
+   * @param cbf `CanBuildFrom` to build the `Map`
+   * @return an Observable that emits a single item: a `Map` containing the mapped items from the source
    *         Observable
    */
-  def toMap[K, V] (keySelector: T => K, valueSelector: T => V) : Observable[Map[K, V]] = {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, V]] = thisJava.toMap[K, V](keySelector, valueSelector)
-    toScalaObservable[util.Map[K, V]](o).map(m => m.toMap)
+  def to[M[_, _], K, V](keySelector: T => K, valueSelector: T => V)(implicit cbf: CanBuildFrom[Nothing, (K, V), M[K, V]]): Observable[M[K, V]] = {
+    lift {
+      (subscriber: Subscriber[M[K, V]]) => {
+        new Subscriber[T](subscriber) {
+          val b = cbf()
+
+          override def onStart(): Unit = request(Long.MaxValue)
+
+          override def onNext(t: T): Unit = {
+            val key = keySelector(t)
+            val value = valueSelector(t)
+            b += key -> value
+          }
+
+          override def onError(e: Throwable): Unit = {
+            subscriber.onError(e)
+          }
+
+          override def onCompleted(): Unit = {
+            subscriber.onNext(b.result)
+            subscriber.onCompleted()
+          }
+        }
+      }
+    }
   }
 
   /**
-   * Return an Observable that emits a single Map, returned by a specified `mapFactory` function, that
-   * contains keys and values extracted from the items emitted by the source Observable.
+   * Return an Observable that emits a single `Map` containing all pairs emitted by the source Observable.
+   * This method is unavailable unless the elements are members of `(K, V)`. Each `(K, V)` becomes a key-value
+   * pair in the map. If more than one pairs have the same key, the `Map` will contain the latest of
+   * those items.
+   *
+   * @return an Observable that emits a single item: an `Map` containing all pairs from the source Observable
+   */
+  def toMap[K, V](implicit ev: Observable[T] <:< Observable[(K, V)]): Observable[Map[K, V]] = {
+    val o: Observable[(K, V)] = this
+    o.toMap(_._1, _._2)
+  }
+
+  /**
+   * Return an Observable that emits a single `Map` containing all items emitted by the source Observable,
+   * mapped by the keys returned by a specified `keySelector` function.
    * <p>
    * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
+   * <p>
+   * If more than one source item maps to the same key, the `Map` will contain the latest of those items.
    *
-   * @param keySelector
-     *            the function that extracts the key from a source item to be used in the Map
-   * @param valueSelector
-     *            the function that extracts the value from the source items to be used as value in the Map
-   * @param mapFactory
-     *            the function that returns a Map instance to be used
-   * @return an Observable that emits a single item: a Map that contains the mapped items emitted by the
-   *         source Observable
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @return an Observable that emits a single item: an `Map` containing the mapped items from the source
+   *         Observable
    */
-  def toMap[K, V] (keySelector: T => K, valueSelector: T => V, mapFactory: () => Map[K, V]): Observable[Map[K, V]] = {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, V]] = thisJava.toMap[K, V](keySelector, valueSelector)
-    toScalaObservable[util.Map[K, V]](o).map(m => mapFactory() ++ m.toMap)
+  def toMap[K](keySelector: T => K): Observable[Map[K, T]] = {
+    to[Map, K, T](keySelector, v => v)
+  }
+
+  /**
+   * Return an Observable that emits a single `Map` containing values corresponding to items emitted by the
+   * source Observable, mapped by the keys returned by a specified `keySelector` function.
+   * <p>
+   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png" alt="" />
+   * <p>
+   * If more than one source item maps to the same key, the `Map` will contain a single entry that
+   * corresponds to the latest of those items.
+   *
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @param valueSelector the function that extracts the value from a source item to be used in the `Map`
+   * @return an Observable that emits a single item: an `Map` containing the mapped items from the source
+   *         Observable
+   */
+  def toMap[K, V](keySelector: T => K, valueSelector: T => V): Observable[Map[K, V]] = {
+    to[Map, K, V](keySelector, valueSelector)
   }
 
   /**
@@ -3960,84 +3985,60 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that emits a single `Map` that contains an `Seq` of items emitted by the
-   * source Observable keyed by a specified `keySelector` function.
+   * Returns an Observable that emits a single `mutable.MultiMap` that contains items emitted by the
+   * source Observable keyed by a specified `keySelector` function. The items having the same
+   * key will be put into a `Set`.
    *
    * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
-   * @param keySelector the function that extracts the key from the source items to be used as key in the HashMap
-   * @return an Observable that emits a single item: a `Map` that contains an `Seq` of items mapped from
-   *         the source Observable
+   * @param keySelector the function that extracts the key from the source items to be used as key in the `mutable.MultiMap`
+   * @return an Observable that emits a single item: a `mutable.MultiMap` that contains items emitted by the
+   *         source Observable keyed by a specified `keySelector` function.
    */
-  def toMultimap[K](keySelector: T => K): Observable[scala.collection.Map[K, Seq[T]]] = {
-    toMultimap(keySelector, k => k)
+  def toMultiMap[K, V >: T](keySelector: T => K): Observable[mutable.MultiMap[K, V]] = {
+    toMultiMap(keySelector, k => k)
   }
 
   /**
-   * Returns an Observable that emits a single `Map` that contains an `Seq` of values extracted by a
+   * Returns an Observable that emits a single `mutable.MultiMap` that contains values extracted by a
    * specified `valueSelector` function from items emitted by the source Observable, keyed by a
-   * specified `keySelector` function.
+   * specified `keySelector` function. The values having the same key will be put into a `Set`.
    *
    * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
-   * @param keySelector the function that extracts a key from the source items to be used as key in the HashMap
-   * @param valueSelector the function that extracts a value from the source items to be used as value in the HashMap
-   * @return an Observable that emits a single item: a `Map` that contains an `Seq` of items mapped from
+   * @param keySelector the function that extracts a key from the source items to be used as key in the `mutable.MultiMap`
+   * @param valueSelector the function that extracts a value from the source items to be used as value in the `mutable.MultiMap`
+   * @return an Observable that emits a single item: a `mutable.MultiMap` that contains keys and values mapped from
    *         the source Observable
    */
-  def toMultimap[K, V](keySelector: T => K, valueSelector: T => V): Observable[scala.collection.Map[K, Seq[V]]] = {
-    toMultimap(keySelector, valueSelector, () => mutable.Map[K, mutable.Buffer[V]]())
+  def toMultiMap[K, V](keySelector: T => K, valueSelector: T => V): Observable[mutable.MultiMap[K, V]] = {
+    toMultiMap(keySelector, valueSelector, new mutable.HashMap[K, mutable.Set[V]] with mutable.MultiMap[K, V])
   }
 
   /**
-   * Returns an Observable that emits a single `mutable.Map[K, mutable.Buffer[V]]`, returned by a specified `mapFactory` function, that
-   * contains values, extracted by a specified `valueSelector` function from items emitted by the source Observable and
-   * keyed by the `keySelector` function. `mutable.Map[K, B]` is the same instance create by `mapFactory`.
-   *
-   * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
-   *
-   * @param keySelector the function that extracts a key from the source items to be used as the key in the Map
-   * @param valueSelector the function that extracts a value from the source items to be used as the value in the Map
-   * @param mapFactory he function that returns a `mutable.Map[K, mutable.Buffer[V]]` instance to be used
-   * @return an Observable that emits a single item: a `mutable.Map[K, mutable.Buffer[V]]` that contains items mapped
-   *         from the source Observable
-   */
-  def toMultimap[K, V, M <: mutable.Map[K, mutable.Buffer[V]]](keySelector: T => K, valueSelector: T => V, mapFactory: () => M): Observable[M] = {
-    toMultimap[K, V, mutable.Buffer[V], M](keySelector, valueSelector, mapFactory, k => mutable.Buffer[V]())
-  }
-
-  /**
-   * Returns an Observable that emits a single `mutable.Map[K, B]`, returned by a specified `mapFactory` function, that
+   * Returns an Observable that emits a single `mutable.MultiMap`, returned by a specified `multiMapFactory` function, that
    * contains values extracted by a specified `valueSelector` function from items emitted by the source Observable, and
-   * keyed by the `keySelector` function. `mutable.Map[K, B]` is the same instance create by `mapFactory`.
+   * keyed by the `keySelector` function. The values having the same key will be put into a `Set`.
    *
    * <img width="640" height="305" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMultiMap.png" alt="" />
    *
-   * @param keySelector the function that extracts a key from the source items to be used as the key in the Map
-   * @param valueSelector the function that extracts a value from the source items to be used as the value in the Map
-   * @param mapFactory the function that returns a Map instance to be used
-   * @param bufferFactory the function that returns a `mutable.Buffer[V]` instance for a particular key to be used in the Map
-   * @return an Observable that emits a single item: a `mutable.Map[K, B]` that contains mapped items from the source Observable.
+   * @param keySelector the function that extracts a key from the source items to be used as the key in the `mutable.MultiMap`
+   * @param valueSelector the function that extracts a value from the source items to be used as the value in the `mutable.MultiMap`
+   * @param multiMapFactory a `mutable.MultiMap` instance to be used. Note: tis is a by-name parameter.
+   * @return an Observable that emits a single item: a `mutable.MultiMap` that contains keys and values mapped from the source Observable.
    */
-  def toMultimap[K, V, B <: mutable.Buffer[V], M <: mutable.Map[K, B]](keySelector: T => K, valueSelector: T => V, mapFactory: () => M, bufferFactory: K => B): Observable[M] = {
-    // It's complicated to convert `mutable.Map[K, mutable.Buffer[V]]` to `java.util.Map[K, java.util.Collection[V]]`,
-    // so RxScala implements `toMultimap` directly.
-    // Choosing `mutable.Buffer/Map` is because `append/update` is necessary to implement an efficient `toMultimap`.
+  def toMultiMap[K, V, M <: mutable.MultiMap[K, V]](keySelector: T => K, valueSelector: T => V, multiMapFactory: => M): Observable[M] = {
     lift {
       (subscriber: Subscriber[M]) => {
         new Subscriber[T](subscriber) {
-          val map = mapFactory()
+          val mm = multiMapFactory
 
           override def onStart(): Unit = request(Long.MaxValue)
 
           override def onNext(t: T): Unit = {
             val key = keySelector(t)
-            val values = map.get(key) match {
-              case Some(v) => v
-              case None => bufferFactory(key)
-            }
-            values += valueSelector(t)
-            map += key -> values: Unit
+            val value = valueSelector(t)
+            mm.addBinding(key, value)
           }
 
           override def onError(e: Throwable): Unit = {
@@ -4045,7 +4046,7 @@ trait Observable[+T]
           }
 
           override def onCompleted(): Unit = {
-            subscriber.onNext(map)
+            subscriber.onNext(mm)
             subscriber.onCompleted()
           }
         }

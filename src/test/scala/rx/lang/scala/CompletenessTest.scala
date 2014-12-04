@@ -42,6 +42,14 @@ class CompletenessTest extends JUnitSuite {
   val fromFuture = "[TODO: Decide how Scala Futures should relate to Observables. Should there be a " +
      "common base interface for Future and Observable? And should Futures also have an unsubscribe method?]"
   val commentForTakeLastBuffer = "[use `takeRight(...).toSeq`]"
+  val commentForToMultimapWithCollectionFactory = "[`toMultiMap` in RxScala returns `mutable.MultiMap`. It's a" +
+    " `Map[A, mutable.Set[B]]`. You can override `def makeSet: Set[B]` to create a custom Set.]"
+  val commentForRange = "[The `range` method of the Java Observable takes `start` and `count` parameters, " +
+     "whereas the `range` method of the Scala Iterable takes `start` and `end` parameters, " +
+     "so adding any of these two would be confusing. Moreover, since `scala.collection.immutable.Range` is " +
+     "a subtype of `Iterable`, there are two nice ways of creating range Observables: " +
+     "`(start to end).toObservable` or `Observable.from(start to end)`, and even more options are possible " +
+     "using `until` and `by`.]"
 
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
@@ -175,8 +183,11 @@ class CompletenessTest extends JUnitSuite {
       "timer(Long, Long, TimeUnit)" -> "timer(Duration, Duration)",
       "timer(Long, Long, TimeUnit, Scheduler)" -> "timer(Duration, Duration, Scheduler)",
       "toList()" -> "toSeq",
-      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultimap(T => K, T => V, () => M)",
-      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> "toMultimap(T => K, T => V, () => M, K => B)",
+      "toMap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, V]])" -> "[mapFactory is not necessary because Scala has `CanBuildFrom`]",
+      "toMultimap(Func1[_ >: T, _ <: K])" -> "toMultiMap(T => K)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V])" -> "toMultiMap(T => K, T => V)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultiMap(T => K, T => V, => M)",
+      "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> commentForToMultimapWithCollectionFactory,
       "toSortedList()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
       "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
       "window(Int)" -> "tumbling(Int)",
@@ -215,8 +226,8 @@ class CompletenessTest extends JUnitSuite {
       "mergeDelayError(Observable[_ <: Observable[_ <: T]])" -> "flattenDelayError(<:<[Observable[T], Observable[Observable[U]]])",
       "sequenceEqual(Observable[_ <: T], Observable[_ <: T])" -> "sequenceEqual(Observable[U])",
       "sequenceEqual(Observable[_ <: T], Observable[_ <: T], Func2[_ >: T, _ >: T, Boolean])" -> "sequenceEqualWith(Observable[U])((U, U) => Boolean)",
-      "range(Int, Int)" -> "[use `(start until (start + count)).toObservable` instead of `range(start, count)`]",
-      "range(Int, Int, Scheduler)" -> "[use `(start until (start + count)).toObservable.subscribeOn(scheduler)` instead of `range(start, count, scheduler)`]",
+      "range(Int, Int)" -> commentForRange,
+      "range(Int, Int, Scheduler)" -> "[use `(start until end).toObservable.subscribeOn(scheduler)` instead of `range(start, count, scheduler)`]",
       "switchOnNext(Observable[_ <: Observable[_ <: T]])" -> "switch(<:<[Observable[T], Observable[Observable[U]]])",
       "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource])" -> "using(=> Resource)(Resource => Observable[T], Resource => Unit)",
       "zip(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "[use instance method `zip` and `map`]",
