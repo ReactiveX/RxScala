@@ -42,12 +42,12 @@ class CompletenessTest extends JUnitSuite {
   val fromFuture = "[TODO: Decide how Scala Futures should relate to Observables. Should there be a " +
      "common base interface for Future and Observable? And should Futures also have an unsubscribe method?]"
   val commentForTakeLastBuffer = "[use `takeRight(...).toSeq`]"
-  val commentForRange = "The `range` method of the Java Observable takes `start` and `count` parameters, " +
+  val commentForRange = "[The `range` method of the Java Observable takes `start` and `count` parameters, " +
      "whereas the `range` method of the Scala Iterable takes `start` and `end` parameters, " +
      "so adding any of these two would be confusing. Moreover, since `scala.collection.immutable.Range` is " +
      "a subtype of `Iterable`, there are two nice ways of creating range Observables: " +
      "`(start to end).toObservable` or `Observable.from(start to end)`, and even more options are possible " +
-     "using `until` and `by`."
+     "using `until` and `by`.]"
 
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
