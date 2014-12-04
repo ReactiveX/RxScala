@@ -3736,65 +3736,90 @@ trait Observable[+T]
   }
 
   /**
-   * Return an Observable that emits a single Map containing all items emitted by the source Observable,
-   * mapped by the keys returned by a specified `keySelector` function.
-   * <p>
-   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
-   * <p>
-   * If more than one source item maps to the same key, the Map will contain the latest of those items.
-   *
-   * @param keySelector
-     * the function that extracts the key from a source item to be used in the Map
-   * @return an Observable that emits a single item: a Map containing the mapped items from the source
-   *         Observable
-   */
-  def toMap[K] (keySelector: T => K): Observable[Map[K, T]]= {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, T]] = thisJava.toMap[K](keySelector)
-    toScalaObservable[util.Map[K,T]](o).map(m => m.toMap)
-  }
-
-  /**
-   * Return an Observable that emits a single Map containing values corresponding to items emitted by the
+   * Return an Observable that emits a single `Map` containing values corresponding to items emitted by the
    * source Observable, mapped by the keys returned by a specified `keySelector` function.
    * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
    * <p>
-   * If more than one source item maps to the same key, the Map will contain a single entry that
-   * corresponds to the latest of those items.
    *
-   * @param keySelector
-     *            the function that extracts the key from a source item to be used in the Map
-   * @param valueSelector
-     *            the function that extracts the value from a source item to be used in the Map
-   * @return an Observable that emits a single item: a HashMap containing the mapped items from the source
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @param valueSelector the function that extracts the value from a source item to be used in the `Map`
+   * @param cbf `CanBuildFrom` to build the `Map`
+   * @return an Observable that emits a single item: a `Map` containing the mapped items from the source
    *         Observable
    */
-  def toMap[K, V] (keySelector: T => K, valueSelector: T => V) : Observable[Map[K, V]] = {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, V]] = thisJava.toMap[K, V](keySelector, valueSelector)
-    toScalaObservable[util.Map[K, V]](o).map(m => m.toMap)
+  def to[M[_, _], K, V](keySelector: T => K, valueSelector: T => V)(implicit cbf: CanBuildFrom[Nothing, (K, V), M[K, V]]): Observable[M[K, V]] = {
+    lift {
+      (subscriber: Subscriber[M[K, V]]) => {
+        new Subscriber[T](subscriber) {
+          val b = cbf()
+
+          override def onStart(): Unit = request(Long.MaxValue)
+
+          override def onNext(t: T): Unit = {
+            val key = keySelector(t)
+            val value = valueSelector(t)
+            b += key -> value
+          }
+
+          override def onError(e: Throwable): Unit = {
+            subscriber.onError(e)
+          }
+
+          override def onCompleted(): Unit = {
+            subscriber.onNext(b.result)
+            subscriber.onCompleted()
+          }
+        }
+      }
+    }
   }
 
   /**
-   * Return an Observable that emits a single Map, returned by a specified `mapFactory` function, that
-   * contains keys and values extracted from the items emitted by the source Observable.
+   * Return an Observable that emits a single `Map` containing all pairs emitted by the source Observable.
+   * This method is unavailable unless the elements are members of `(K, V)`. Each `(K, V)` becomes a key-value
+   * pair in the map. If more than one pairs have the same key, the `Map` will contain the latest of
+   * those items.
+   *
+   * @return an Observable that emits a single item: an `Map` containing all pairs from the source Observable
+   */
+  def toMap[K, V](implicit ev: Observable[T] <:< Observable[(K, V)]): Observable[Map[K, V]] = {
+    val o: Observable[(K, V)] = this
+    o.toMap(_._1, _._2)
+  }
+
+  /**
+   * Return an Observable that emits a single `Map` containing all items emitted by the source Observable,
+   * mapped by the keys returned by a specified `keySelector` function.
    * <p>
    * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
+   * <p>
+   * If more than one source item maps to the same key, the `Map` will contain the latest of those items.
    *
-   * @param keySelector
-     *            the function that extracts the key from a source item to be used in the Map
-   * @param valueSelector
-     *            the function that extracts the value from the source items to be used as value in the Map
-   * @param mapFactory
-     *            the function that returns a Map instance to be used
-   * @return an Observable that emits a single item: a Map that contains the mapped items emitted by the
-   *         source Observable
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @return an Observable that emits a single item: an `Map` containing the mapped items from the source
+   *         Observable
    */
-  def toMap[K, V] (keySelector: T => K, valueSelector: T => V, mapFactory: () => Map[K, V]): Observable[Map[K, V]] = {
-    val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    val o: rx.Observable[util.Map[K, V]] = thisJava.toMap[K, V](keySelector, valueSelector)
-    toScalaObservable[util.Map[K, V]](o).map(m => mapFactory() ++ m.toMap)
+  def toMap[K](keySelector: T => K): Observable[Map[K, T]] = {
+    to[Map, K, T](keySelector, v => v)
+  }
+
+  /**
+   * Return an Observable that emits a single `Map` containing values corresponding to items emitted by the
+   * source Observable, mapped by the keys returned by a specified `keySelector` function.
+   * <p>
+   * <img width="640" src="https://raw.github.com/wiki/Netflix/RxJava/images/rx-operators/toMap.png">
+   * <p>
+   * If more than one source item maps to the same key, the `Map` will contain a single entry that
+   * corresponds to the latest of those items.
+   *
+   * @param keySelector the function that extracts the key from a source item to be used in the `Map`
+   * @param valueSelector the function that extracts the value from a source item to be used in the `Map`
+   * @return an Observable that emits a single item: an `Map` containing the mapped items from the source
+   *         Observable
+   */
+  def toMap[K, V](keySelector: T => K, valueSelector: T => V): Observable[Map[K, V]] = {
+    to[Map, K, V](keySelector, valueSelector)
   }
 
   /**
