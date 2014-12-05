@@ -50,6 +50,15 @@ class CompletenessTest extends JUnitSuite {
      "a subtype of `Iterable`, there are two nice ways of creating range Observables: " +
      "`(start to end).toObservable` or `Observable.from(start to end)`, and even more options are possible " +
      "using `until` and `by`.]"
+  val commentForExperimental = "[Marked as `@Beta` or `@Experimental` in RxJava and thus not available in RxScala]"
+
+  // We should ignore unstable APIs in RxJava. However, the `@Beta` and `@Experimental` annotations
+  // have RetentionPolicy.CLASS retention, so even though they are present in the `.class` file, they
+  // are not exposed by the JVM to runtime reflection calls. So we need to maintain a list.
+  val rxjavaExperimentalMethods = Set(
+    "onBackpressureBlock()",
+    "onBackpressureBlock(Int)"
+  )
 
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
@@ -263,7 +272,9 @@ class CompletenessTest extends JUnitSuite {
   }).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
     // amb 2-9
     "amb(" + _ + ")" -> "[unnecessary because we can use `o1 amb o2` instead or `amb(List(o1, o2, o3, ...)`]"
-  ).drop(1).toMap
+  ).drop(1).toMap ++ rxjavaExperimentalMethods.map(method =>
+    method -> commentForExperimental
+  ).toMap
 
   def removePackage(s: String) = s.replaceAll("(\\w+\\.)+(\\w+)", "$2")
 
