@@ -51,10 +51,17 @@ class CompletenessTest extends JUnitSuite {
      "`(start to end).toObservable` or `Observable.from(start to end)`, and even more options are possible " +
      "using `until` and `by`.]"
 
+  // We should ignore unstable APIs in RxJava. However, because `@Beta` and `@Experimental` cannot
+  // be detected at run time, we need to maintain a list.
+  val rxjavaExperimentalMethods = Set(
+    "onBackpressureBlock()",
+    "onBackpressureBlock(Int)"
+  )
+
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
    */
-  val correspondence = defaultMethodCorrespondence ++ correspondenceChanges // ++ overrides LHS with RHS
+  val correspondence = (defaultMethodCorrespondence ++ correspondenceChanges) filterKeys (!rxjavaExperimentalMethods.contains(_)) // ++ overrides LHS with RHS
 
   /**
    * Creates default method correspondence mappings, assuming that Scala methods have the same
