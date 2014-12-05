@@ -21,7 +21,7 @@ import rx.lang.scala.Subject
  * Subject that, once an `Observer` has subscribed, emits all subsequently observed items to the
  * subscriber.
  * <p>
- * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
+ * <img width="640" height="405" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="" />
  * <p>
  * @example
  {{{
@@ -46,3 +46,4 @@ object PublishSubject {
 }
 
 private [scala] class PublishSubject[T] private [scala] (val asJavaSubject: rx.subjects.PublishSubject[T]) extends Subject[T]  {}
+

@@ -21,7 +21,7 @@ import rx.lang.scala.Subject
  * Subject that publishes only the last item observed to each `Observer` that has subscribed, when the
  * source `Observable}` completes.
  * <p>
- * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.AsyncSubject.png" alt="">
+ * <img width="640" height="405" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/S.AsyncSubject.png" alt="" />
  * <p>
  * @example
  {{{

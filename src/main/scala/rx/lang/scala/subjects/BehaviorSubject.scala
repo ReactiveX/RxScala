@@ -21,7 +21,7 @@ import rx.lang.scala.Subject
  * Subject that emits the most recent item it has observed and all subsequent observed items to each subscribed
  * `Observer`.
  * <p>
- * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorSubject.png" alt="">
+ * <img width="640" height="405" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorSubject.png" alt="" />
  * <p>
  * @example
  {{{

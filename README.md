@@ -90,7 +90,7 @@ RxScala:
 
 - The API documentation can be found [here](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable). 
 
-Note that starting from version 0.15, `rx.lang.scala.Observable` is not a value class any more.  [./Rationale.md](https://github.com/Netflix/RxJava/blob/master/language-adaptors/rxjava-scala/Rationale.md) explains why.
+Note that starting from version 0.15, `rx.lang.scala.Observable` is not a value class any more.  [./Rationale.md](https://github.com/ReactiveX/RxScala/blob/0.x/Rationale.md) explains why.
 
 You can build the API documentation yourself by running `sbt doc` in the RxScala root directory. Open `target/scala-2.11/api/index.html` to display it.
 
