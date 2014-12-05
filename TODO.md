@@ -5,7 +5,7 @@ This is a (probably incomplete) list of what still needs to be done in the Scala
 
 TODOs which came up at the meeting with Erik Meijer on 2013-10-11:
 
-* Rename the factory methods in `object Observable`, considering that the most important is the one taking an `Observer => Subscription` function (the "king" according to Erik). Thunk to Subscription conversion (?), also consider Jason's [comments](https://github.com/Netflix/RxJava/commit/c1596253fc5567b7cc37d20128374d189471ff79). A useful trick might also be to have `apply(T, T, T*)` instead of just `apply(T*)`.
+* Rename the factory methods in `object Observable`, considering that the most important is the one taking an `Observer => Subscription` function (the "king" according to Erik). Thunk to Subscription conversion (?), also consider Jason's [comments](https://github.com/ReactiveX/RxJava/commit/c1596253fc5567b7cc37d20128374d189471ff79). A useful trick might also be to have `apply(T, T, T*)` instead of just `apply(T*)`.
 * Factory methods for observables and instance methods should take implicit scheduler, default is different per method (Isn't this a contradiction? In other words: If I call a method without providing a scheduler, should the default scheduler be used or the implicit that I provided?) Find in .NET source the list of which schedulers goes with which operators by default. If no other default, use NewThreadScheduler. Note that there are methods in Scala Observable which should have an overload taking a Scheduler, but do not yet have it! Also remember Erik saying that he would like to "minimize magically injected concurrency".
 * Convert executor to scheduler
 * Check if TestScheduler added in 0.14.3 is sufficient
@@ -14,7 +14,7 @@ TODOs which came up at the meeting with Erik Meijer on 2013-10-11:
 * Currently all Swing examples use Swing directly, without using the Scala wrappers around Swing. Make sure that everything is nice if the Scala wrappers around Swing are used, eg `Reaction { case clicked: ButtonClicked => … }` -- avoid default case, check out the hooks for partial function applyOrElse to avoid double pattern matching
 * There are no examples yet using `async`, but `async` will be used in the course. Write examples and check if everything works as expected when combined with `async`.
 * Futures: For the moment, just add a Future->Observable converter method to `object Observable`. Later, think if `Future[T] extends Observable[T]`.
-* Operator `delay`: Once Erik has commented on [this](https://github.com/Netflix/RxJava/pull/384), make sure this operator is added accordingly to RxJava and then to RxScala
+* Operator `delay`: Once Erik has commented on [this](https://github.com/ReactiveX/RxJava/pull/384), make sure this operator is added accordingly to RxJava and then to RxScala
 
 Some more TODOs:
 

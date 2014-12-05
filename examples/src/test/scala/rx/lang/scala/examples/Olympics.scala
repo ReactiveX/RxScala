@@ -92,8 +92,8 @@ object Olympics {
   /*
   def fourYearsEmptyOld: Observable[Medal] = {
     // TODO this should return an observable which emits nothing during fourYears and then completes
-    // Because of https://github.com/Netflix/RxJava/issues/388, we get non-terminating tests
-    // And this https://github.com/Netflix/RxJava/pull/289#issuecomment-24738668 also causes problems
+    // Because of https://github.com/ReactiveX/RxJava/issues/388, we get non-terminating tests
+    // And this https://github.com/ReactiveX/RxJava/pull/289#issuecomment-24738668 also causes problems
     // So we don't use this:
     Observable.interval(fourYears).take(1).map(i => neverUsedDummyMedal).filter(m => false)
     // But we just return empty, which completes immediately
