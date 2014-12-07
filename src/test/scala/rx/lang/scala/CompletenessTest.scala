@@ -134,7 +134,7 @@ class CompletenessTest extends JUnitSuite {
       "mergeWith(Observable[_ <: T])" -> "merge(Observable[U])",
       "ofType(Class[R])" -> "[use `filter(_.isInstanceOf[Class])`]",
       "onErrorResumeNext(Func1[Throwable, _ <: Observable[_ <: T]])" -> "onErrorResumeNext(Throwable => Observable[U])",
-      "onErrorResumeNext(Observable[_ <: T])" -> "onErrorResumeNext(Observable[U])",
+      "onErrorResumeNext(Observable[_ <: T])" -> "onErrorResumeNext(Throwable => Observable[U])",
       "onErrorReturn(Func1[Throwable, _ <: T])" -> "onErrorReturn(Throwable => U)",
       "onExceptionResumeNext(Observable[_ <: T])" -> "onExceptionResumeNext(Observable[U])",
       "publish(Func1[_ >: Observable[T], _ <: Observable[R]])" -> "publish(Observable[T] => Observable[R])",
