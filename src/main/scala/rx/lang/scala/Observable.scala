@@ -1131,37 +1131,6 @@ trait Observable[+T]
   }
 
   /**
-   * Instruct an Observable to pass control to another Observable rather than invoking [[rx.lang.scala.Observer.onError onError]] if it encounters an error.
-   *
-   * <img width="640" height="310" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/onErrorResumeNext.png" alt="" />
-   *
-   * By default, when an Observable encounters an error that prevents it from emitting the
-   * expected item to its [[rx.lang.scala.Observer]], the Observable invokes its Observer's
-   * `onError` method, and then quits without invoking any more of its Observer's
-   * methods. The `onErrorResumeNext` method changes this behavior. If you pass
-   * another Observable (`resumeSequence`) to an Observable's
-   * `onErrorResumeNext` method, if the original Observable encounters an error,
-   * instead of invoking its Observer's `onError` method, it will instead relinquish
-   * control to `resumeSequence` which will invoke the Observer's [[rx.lang.scala.Observer.onNext onNext]]
-   * method if it is able to do so. In such a case, because no
-   * Observable necessarily invokes `onError`, the Observer may never know that an
-   * error happened.
-   *
-   * You can use this to prevent errors from propagating or to supply fallback data should errors
-   * be encountered.
-   *
-   * @param resumeSequence
-   *            a function that returns an Observable that will take over if the source Observable
-   *            encounters an error
-   * @return the original Observable, with appropriately modified behavior
-   */
-  def onErrorResumeNext[U >: T](resumeSequence: Observable[U]): Observable[U] = {
-    val rSeq1: rx.Observable[_ <: U] = resumeSequence.asJavaObservable
-    val rSeq2: rx.Observable[Nothing] = rSeq1.asInstanceOf[rx.Observable[Nothing]]
-    toScalaObservable[U](asJavaObservable.onErrorResumeNext(rSeq2))
-  }
-
-  /**
    * Instruct an Observable to pass control to another Observable rather than invoking [[rx.lang.scala.Observer.onError onError]] if it encounters an error of type `java.lang.Exception`.
    *
    * This differs from `Observable.onErrorResumeNext` in that this one does not handle `java.lang.Throwable` or `java.lang.Error` but lets those continue through.
