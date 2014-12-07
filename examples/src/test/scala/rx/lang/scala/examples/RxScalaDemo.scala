@@ -1480,6 +1480,21 @@ class RxScalaDemo extends JUnitSuite {
     o.onErrorResumeNext(_ => Observable.just(10, 11, 12)).subscribe(println(_))
   }
 
+  @Test def onErrorResumeNextExamplePartialFunction() {
+    val o = Observable {
+      (subscriber: Subscriber[Int]) =>
+        subscriber.onNext(1)
+        subscriber.onNext(2)
+        subscriber.onError(new IOException("Oops"))
+        subscriber.onNext(3)
+        subscriber.onNext(4)
+    }
+    o.onErrorResumeNext({
+      case e: IOException => Observable.just(20, 21, 22)
+      case _ => Observable.just(10, 11, 12)
+    }).subscribe(println(_))
+  }
+
   @Test def switchMapExample() {
     val o = Observable.interval(300 millis).take(5).switchMap[String] {
       n => Observable.interval(50 millis).take(10).map(i => s"Seq ${n}: ${i}")
