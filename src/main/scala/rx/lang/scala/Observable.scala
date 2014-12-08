@@ -4424,8 +4424,8 @@ object Observable {
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Creating-Observables#empty-error-and-never">RxJava Wiki: empty()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229066.aspx">MSDN: Observable.Empty Method (IScheduler)</a>
    */
-  def empty: Observable[Nothing] = {
-    toScalaObservable(rx.Observable.empty[Nothing]())
+  def empty[T]: Observable[T] = {
+    toScalaObservable(rx.Observable.empty())
   }
 
   /**
@@ -4518,8 +4518,8 @@ object Observable {
    *
    * @return an Observable that never sends any items or notifications to an [[rx.lang.scala.Observer]]
    */
-  def never: Observable[Nothing] = {
-    toScalaObservable[Nothing](rx.Observable.never())
+  def never[T]: Observable[T] = {
+    toScalaObservable(rx.Observable.never())
   }
 
   /**
