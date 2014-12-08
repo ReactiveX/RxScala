@@ -1644,4 +1644,10 @@ class RxScalaDemo extends JUnitSuite {
     event1ProducerSubscription.unsubscribe()
     event2ProducerSubscription.unsubscribe()
   }
+
+  @Test def errorExample(): Unit = {
+    val o1 = Observable.just(1, 2, 3)
+    val o2 = Observable.error(new RuntimeException("Oops"))
+    (o1 ++ o2).subscribe(v => println(v), e => e.printStackTrace(), () => println("completed"))
+  }
 }

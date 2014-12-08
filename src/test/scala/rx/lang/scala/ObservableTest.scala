@@ -94,7 +94,7 @@ class ObservableTests extends JUnitSuite {
     val msg = "msg6251"
     var receivedMsg = "none"
     try {
-      Observable.error[Int](new Exception(msg)).firstOrElse(10).toBlocking.single
+      Observable.error(new Exception(msg)).firstOrElse(10).toBlocking.single
     } catch {
       case e: Exception => receivedMsg = e.getCause().getMessage()
     }
@@ -428,4 +428,15 @@ class ObservableTests extends JUnitSuite {
     assertEquals(expectedMap3, m3.toBlocking.single)
   }
 
+  @Ignore // Don't run it. Only test if it can be compiled
+  def testErrorSignature() {
+    val o: Observable[Int] = Observable.error(new RuntimeException("Oops")).map(v => v)
+    println(o.toBlocking.single)
+
+    val x = 1
+    println(x + (Observable.error(new RuntimeException("Oops")).toBlocking.single: Int))
+
+    val y: Int = Observable.error(new RuntimeException("Oops")).toBlocking.single
+    println(y)
+  }
 }

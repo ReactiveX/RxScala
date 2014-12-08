@@ -4394,20 +4394,18 @@ object Observable {
   }
   
   /**
-   * Returns an Observable that invokes an [[rx.lang.scala.Observer]]'s [[rx.lang.scala.Observer.onError onError]]
-   * method when the Observer subscribes to it.
+   * Returns an [[Observable]] that invokes the [[Observer.onError]] method when the [[Observer]] subscribes to it.
    *
    * <img width="640" height="190" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/error.png" alt="" />
    *
-   * @param exception
-   *            the particular error to report
-   * @tparam T
-   *            the type of the items (ostensibly) emitted by the Observable
-   * @return an Observable that invokes the [[rx.lang.scala.Observer]]'s [[rx.lang.scala.Observer.onError onError]]
-   *         method when the Observer subscribes to it
+   * ===Scheduler:===
+   * `error` does not operate by default on a particular [[Scheduler]].
+   *
+   * @param exception the particular `Throwable` to pass to [[Observer.onError]]
+   * @return an [[Observable]] that invokes the [[Observer.onError]] method when the [[Observer]] subscribes to it
    */
-  def error[T](exception: Throwable): Observable[T] = {
-    toScalaObservable[T](rx.Observable.error(exception))
+  def error(exception: Throwable): Observable[Nothing] = {
+    toScalaObservable(rx.Observable.error(exception))
   }
 
   /**
