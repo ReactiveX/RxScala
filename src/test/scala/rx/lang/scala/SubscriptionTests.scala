@@ -183,4 +183,22 @@ class SubscriptionTests extends JUnitSuite {
       assertTrue(s2.isUnsubscribed)
   }
 
+  @Test
+  def testIssue85: Unit = {
+    // https://github.com/ReactiveX/RxScala/issues/85
+    val xs = Observable.create[Nothing](o => {
+      o.onCompleted()
+      Subscription {
+        // do nothing
+      }
+    })
+    val s = xs.subscribe()
+    assertTrue(s.isUnsubscribed)
+
+    val ys = Observable[Nothing](o => {
+      o.onCompleted()
+    })
+    val z = ys.subscribe()
+    assertTrue(z.isUnsubscribed)
+  }
 }

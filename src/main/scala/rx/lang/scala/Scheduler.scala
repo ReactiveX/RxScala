@@ -47,7 +47,10 @@ trait Scheduler {
 }
 
 object Worker {
-  def apply(worker: rx.Scheduler.Worker): Worker = new Worker { private[scala] val asJavaWorker = worker }
+  def apply(worker: rx.Scheduler.Worker): Worker = new Worker {
+    private[scala] override val asJavaWorker = worker
+    private[scala] override val asJavaSubscription = worker
+  }
 }
 
 trait Worker extends Subscription {

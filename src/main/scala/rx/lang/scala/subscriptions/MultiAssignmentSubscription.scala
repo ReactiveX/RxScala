@@ -59,9 +59,6 @@ class MultipleAssignmentSubscription private[scala] (override val asJavaSubscrip
     this
   }
 
-  override def unsubscribe(): Unit =  asJavaSubscription.unsubscribe()
-  override def isUnsubscribed: Boolean = asJavaSubscription.isUnsubscribed
-
 }
 
 

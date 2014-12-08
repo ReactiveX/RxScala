@@ -69,7 +69,4 @@ class CompositeSubscription private[scala] (override val asJavaSubscription: rx.
     this
   }
 
-  override def unsubscribe(): Unit =  asJavaSubscription.unsubscribe()
-  override def isUnsubscribed: Boolean = asJavaSubscription.isUnsubscribed
-
 }

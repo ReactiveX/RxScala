@@ -37,9 +37,6 @@ object SerialSubscription {
  */
 class SerialSubscription private[scala] (override val asJavaSubscription: rx.subscriptions.SerialSubscription) extends Subscription {
 
-  override def unsubscribe(): Unit =  asJavaSubscription.unsubscribe()
-  override def isUnsubscribed: Boolean = asJavaSubscription.isUnsubscribed
-
   def subscription_=(value: Subscription): this.type = {
       asJavaSubscription.set(value.asJavaSubscription)
       this
