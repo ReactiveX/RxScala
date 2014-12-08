@@ -1337,7 +1337,7 @@ class RxScalaDemo extends JUnitSuite {
   @Test def schedulerExample3(): Unit = {
     val worker = IOScheduler().createWorker
     var no = 1
-    val subscription = worker.schedulePeriodically(initialDelay = 1 seconds, period = 100 millis) {
+    val subscription = worker.schedule(initialDelay = 1 seconds, period = 100 millis) {
       println(s"Hello(${no}) from Scheduler")
       no += 1
     }
