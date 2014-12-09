@@ -4338,10 +4338,10 @@ object Observable {
    * @return
    *         an Observable that, when an [[rx.lang.scala.Observer]] subscribes to it, will execute the given function.
    */
-  def create[T](func: Observer[T] => Subscription): Observable[T] = {
+  def create[T](@deprecatedName('func) f: Observer[T] => Subscription): Observable[T] = {
     Observable(
       (subscriber: Subscriber[T]) => {
-        val s = func(subscriber)
+        val s = f(subscriber)
         if (s != null && s != subscriber) {
           subscriber.add(s)
         }
