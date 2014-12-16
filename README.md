@@ -79,10 +79,15 @@ Since RxScala is part of the RxJava family the communication channels are simila
 
 ## Versioning
 
-Before 0.21, RxScala 0.x was based on RxJava 0.x.
-From 0.21, RxScala is based on RxJava 1.0.
+| RxScala version | Compatible RxJava version |
+| ------------------- | ------------------------- |
+| 0.23.*<sup>[1]</sup> | 1.0.* |
+| 0.22.0 | 1.0.0-rc.5 |
+| 0.21.1 | 1.0.0-rc.3 |
+| 0.X.Y (X < 21)<sup>[2]</sup> | 0.X.Y |
 
-As of 1.0.0 semantic versioning will be used.
+[1] You can use any release of RxScala 0.23 with any release of RxJava 1.0. E.g, use RxScala 0.23.0 with RxJava 1.0.1 <br/>
+[2] You should use the same version of RxScala with RxJava. E.g, use RxScala 0.20.1 with RxJava 0.20.1
 
 ## Full Documentation
 
