@@ -38,8 +38,8 @@ object SerializedSubject {
    * @see RxScalaDemo.eventBusExample for example usage
    */
   def apply[T](actual: Subject[T]): SerializedSubject[T] = {
-    val jSubject: rx.subjects.Subject[T, T] = actual.asJavaSubject.asInstanceOf[rx.subjects.Subject[T, T]]
-    new SerializedSubject[T](new rx.subjects.SerializedSubject[T, T](jSubject))
+    val jSubject = actual.asJavaSubject.toSerialized.asInstanceOf[rx.subjects.SerializedSubject[T, T]]
+    new SerializedSubject[T](jSubject)
   }
 }
 
