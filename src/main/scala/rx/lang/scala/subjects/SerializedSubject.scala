@@ -38,9 +38,9 @@ object SerializedSubject {
    * @see RxScalaDemo.eventBusExample for example usage
    */
   def apply[T](actual: Subject[T]): SerializedSubject[T] = {
-    val jSubject = actual.asJavaSubject.toSerialized.asInstanceOf[rx.subjects.SerializedSubject[T, T]]
+    val jSubject = actual.asJavaSubject.toSerialized
     new SerializedSubject[T](jSubject)
   }
 }
 
-private [scala] class SerializedSubject[T] private [scala] (val asJavaSubject: rx.subjects.SerializedSubject[T, T]) extends Subject[T] {}
+private [scala] class SerializedSubject[T] private [scala] (val asJavaSubject: rx.subjects.SerializedSubject[_ >: T, _ <: T]) extends Subject[T]
