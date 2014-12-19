@@ -56,8 +56,11 @@ class CompletenessTest extends JUnitSuite {
   // have RetentionPolicy.CLASS retention, so even though they are present in the `.class` file, they
   // are not exposed by the JVM to runtime reflection calls. So we need to maintain a list.
   val rxjavaExperimentalMethods = Set(
+    "doOnRequest(Action1[Long])",
     "onBackpressureBlock()",
-    "onBackpressureBlock(Int)"
+    "onBackpressureBlock(Int)",
+    "onBackpressureBuffer(Long)",
+    "onBackpressureBuffer(Long, Action0)"
   )
 
   /**
