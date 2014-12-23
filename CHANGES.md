@@ -1,6 +1,6 @@
 # RxScala Releases
 
-## Version 0.23.1 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.23.1 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.0.3 along with some enhancements and bug fixes.
 
@@ -12,7 +12,7 @@ This release upgrades RxJava to 1.0.3 along with some enhancements and bug fixes
 
 Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
 
-## Version 0.23.0 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.23.0 – December 4th 2014 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava from 1.0.0-rc.5 to 1.0.2 along with some enhancements and bug fixes.
 
@@ -57,7 +57,7 @@ for examples of new `toMap` and `toMultiMap`.
 
 Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
 
-## Version 0.22.0 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.22.0 - October 7th 2014 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release updates RxScala to use RxJava 1.0.0-rc.5 which included some breaking changes as it approaches 1.0 Final. Read the RxJava [Release Notes](https://github.com/ReactiveX/RxJava/releases/tag/v1.0.0-rc.5) for more information.
 
@@ -70,7 +70,7 @@ This release updates RxScala to use RxJava 1.0.0-rc.5 which included some breaki
 
 Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
 
-## Version 0.21.1 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.21.1 - September 28th 2014 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 The first release after splitting from RxJava into its own top level project RxScala.
 
