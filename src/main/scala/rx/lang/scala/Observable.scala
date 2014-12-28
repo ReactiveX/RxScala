@@ -160,8 +160,7 @@ trait Observable[+T]
    *
    * This should only be used for implementing an `Operator` that requires nested subscriptions.
    *
-   * Normal use should use [[Observable.subscribe]] which ensures the Rx contract and other functionality.
-   *
+   * Normal use should use `Observable.subscribe` which ensures the Rx contract and other functionality.   *
    * @param subscriber
    * @return [[Subscription]] which is the Subscriber passed in
    * @since 0.17
@@ -1535,7 +1534,7 @@ trait Observable[+T]
   }
 
   /**
-   * This method has similar behavior to [[rx.lang.scala.Observable.replay]] except that this auto-subscribes to
+   * This method has similar behavior to `Observable.replay` except that this auto-subscribes to
    * the source Observable rather than returning a start function and an Observable.
    *
    * <img width="640" height="410" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/cache.png" alt="" />
@@ -1543,8 +1542,8 @@ trait Observable[+T]
    * This is useful when you want an Observable to cache responses and you can't control the
    * subscribe/unsubscribe behavior of all the [[rx.lang.scala.Observer]]s.
    *
-   * When you call `cache`, it does not yet subscribe to the
-   * source Observable. This only happens when `subscribe` is called
+   * When you call cache, it does not yet subscribe to the
+   * source Observable. This only happens when `ubscribe` is called
    * the first time on the Observable returned by `cache()`.
    * 
    * Note: You sacrifice the ability to unsubscribe from the origin when you use the
@@ -1560,8 +1559,8 @@ trait Observable[+T]
 
   /**
    * Caches emissions from the source Observable and replays them in order to any subsequent Subscribers.
-   * This method has similar behavior to [[Observable.replay]] except that this auto-subscribes to the source
-   * Observable rather than returning a [[ConnectableObservable]] for which you must call
+   * This method has similar behavior to `Observable.replay` except that this auto-subscribes to the source
+   * Observable rather than returning a [[rx.lang.scala.observables.ConnectableObservable ConnectableObservable]] for which you must call
    * `connect` to activate the subscription.
    * <p>
    * <img width="640" height="410" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/cache.png" alt="" />
@@ -3129,8 +3128,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an
    * `onError`. An `onError` notification from the source will result in the emission of a
-   * [[Throwable]] to the Observable provided as an argument to the `notificationHandler`
-   * function. If the Observable returned `onCompletes` or `onErrors` then `retry` will call
+   * `Throwable` to the Observable provided as an argument to the `notificationHandler`   * function. If the Observable returned `onCompletes` or `onErrors` then `retry` will call
    * `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable.
    * <p>
@@ -3192,8 +3190,7 @@ trait Observable[+T]
 
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an `onError`.
-   * An onError will emit a [[Throwable]] to the Observable provided as an argument to the notificationHandler
-   * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
+   * An onError will emit a `Throwable` to the Observable provided as an argument to the notificationHandler   * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
    * or `onError` on the child subscription. Otherwise, this observable will resubscribe to the source observable, on a particular Scheduler.
    * <p>
    * <img width="640" height="430" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/retryWhen.f.png" alt="" />
@@ -3286,7 +3283,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source Observable with the exception of an
    * `onCompleted`. An `onCompleted` notification from the source will result in the emission of
-   * a [[scala.Unit]] to the Observable provided as an argument to the `notificationHandler`
+   * a `scala.Unit` to the Observable provided as an argument to the `notificationHandler`
    * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable, on a particular Scheduler.
@@ -3317,7 +3314,7 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source Observable with the exception of an
    * `onCompleted`. An `onCompleted` notification from the source will result in the emission of
-   * a [[scala.Unit]] to the Observable provided as an argument to the `notificationHandler`
+   * a `scala.Unit` to the Observable provided as an argument to the `notificationHandler`
    * function. If the Observable returned `onCompletes` or `onErrors` then `repeatWhen` will
    * call `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source observable.
@@ -3374,10 +3371,10 @@ trait Observable[+T]
   }
 
   /**
-   * Converts an Observable into a [[BlockingObservable]] (an Observable with blocking
+   * Converts an Observable into a [[rx.lang.scala.observables.BlockingObservable BlockingObservable]] (an Observable with blocking
    * operators).
    *
-   * @return a [[BlockingObservable]] version of this Observable
+   * @return a [[rx.lang.scala.observables.BlockingObservable BlockingObservable]] version of this Observable
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Blocking-Observable-Operators">Blocking Observable Operators</a>
    * @since 0.19
    */
