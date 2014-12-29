@@ -160,7 +160,8 @@ trait Observable[+T]
    *
    * This should only be used for implementing an `Operator` that requires nested subscriptions.
    *
-   * Normal use should use `Observable.subscribe` which ensures the Rx contract and other functionality.   *
+   * Normal use should use `Observable.subscribe` which ensures the Rx contract and other functionality.
+   *
    * @param subscriber
    * @return [[Subscription]] which is the Subscriber passed in
    * @since 0.17
@@ -1542,8 +1543,8 @@ trait Observable[+T]
    * This is useful when you want an Observable to cache responses and you can't control the
    * subscribe/unsubscribe behavior of all the [[rx.lang.scala.Observer]]s.
    *
-   * When you call cache, it does not yet subscribe to the
-   * source Observable. This only happens when `ubscribe` is called
+   * When you call `cache`, it does not yet subscribe to the
+   * source Observable. This only happens when `unsubscribe` is called
    * the first time on the Observable returned by `cache()`.
    * 
    * Note: You sacrifice the ability to unsubscribe from the origin when you use the
@@ -3128,7 +3129,8 @@ trait Observable[+T]
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an
    * `onError`. An `onError` notification from the source will result in the emission of a
-   * `Throwable` to the Observable provided as an argument to the `notificationHandler`   * function. If the Observable returned `onCompletes` or `onErrors` then `retry` will call
+   * `Throwable` to the Observable provided as an argument to the `notificationHandler`
+   *  function. If the Observable returned `onCompletes` or `onErrors` then `retry` will call
    * `onCompleted` or `onError` on the child subscription. Otherwise, this Observable will
    * resubscribe to the source Observable.
    * <p>
@@ -3190,7 +3192,8 @@ trait Observable[+T]
 
   /**
    * Returns an Observable that emits the same values as the source observable with the exception of an `onError`.
-   * An onError will emit a `Throwable` to the Observable provided as an argument to the notificationHandler   * func. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
+   * An onError will emit a `Throwable` to the Observable provided as an argument to the `notificationHandler`
+   * function. If the Observable returned `onCompletes` or `onErrors` then retry will call `onCompleted`
    * or `onError` on the child subscription. Otherwise, this observable will resubscribe to the source observable, on a particular Scheduler.
    * <p>
    * <img width="640" height="430" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/retryWhen.f.png" alt="" />

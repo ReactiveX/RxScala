@@ -25,7 +25,7 @@ import rx.lang.scala.Subject
  * its [[rx.lang.scala.Subject]]s; it invokes `onCompleted` or `onError` only once; and it never invokes `onNext`
  * after invoking either `onCompleted` or `onError`.
  * 
- * [[SerializedSubject]] enforces this, and the Subject it returns invokes `onNext` an
+ * [[SerializedSubject]] enforces this, and the Subject it returns invokes `onNext` and
  * `onCompleted` or `onError` synchronously on the wrapped Subject.
  */
 object SerializedSubject {
