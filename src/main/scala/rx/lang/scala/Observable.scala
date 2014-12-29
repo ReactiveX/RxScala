@@ -1544,8 +1544,8 @@ trait Observable[+T]
    * subscribe/unsubscribe behavior of all the [[rx.lang.scala.Observer]]s.
    *
    * When you call `cache`, it does not yet subscribe to the
-   * source Observable. This only happens when `unsubscribe` is called
-   * the first time on the Observable returned by `cache()`.
+   * source Observable. This only happens when `subscribe` is called
+   * the first time on the Observable returned by `cache`.
    * 
    * Note: You sacrifice the ability to unsubscribe from the origin when you use the
    * `cache()` operator so be careful not to use this operator on Observables that
