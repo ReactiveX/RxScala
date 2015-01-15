@@ -25,16 +25,16 @@ import rx.lang.scala.Subject
  * its [[rx.lang.scala.Subject]]s; it invokes `onCompleted` or `onError` only once; and it never invokes `onNext`
  * after invoking either `onCompleted` or `onError`.
  * 
- * [[rx.lang.scala.subjects.SerializedSubject]] enforces this, and the Subject it returns invokes `onNext` and
+ * [[SerializedSubject]] enforces this, and the Subject it returns invokes `onNext` and
  * `onCompleted` or `onError` synchronously on the wrapped Subject.
  */
 object SerializedSubject {
   /**
-   * Creates and returns a new `SerializedSubject`.
+   * Creates and returns a new [[SerializedSubject]].
    *
-   * @param actual actual `Subject` to wrap and synchronously notify
-   * @return a `SerializedSubject` that is a chronologically well-behaved version of the actual
-   *         Subject, and that synchronously notifies the wrapped `Subject`
+   * @param actual actual [[Subject]] to wrap and synchronously notify
+   * @return a [[SerializedSubject]] that is a chronologically well-behaved version of the actual
+   *         Subject, and that synchronously notifies the wrapped [[Subject]]
    * @see RxScalaDemo.eventBusExample for example usage
    */
   def apply[T](actual: Subject[T]): SerializedSubject[T] = {
@@ -43,4 +43,4 @@ object SerializedSubject {
   }
 }
 
-private [scala] class SerializedSubject[T] private [scala] (val asJavaSubject: rx.subjects.SerializedSubject[_ >: T, _ <: T]) extends Subject[T]
+class SerializedSubject[T] private [scala] (val asJavaSubject: rx.subjects.SerializedSubject[_ >: T, _ <: T]) extends Subject[T]

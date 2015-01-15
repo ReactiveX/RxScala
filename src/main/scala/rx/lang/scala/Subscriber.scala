@@ -1,14 +1,34 @@
+/**
+ * Copyright 2014 Netflix, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package rx.lang.scala
 
 /**
- * An extension of the `Observer` trait which adds subscription handling
- * (`unsubscribe`, `isUnsubscribed`, and `add` methods) and backpressure handling
- * (`onStart` and `request` methods).
+ * An extension of the [[Observer]] trait which adds subscription handling
+ * ([[unsubscribe]], [[isUnsubscribed]], and `add` methods) and backpressure handling
+ * ([[onStart]] and [[request]] methods).
+ *
+ * After a [[Subscriber]] calls an [[Observable]]'s `subscribe` method, the
+ * [[Observable]] calls the [[Subscriber]]'s [[onNext]] method to emit items. A well-behaved
+ * [[Observable]] will call a [[Subscriber]]'s [[onCompleted]] method exactly once or the [[Subscriber]]'s
+ * [[onError]] method exactly once.
  * 
- * Similarly to the RxJava Subscriber, this class has two constructors:
+ * Similarly to the RxJava `Subscriber`, this class has two constructors:
  * 
- * The first constructor takes as argument the child Subscriber from further down the pipeline
- * and is usually only needed together with `lift`:
+ * The first constructor takes as argument the child [[Subscriber]] from further down the pipeline
+ * and is usually only needed together with [[Observable.lift lift]]:
  * 
  * {{{
  * myObservable.lift((subscriber: Subscriber[T]) => new Subscriber[T](subscriber) {
@@ -88,14 +108,18 @@ abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] wit
   private [scala] override val asJavaSubscription: rx.Subscription = asJavaSubscriber
 
   /**
-   * Used to register an unsubscribe callback.
+   * Add a [[Subscription]] to this [[Subscriber]]'s list of [[Subscription]]s if this list is not marked as
+   * unsubscribed. If the list **is** marked as unsubscribed, it will unsubscribe the new [[Subscription]] as well.
+   *
+   * @param s the [[Subscription]] to add
    */
   final def add(s: Subscription): Unit = {
     asJavaSubscriber.add(s.asJavaSubscription)
   }
 
   /**
-   * Register a callback to be run when Subscriber is unsubscribed
+   * Create a [[Subscription]] using `u` and add it to this [[Subscriber]]'s list of [[Subscription]]s if this list
+   * is not marked as unsubscribed. If the list **is** marked as unsubscribed, it will call `u`.
    *
    * @param u callback to run when unsubscribed
    */
@@ -103,18 +127,50 @@ abstract class Subscriber[-T](subscriber: Subscriber[_]) extends Observer[T] wit
     asJavaSubscriber.add(Subscription(u).asJavaSubscription)
   }
 
+  /**
+   * Unsubscribe all [[Subscription]]s added to this Subscriber's .
+   */
   override final def unsubscribe(): Unit = {
     asJavaSubscriber.unsubscribe()
   }
 
+  /**
+   * Indicates whether this [[Subscriber]] has unsubscribed from its list of [[Subscription]]s.
+   *
+   * @return `true` if this [[Subscriber]] has unsubscribed from its [[Subscription]]s, `false` otherwise
+   */
   override final def isUnsubscribed: Boolean = {
     asJavaSubscriber.isUnsubscribed
   }
 
+  /**
+   * This method is invoked when the [[Subscriber]] and [[Observable]] have been connected but the [[Observable]] has
+   * not yet begun to emit items or send notifications to the [[Subscriber]]. Override this method to add any
+   * useful initialization to your subscription, for instance to initiate backpressure.
+   *
+   * {{{
+   * Observable.just(1, 2, 3).subscribe(new Subscriber[Int]() {
+   *   override def onStart(): Unit = request(1)
+   *   override def onNext(v: Int): Unit = {
+   *     println(v)
+   *     request(1)
+   *   }
+   *   override def onError(e: Throwable): Unit = e.printStackTrace()
+   *   override def onCompleted(): Unit = {}
+   * })
+   * }}}
+   */
   def onStart(): Unit = {
     // do nothing by default
   }
 
+  /**
+   * Request a certain maximum number of emitted items from the [[Observable]] this [[Subscriber]] is subscribed to.
+   * This is a way of requesting backpressure. To disable backpressure, pass `Long.MaxValue` to this method.
+   *
+   * @param n the maximum number of items you want the [[Observable]] to emit to the [[Subscriber]] at this time, or
+   *          `Long.MaxValue` if you want the [[Observable]] to emit items at its own pace
+   */
   protected[this] final def request(n: Long): Unit = {
     asJavaSubscriber match {
       case s: SubscriberAdapter[T] => s.requestMore(n)
