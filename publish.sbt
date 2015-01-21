@@ -1,19 +1,13 @@
 import bintray.BintrayCredentials.api
 import bintray.Keys._
 
-pgpSecretRing := file("key.private.F984A085.asc")
-
-pgpPublicRing := file("key.public.F984A085.asc")
-
-pgpPassphrase := sys.env get "PGP_ENCRYPTION_PASSWORD" map (_ toCharArray)
-
 bintraySettings
 
 repository in bintray := "RxJava"
 
 name in bintray := "RxScala"
 
-licenses += ("The Apache Software License, Version 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
+licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
 
 bintrayOrganization in bintray := Some("reactivex")
 
