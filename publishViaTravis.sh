@@ -21,7 +21,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
     echo 'Completed upload!'
   else
     echo 'Upload failed.'
-    return 1
+    exit 1
   fi
 else
   echo 'Bintray Upload => Not a tagged build so will not upload'
