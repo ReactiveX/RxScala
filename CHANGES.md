@@ -1,8 +1,8 @@
 # RxScala Releases
 
-## Version 0.23.1 - January 15th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.23.1 - January 21th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
-This release upgrades RxJava to 1.0.3 along with some enhancements and bug fixes.
+This release upgrades RxJava to 1.0.4 along with some enhancements and bug fixes.
 
 ### Pull Requests
 
