@@ -16,6 +16,7 @@
 
 package rx.lang.scala
 
+import rx.exceptions.OnErrorNotImplementedException
 import rx.functions.FuncN
 import rx.lang.scala.observables.ConnectableObservable
 import scala.concurrent.duration
@@ -94,6 +95,10 @@ import scala.reflect.ClassTag
  * @define subscribeCallbacksParamScheduler
  *         the scheduler to use
  *
+ * @define noDefaultScheduler
+ * ===Scheduler:===
+ * This method does not operate by default on a particular [[Scheduler]].
+ *
  * @define debounceVsThrottle
  * Information on debounce vs throttle:
  *  - [[http://drupalmotion.com/article/debounce-and-throttle-visual-explanation]]
@@ -116,9 +121,13 @@ trait Observable[+T]
   private [scala] val asJavaObservable: rx.Observable[_ <: T]
 
   /**
-   * $subscribeObserverMain
+   * Subscribes to an [[Observable]] but ignore its emissions and notifications.
+   *
+   * $noDefaultScheduler
    *
    * @return $subscribeAllReturn
+   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(): Subscription = {
     asJavaObservable.subscribe()
@@ -127,8 +136,11 @@ trait Observable[+T]
   /**
    * $subscribeObserverMain
    *
+   * $noDefaultScheduler
+   *
    * @param observer $subscribeObserverParamObserver
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(observer: Observer[T]): Subscription = {
     asJavaObservable.subscribe(observer.asJavaObserver)
@@ -137,16 +149,22 @@ trait Observable[+T]
   /**
    * $subscribeObserverMain
    *
+   * $noDefaultScheduler
+   *
    * @param observer $subscribeObserverParamObserver
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def apply(observer: Observer[T]): Subscription = subscribe(observer)
 
   /**
    * $subscribeSubscriberMain
    *
+   * $noDefaultScheduler
+   *
    * @param subscriber $subscribeSubscriberParamObserver
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(subscriber: Subscriber[T]): Subscription = {
     // Add the casting to avoid compile error "ambiguous reference to overloaded definition"
@@ -173,16 +191,23 @@ trait Observable[+T]
   /**
    * $subscribeSubscriberMain
    *
+   * $noDefaultScheduler
+   *
    * @param subscriber $subscribeSubscriberParamObserver
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def apply(subscriber: Subscriber[T]): Subscription = subscribe(subscriber)
 
   /**
    * $subscribeCallbacksMainNoNotifications
    *
+   * $noDefaultScheduler
+   *
    * @param onNext $subscribeCallbacksParamOnNext
    * @return $subscribeAllReturn
+   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(onNext: T => Unit): Subscription = {
    asJavaObservable.subscribe(scalaFunction1ProducingUnitToAction1(onNext))
@@ -191,9 +216,12 @@ trait Observable[+T]
   /**
    * $subscribeCallbacksMainWithNotifications
    *
+   * $noDefaultScheduler
+   *
    * @param onNext $subscribeCallbacksParamOnNext
    * @param onError $subscribeCallbacksParamOnError
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(onNext: T => Unit, onError: Throwable => Unit): Subscription = {
     asJavaObservable.subscribe(
@@ -205,10 +233,13 @@ trait Observable[+T]
   /**
    * $subscribeCallbacksMainWithNotifications
    *
+   * $noDefaultScheduler
+   *
    * @param onNext $subscribeCallbacksParamOnNext
    * @param onError $subscribeCallbacksParamOnError
    * @param onCompleted $subscribeCallbacksParamOnComplete
    * @return $subscribeAllReturn
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Subscription = {
     asJavaObservable.subscribe(
@@ -3924,9 +3955,13 @@ trait Observable[+T]
    *
    * Alias to `subscribe(T => Unit)`.
    *
+   * $noDefaultScheduler
+   *
    * @param onNext function to execute for each item.
    * @throws IllegalArgumentException if `onNext` is null
+   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @since 0.19
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def foreach(onNext: T => Unit): Unit = {
     asJavaObservable.subscribe(onNext)
@@ -3937,10 +3972,13 @@ trait Observable[+T]
    *
    * Alias to `subscribe(T => Unit, Throwable => Unit)`.
    *
+   * $noDefaultScheduler
+   *
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
    * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null
    * @since 0.19
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def foreach(onNext: T => Unit, onError: Throwable => Unit): Unit = {
     asJavaObservable.subscribe(onNext, onError)
@@ -3951,11 +3989,14 @@ trait Observable[+T]
    *
    * Alias to `subscribe(T => Unit, Throwable => Unit, () => Unit)`.
    *
+   * $noDefaultScheduler
+   *
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
    * @param onComplete function to execute when completion is signalled.
    * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null, or if `onComplete` is null
    * @since 0.19
+   * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def foreach(onNext: T => Unit, onError: Throwable => Unit, onComplete: () => Unit): Unit = {
     asJavaObservable.subscribe(onNext, onError, onComplete)
