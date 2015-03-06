@@ -1,5 +1,56 @@
 # RxScala Releases
 
+## Version 0.24.0 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release adds `ExperimentalAPIs` to support `Experimental/Beta` APIs in RxJava, removes `def onErrorResumeNext[U >: T](resumeSequence: Observable[U]): Observable[U]`
+to solve an ambiguity issue when using partial functions, and upgrades RxJava to 1.0.7.
+
+#### ExperimentalAPIs
+
+Now you can `import rx.lang.scala.ExperimentalAPIs._` to use some unstable APIs which depends on `Experimental/Beta` APIs in RxJava. E.g.,
+
+```Scala
+import rx.lang.scala.Observable
+import rx.lang.scala.ExperimentalAPIs._
+
+val o1: Observable[Int] = Observable.empty
+val o2 = Observable.just(1, 3, 5)
+val alternate = Observable.just(2, 4, 6)
+o1.switchIfEmpty(alternate).foreach(println)
+o2.switchIfEmpty(alternate).foreach(println)
+```
+
+See more examples in [ExperimentalAPIExamples](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/rx/lang/scala/examples/ExperimentalAPIExamples.scala)
+
+Because the APIs in ExperimentalAPIs depends on unstable APIs in RxJava, if you would like to use a custom RxJava version,
+it's better to check the compatibility in https://github.com/ReactiveX/RxScala#versioning
+
+#### onErrorResumeNext
+
+`def onErrorResumeNext[U >: T](resumeSequence: Observable[U]): Observable[U]` is removed to solve an ambiguity issue when
+ using partial functions.
+
+Now you can use partial functions in `onErrorResumeNext`. E.g.,
+
+```Scala
+val o = Observable { (subscriber: Subscriber[Int]) =>
+  subscriber.onNext(1)
+  subscriber.onNext(2)
+  subscriber.onError(new IOException("Oops"))
+}
+o.onErrorResumeNext {
+  case e: IOException => Observable.just(20, 21, 22)
+  case _ => Observable.just(10, 11, 12)
+}.subscribe(println(_))
+```
+
+### Pull Requests
+
+* [Pull 146] (https://github.com/ReactiveX/RxScala/pull/146) Add ExperimentalObservable
+* [Pull 82] (https://github.com/ReactiveX/RxScala/pull/82) Fix onErrorResumeNext partial function ambiguity problem
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.23.1 - January 21st 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.0.4 along with some enhancements and bug fixes.
