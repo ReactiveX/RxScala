@@ -1,6 +1,6 @@
 # RxScala Releases
 
-## Version 0.24.0 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.24.0 - March 5th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release adds `ExperimentalAPIs` to support `Experimental/Beta` APIs in RxJava, removes `def onErrorResumeNext[U >: T](resumeSequence: Observable[U]): Observable[U]`
 to solve an ambiguity issue when using partial functions, and upgrades RxJava to 1.0.7.
