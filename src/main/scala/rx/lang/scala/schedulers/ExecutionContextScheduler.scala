@@ -16,7 +16,7 @@
 package rx.lang.scala.schedulers
 
 import java.util.concurrent.Executor
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import rx.lang.scala.Scheduler
 
 object ExecutionContextScheduler {
@@ -24,10 +24,15 @@ object ExecutionContextScheduler {
   /**
    * Returns a [[rx.lang.scala.Scheduler]] that executes work on the specified `ExecutionContext`.
    */
-  def apply(executor: ExecutionContext): ExecutionContextScheduler =  {
-    new ExecutionContextScheduler(rx.schedulers.Schedulers.from(new Executor {
-      override def execute(command: Runnable): Unit = executor.execute(command)
-    }))
+  def apply(executor: ExecutionContext): ExecutionContextScheduler = {
+    val jExecutor = if (executor.isInstanceOf[ExecutionContextExecutor]) {
+      executor.asInstanceOf[ExecutionContextExecutor]
+    } else {
+      new Executor {
+        override def execute(command: Runnable): Unit = executor.execute(command)
+      }
+    }
+    new ExecutionContextScheduler(rx.schedulers.Schedulers.from(jExecutor))
   }
 }
 
