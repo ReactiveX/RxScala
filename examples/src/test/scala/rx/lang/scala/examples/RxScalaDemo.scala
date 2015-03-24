@@ -17,6 +17,7 @@ package rx.lang.scala.examples
 
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 import rx.lang.scala.subjects.SerializedSubject
@@ -27,6 +28,7 @@ import scala.collection.mutable
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.duration.DurationLong
+import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.language.implicitConversions
 
@@ -1356,6 +1358,25 @@ class RxScalaDemo extends JUnitSuite {
     val subscription = worker.schedule(1 seconds)(hello)
     TimeUnit.SECONDS.sleep(2)
     subscription.unsubscribe()
+  }
+
+  def sayHelloFromExecutionContext(ec: ExecutionContext): Unit = {
+    val scheduler = ExecutionContextScheduler(ec)
+    val latch = new CountDownLatch(1)
+    Observable.just("Hello").subscribeOn(scheduler).subscribe(
+      v => println(s"$v from ${Thread.currentThread.getName}"),
+      e => e.printStackTrace(),
+      () => latch.countDown()
+    )
+    latch.await(5, TimeUnit.SECONDS)
+  }
+
+  @Test def executionContextSchedulerExample(): Unit = {
+    sayHelloFromExecutionContext(scala.concurrent.ExecutionContext.Implicits.global)
+  }
+
+  @Test def executionContextSchedulerExample2(): Unit = {
+    sayHelloFromExecutionContext(ExecutionContext.fromExecutor(Executors.newCachedThreadPool()))
   }
 
   def createAHotObservable: Observable[String] = {
