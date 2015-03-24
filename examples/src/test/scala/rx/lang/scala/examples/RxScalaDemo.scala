@@ -1360,26 +1360,23 @@ class RxScalaDemo extends JUnitSuite {
     subscription.unsubscribe()
   }
 
-  @Test def executionContextSchedulerExample(): Unit = {
-    val executor = scala.concurrent.ExecutionContext.Implicits.global
-    val worker = ExecutionContextScheduler(executor).createWorker
+  def sayHelloFromExecutionContext(ec: ExecutionContext): Unit = {
+    val scheduler = ExecutionContextScheduler(ec)
     val latch = new CountDownLatch(1)
-    worker.schedule(1 seconds) {
-      println(s"Hello from ${Thread.currentThread.getName} after 1 second")
-      latch.countDown()
-    }
+    Observable.just("Hello").subscribeOn(scheduler).subscribe(
+      v => println(s"$v from ${Thread.currentThread.getName}"),
+      e => e.printStackTrace(),
+      () => latch.countDown()
+    )
     latch.await(5, TimeUnit.SECONDS)
   }
 
+  @Test def executionContextSchedulerExample(): Unit = {
+    sayHelloFromExecutionContext(scala.concurrent.ExecutionContext.Implicits.global)
+  }
+
   @Test def executionContextSchedulerExample2(): Unit = {
-    val executor = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
-    val worker = ExecutionContextScheduler(executor).createWorker
-    val latch = new CountDownLatch(1)
-    worker.schedule(1 seconds) {
-      println(s"Hello from ${Thread.currentThread.getName} after 1 second")
-      latch.countDown()
-    }
-    latch.await(5, TimeUnit.SECONDS)
+    sayHelloFromExecutionContext(ExecutionContext.fromExecutor(Executors.newCachedThreadPool()))
   }
 
   def createAHotObservable: Observable[String] = {
