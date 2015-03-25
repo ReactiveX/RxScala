@@ -1,5 +1,16 @@
 # RxScala Releases
 
+## Version 0.24.1 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release upgrades RxJava to 1.0.8 along with ExecutionContextScheduler and onBackpressureDropDo.
+
+### Pull Requests
+
+* [Pull 151] (https://github.com/ReactiveX/RxScala/pull/151) Update to Rxjava 1.0.8 & add onBackpressureDropDo to ExperimentalAPIs
+* [Pull 91] (https://github.com/ReactiveX/RxScala/pull/91) Add ExecutionContextScheduler for Scala ExecutionContext
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.24.0 - March 5th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release adds `ExperimentalAPIs` to support `Experimental/Beta` APIs in RxJava, removes `def onErrorResumeNext[U >: T](resumeSequence: Observable[U]): Observable[U]`
