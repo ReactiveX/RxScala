@@ -61,6 +61,7 @@ class CompletenessTest extends JUnitSuite {
     "onBackpressureBlock(Int)",
     "onBackpressureBuffer(Long)",
     "onBackpressureBuffer(Long, Action0)",
+    "onBackpressureDrop(Action1[_ >: T])",
     "takeUntil(Func1[_ >: T, Boolean])",
     "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource], Boolean)",
     "withLatestFrom(Observable[_ <: U], Func2[_ >: T, _ >: U, _ <: R])",

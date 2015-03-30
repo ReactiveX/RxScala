@@ -241,6 +241,27 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
     }
     toScalaObservable[R](o.asJavaObservable.flatMap[R](jOnNext, jOnError, jOnCompleted, maxConcurrent))
   }
+
+  /**
+   * Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
+   * rather than emit, those items that its observer is not prepared to observe.
+   *
+   * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.drop.png" alt="">
+   *
+   * If the downstream request count hits `0` then the [[Observable]] will refrain from calling `onNext` until
+   * the observer invokes `request(n)` again to increase the request count.
+   *
+   * $noDefaultScheduler
+   *
+   * @param onDrop the action to invoke for each item dropped. `onDrop` action should be fast and should never block.
+   * @return an new [[Observable]] that will drop `onNext` notifications on overflow
+   * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
+   */
+  def onBackpressureDropDo(onDrop: T => Unit): Observable[T] = {
+    toScalaObservable[T](o.asJavaObservable.onBackpressureDrop(new Action1[T] {
+      override def call(t: T) = onDrop(t)
+    }))
+  }
 }
 
 object ExperimentalAPIs {

@@ -143,4 +143,16 @@ object ExperimentalAPIExamples {
         10)
       .toBlocking.foreach(v => System.out.println("Received: " + v))
   }
+
+  @Test def onBackpressureDropDoExample(): Unit = {
+    Observable[Int](subscriber => {
+      (1 to 200).foreach(subscriber.onNext)
+    }).onBackpressureDropDo {
+      t => println(s"Dropping $t")
+    }.observeOn(IOScheduler()).subscribe {
+      v =>
+        Thread.sleep(10) // A slow consumer
+        println(s"process $v")
+    }
+  }
 }
