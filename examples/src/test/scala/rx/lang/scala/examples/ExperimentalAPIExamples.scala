@@ -144,10 +144,10 @@ object ExperimentalAPIExamples {
       .toBlocking.foreach(v => System.out.println("Received: " + v))
   }
 
-  @Test def onBackpressureDropWithDropActionExample(): Unit = {
+  @Test def onBackpressureDropDoExample(): Unit = {
     Observable[Int](subscriber => {
       (1 to 200).foreach(subscriber.onNext)
-    }).onBackpressureDropWithDropAction {
+    }).onBackpressureDropDo {
       t => println(s"Dropping $t")
     }.observeOn(IOScheduler()).subscribe {
       v =>

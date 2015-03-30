@@ -257,7 +257,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an new [[Observable]] that will drop `onNext` notifications on overflow
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  def onBackpressureDropWithDropAction(onDrop: T => Unit): Observable[T] = {
+  def onBackpressureDropDo(onDrop: T => Unit): Observable[T] = {
     toScalaObservable[T](o.asJavaObservable.onBackpressureDrop(new Action1[T] {
       override def call(t: T) = onDrop(t)
     }))
