@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script will upload to Bintray. It is intended to be conditionally executed on tagged builds.
 
+export TRAVIS_TAG=0.24.1
+
 echo -e 'Bintray Upload Script => Branch ['$TRAVIS_BRANCH']  Tag ['$TRAVIS_TAG']'
 
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
@@ -9,7 +11,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
 
   sbt storeBintrayCredentials
 
-  sbt +publish
+  #sbt +publish
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
@@ -22,7 +24,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ]; then
   # snyc to Sonatype
   export SONA_USER=$sonatypeUsername
   export SONA_PASS=$sonatypePassword
-  sbt syncMavenCentral
+  sbt +bintray::syncMavenCentral
   RETVAL=$?
   if [ $RETVAL -eq 0 ]; then
     echo 'Completed sync to Sonatype!'
