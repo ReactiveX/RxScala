@@ -4,11 +4,10 @@ jdk:
 script:
 - sbt +test +examples/test
 after_success:
-- ./publishViaTravis.sh
+- "./publishViaTravis.sh"
 env:
   global:
-  - secure: Crf4hu2G53xisZChdK0Tam/FSBX/UpbPwGi0sJq5rPSlUt3jEp/AUFnlYiKD1oWtteWHvTgdh1IRqfZfLG0G49hT9+V0knvCTAtY6tPGI+0I/L/WctINIRxMec7JdArKhwxLBJGfYN2U1XM5lGWn6ge/X+CVOFuygk8GN/+688Q=
-  - secure: YPEAWead3ErfHcDohij5v7fYT9Kl6Zt5YgBtn3GVM4sKJukIJIyKXcHwxtEWvPoTYjsgFyYil9JnGZMyD+0tJ5fDf/HB6IeWuq81Tr9qn07Xh0JvuR2tWW2XhiTUt8+yJIRQ4gHH2F1UygyxTsBnaR3zSHjBoKcW72zSEQV1dEY=
-  - secure: L2sXfNYgRW57FPlhEhcCkWLLT7kuq4ZvrndAxRyuoMs1Wv8IsgYGjaetktMVHIv0TAAgVBcOe8mZUjuC4VOgUcfkIblX+MHxruZcWTN5VSqGOFxm22aLymY9tM2j3XXAKa/cE/UkxDqccQtTK7SMH4+J5Iknkcv6BRu568dkOWY=
-  - secure: JQwBNYnA1k9c/yQ1fqyxBIQvGw1H664C/o56r+cAOUAGO697NAccSduo7vrnCrzloiXRha5Sp48wMu+umyQ/usezG5szqnYn9RvXi4dcgGA/hkTPdWLDUE0624ahxaKs6mQlr2b7R421zsJqrfWK1awiqGjNOfvOOXADEC5OtjI=
-  - secure: DRA3I4CS6rwoRdFE0ycN7vi+ERA8+imkS9ep3byt4TLpuowUqi6ZHiJgX5BeAyFhRhMwOU+6jq94BA5rbES2UynY1qAVwXkQrAjhC/IvLcPVckqsAi2cvwex6L0ESfdXHGlJblNQN4sfjKh/+RNoi0JIQT14gyR/IntIapC1bu4=
+  - secure: WAvDCxc5Go3dHjL/gLbViAdhVCVJYJ0PiTrUYkt0+Rjd5mxizcMAJ8JVHYK42Isy7rPfshKCuFZA9eMqTqG0X2vkwAe3zHDKVoIef9OrDsP0CtRHPkFP1nl+dkez1Aw/2Y/KUoFQi5c8oeFxzP+MJBWM7wnx6A/aG8BIwiBf7hQ=
+  - secure: ArkpiJ+RFZw75cMQgkZXT9L9L24yb8U/j8U5frBvNEyND/RN2QA1Y0uEBc9y3Ygyu678BBKCOGyTcqXYHtvGPbvqaZYvDREgb3hoperBqoR3AfCoEzX0t/DIyfrS09IHxn6HVNahIEyQRp8hnCJSIphVGmVI8nOGr5wd0t1tjhg=
+  - secure: NzKGhiIMeprRtRS3C6KYbC4a0WsAOwTRmjUkKCJa9ElCSz9UUcTBAl2261rhXXc0h9OsqS4S7H/UUpjmeczmV56nIzyf6aBNQ6MK8Bfr4iK92OBNlTkSd3hfGMMlQc0Wr30EC0+xfrtpVOIQSWtt2kK02b26jNS9R+FalvT5ZuE=
+  - secure: gEbrDzMc6Moonn4GojuJx0n4nPPMBmqaVqev8u4A7rKzm29BwoIpPOk9g7EGy+MAbkKYMw9LdAze6uSm+CiXrOaK4GzCC2S6b1NdYYcmMuoMwoBXmeDQXyaoUZa1zXk92+H+8Qj1CIIioBpkKWwBwqHOKjII7SP2EcyFEcCXOng=
