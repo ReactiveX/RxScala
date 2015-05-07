@@ -71,9 +71,9 @@ sealed trait Notification[+T] {
  * Example:
  * {{{
  * import Notification._
- * Observable(1, 2, 3).materialize.subscribe(n => n match {
+ * Observable.just(1, 2, 3).materialize.subscribe(n => n match {
  *   case OnNext(v)     => println("Got value " + v)
- *   case OnCompleted() => println("Completed")
+ *   case OnCompleted => println("Completed")
  *   case OnError(err)  => println("Error: " + err.getMessage)
  * })
  * }}}
