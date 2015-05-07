@@ -2279,7 +2279,7 @@ trait Observable[+T]
    * @param that
    *            an Observable to be merged
    * @return an Observable that emits items from `this` and `that` until 
-   *            `this` or `that` emits `onError` or `onComplete`.
+   *            `this` or `that` emits `onError` or both Observables emit `onCompleted`.
    */
   def merge[U >: T](that: Observable[U]): Observable[U] = {
     val thisJava: rx.Observable[_ <: U] = this.asJavaObservable
