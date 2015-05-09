@@ -3856,7 +3856,7 @@ trait Observable[+T]
 
   /**
    * Returns an Observable that emits records of the time interval between consecutive items emitted by the
-   * source Obsegrvable.
+   * source Observable.
    * <p>
    * <img width="640" height="310" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/timeInterval.png" alt="" />
    *
