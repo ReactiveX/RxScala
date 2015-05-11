@@ -94,7 +94,7 @@ class ObservableTests extends JUnitSuite {
     val msg = "msg6251"
     var receivedMsg = "none"
     try {
-      Observable.error[Int](new Exception(msg)).firstOrElse(10).toBlocking.single
+      Observable.error(new Exception(msg)).firstOrElse(10).toBlocking.single
     } catch {
       case e: Exception => receivedMsg = e.getCause().getMessage()
     }
