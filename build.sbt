@@ -12,9 +12,9 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
 
 scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
-scalaVersion in ThisBuild := "2.11.2"
+scalaVersion in ThisBuild := "2.11.6"
 
-crossScalaVersions in ThisBuild := Seq("2.10.4", "2.11.2")
+crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6")
 
 libraryDependencies ++= Seq(
   "io.reactivex" % "rxjava" % "1.0.8",
