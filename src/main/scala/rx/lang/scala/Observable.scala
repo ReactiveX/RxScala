@@ -4756,7 +4756,7 @@ object Observable {
    *
    * @tparam T
    *            the type of the items that this Observable emits.
-   * @param func
+   * @param f
    *            a function that accepts an `Observer[T]`, invokes its `onNext`, `onError`, and `onCompleted` methods
    *            as appropriate, and returns a [[rx.lang.scala.Subscription]] to allow the Observer to
    *            canceling the subscription.

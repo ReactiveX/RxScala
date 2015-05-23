@@ -150,13 +150,13 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
   }
 
   /**
-   * Returns an {@link Iterable} that always returns the item most recently emitted by an {@link Observable}.
+   * Returns an `Iterable` that always returns the item most recently emitted by an [[Observable]].
    * <p>
    * <img width="640" height="490" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/B.mostRecent.png" alt="" />
    *
    * @param initialValue
-   *            the initial value that will be yielded by the {@link Iterable} sequence if the {@link Observable} has not yet emitted an item
-   * @return an {@link Iterable} that on each iteration returns the item that the {@link Observable} has most recently emitted
+   *            the initial value that will be yielded by the `Iterable` sequence if the [[Observable]] has not yet emitted an item
+   * @return an `Iterable` that on each iteration returns the item that the [[Observable]] has most recently emitted
    */
   def mostRecent[U >: T](initialValue: U): Iterable[U] = {
     val asJavaU = asJava.asInstanceOf[rx.observables.BlockingObservable[U]]
@@ -164,12 +164,12 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
   }
 
   /**
-   * Returns an {@link Iterable} that blocks until the {@link Observable} emits another item,
+   * Returns an `Iterable` that blocks until the [[Observable]] emits another item,
    * then returns that item.
    * <p>
    * <img width="640" height="490" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/B.next.png" alt="" />
    *
-   * @return an {@link Iterable} that blocks upon each iteration until the {@link Observable} emits a new item, whereupon the Iterable returns that item
+   * @return an `Iterable` that blocks upon each iteration until the [[Observable]] emits a new item, whereupon the Iterable returns that item
    */
   def next: Iterable[T] = {
     asJava.next().asScala: Iterable[T] // useless ascription because of compiler bug
@@ -220,14 +220,14 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
   }
 
   /**
-   * Returns an {@link Iterator} that iterates over all items emitted by this {@link Observable}.
+   * Returns an `Iterator` that iterates over all items emitted by this [[Observable]].
    */
   def toIterable: Iterable[T] = {
     asJava.toIterable.asScala: Iterable[T] // useless ascription because of compiler bug
   }
 
   /**
-   * Returns a {@link List} that contains all items emitted by this {@link Observable}.
+   * Returns a `List` that contains all items emitted by this [[Observable]].
    */
   def toList: List[T] = {
     asJava.toIterable.asScala.toList: List[T] // useless ascription because of compiler bug
