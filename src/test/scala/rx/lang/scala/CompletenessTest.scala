@@ -50,26 +50,6 @@ class CompletenessTest extends JUnitSuite {
      "a subtype of `Iterable`, there are two nice ways of creating range Observables: " +
      "`(start to end).toObservable` or `Observable.from(start to end)`, and even more options are possible " +
      "using `until` and `by`.]"
-  val commentForExperimental = "[Marked as `@Beta` or `@Experimental` in RxJava and thus not available in RxScala]"
-
-  // We should ignore unstable APIs in RxJava. However, the `@Beta` and `@Experimental` annotations
-  // have RetentionPolicy.CLASS retention, so even though they are present in the `.class` file, they
-  // are not exposed by the JVM to runtime reflection calls. So we need to maintain a list.
-  val rxjavaExperimentalMethods = Set(
-    "doOnRequest(Action1[Long])",
-    "onBackpressureBlock()",
-    "onBackpressureBlock(Int)",
-    "onBackpressureBuffer(Long)",
-    "onBackpressureBuffer(Long, Action0)",
-    "onBackpressureDrop(Action1[_ >: T])",
-    "takeUntil(Func1[_ >: T, Boolean])",
-    "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource], Boolean)",
-    "withLatestFrom(Observable[_ <: U], Func2[_ >: T, _ >: U, _ <: R])",
-    "flatMap(Func1[_ >: T, _ <: Observable[_ <: R]], Func1[_ >: Throwable, _ <: Observable[_ <: R]], Func0[_ <: Observable[_ <: R]], Int)",
-    "flatMap(Func1[_ >: T, _ <: Observable[_ <: R]], Int)",
-    "flatMap(Func1[_ >: T, _ <: Observable[_ <: U]], Func2[_ >: T, _ >: U, _ <: R], Int)",
-    "switchIfEmpty(Observable[_ <: T])"
-  )
 
   /**
    * Maps each method from the Java Observable to its corresponding method in the Scala Observable
@@ -144,6 +124,7 @@ class CompletenessTest extends JUnitSuite {
       "groupBy(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: R])" -> "groupBy(T => K, T => V)",
       "mergeWith(Observable[_ <: T])" -> "merge(Observable[U])",
       "ofType(Class[R])" -> "[use `filter(_.isInstanceOf[Class])`]",
+      "onBackpressureBuffer(Long, Action0)" -> "onBackpressureBuffer(Long, => Unit)",
       "onErrorResumeNext(Func1[Throwable, _ <: Observable[_ <: T]])" -> "onErrorResumeNext(Throwable => Observable[U])",
       "onErrorResumeNext(Observable[_ <: T])" -> "onErrorResumeNext(Throwable => Observable[U])",
       "onErrorReturn(Func1[Throwable, _ <: T])" -> "onErrorReturn(Throwable => U)",
@@ -182,6 +163,7 @@ class CompletenessTest extends JUnitSuite {
       "skipLast(Long, TimeUnit)" -> "dropRight(Duration)",
       "skipLast(Long, TimeUnit, Scheduler)" -> "dropRight(Duration, Scheduler)",
       "subscribe()" -> "subscribe()",
+      "switchIfEmpty(Observable[_ <: T])" -> "switchIfEmpty(Observable[U])",
       "takeFirst(Func1[_ >: T, Boolean])" -> "[use `filter(condition).take(1)`]",
       "takeLast(Int)" -> "takeRight(Int)",
       "takeLast(Long, TimeUnit)" -> "takeRight(Duration)",
@@ -209,7 +191,9 @@ class CompletenessTest extends JUnitSuite {
       "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultiMap(T => K, T => V, => M)",
       "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> commentForToMultimapWithCollectionFactory,
       "toSortedList()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
+      "toSortedList(Int)" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
       "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
+      "toSortedList(Func2[_ >: T, _ >: T, Integer], Int)" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
       "window(Int)" -> "tumbling(Int)",
       "window(Int, Int)" -> "sliding(Int, Int)",
       "window(Long, TimeUnit)" -> "tumbling(Duration)",
@@ -250,6 +234,7 @@ class CompletenessTest extends JUnitSuite {
       "range(Int, Int, Scheduler)" -> "[use `(start until end).toObservable.subscribeOn(scheduler)` instead of `range(start, count, scheduler)`]",
       "switchOnNext(Observable[_ <: Observable[_ <: T]])" -> "switch(<:<[Observable[T], Observable[Observable[U]]])",
       "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource])" -> "using(=> Resource)(Resource => Observable[T], Resource => Unit)",
+      "withLatestFrom(Observable[_ <: U], Func2[_ >: T, _ >: U, _ <: R])" -> "withLatestFrom(Observable[U])((T, U) => R)",
       "zip(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "[use instance method `zip` and `map`]",
       "zip(Observable[_ <: Observable[_]], FuncN[_ <: R])" -> "[use `zip` in companion object and `map`]",
       "zip(Iterable[_ <: Observable[_]], FuncN[_ <: R])" -> "[use `zip` in companion object and `map`]",
@@ -283,9 +268,7 @@ class CompletenessTest extends JUnitSuite {
   }).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
     // amb 2-9
     "amb(" + _ + ")" -> "[unnecessary because we can use `o1 amb o2` instead or `amb(List(o1, o2, o3, ...)`]"
-  ).drop(1).toMap ++ rxjavaExperimentalMethods.map(method =>
-    method -> commentForExperimental
-  ).toMap
+  ).drop(1).toMap
 
   def removePackage(s: String) = s.replaceAll("(\\w+\\.)+(\\w+)", "$2")
 
