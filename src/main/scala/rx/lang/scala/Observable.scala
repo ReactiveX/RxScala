@@ -4303,6 +4303,11 @@ trait Observable[+T]
 
 /**
  * Provides various ways to construct new Observables.
+ *
+ * @define noDefaultScheduler
+ * ===Scheduler:===
+ * This method does not operate by default on a particular [[Scheduler]].
+ *
  */
 object Observable {
   import scala.collection.JavaConverters._
@@ -4402,22 +4407,20 @@ object Observable {
   def apply[T](f: Subscriber[T] => Unit): Observable[T] = {
     toScalaObservable(rx.Observable.create(f))
   }
-  
+
   /**
-   * Returns an Observable that invokes an [[rx.lang.scala.Observer]]'s [[rx.lang.scala.Observer.onError onError]]
-   * method when the Observer subscribes to it.
+   * Returns an [[Observable]] that invokes an [[Observer.onError]] method when the [[Observer]] subscribes to it.
    *
-   * <img width="640" height="190" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/error.png" alt="" />
+   * <img width="640" height="190" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/error.png" alt="">
    *
-   * @param exception
-   *            the particular error to report
-   * @tparam T
-   *            the type of the items (ostensibly) emitted by the Observable
-   * @return an Observable that invokes the [[rx.lang.scala.Observer]]'s [[rx.lang.scala.Observer.onError onError]]
-   *         method when the Observer subscribes to it
+   * $noDefaultScheduler
+   *
+   * @param exception the particular `Throwable` to pass to [[Observer.onError]]
+   * @return an [[Observable]] that invokes the [[Observer.onError]] method when the [[Observer]] subscribes to it
+   * @see <a href="http://reactivex.io/documentation/operators/empty-never-throw.html">ReactiveX operators documentation: Throw</a>
    */
-  def error[T](exception: Throwable): Observable[T] = {
-    toScalaObservable[T](rx.Observable.error(exception))
+  def error(exception: Throwable): Observable[Nothing] = {
+    toScalaObservable[Nothing](rx.Observable.error(exception))
   }
 
   /**
