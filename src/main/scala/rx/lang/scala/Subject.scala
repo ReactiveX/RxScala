@@ -131,7 +131,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
-  def getValues: Seq[AnyRef] = asJavaSubject.getValues
+  def getValues: Seq[T] = asJavaSubject.getValues.map(_.asInstanceOf[T])
 }
 
 /**
