@@ -5094,32 +5094,6 @@ object Observable {
    *                        Note: this is a by-name parameter.
    * @param observableFactory the factory function to create an Observable
    * @param dispose the function that will dispose of the resource
-   * @return the Observable whose lifetime controls the lifetime of the dependent resource object
-   * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#using">RxJava wiki: using</a>
-   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229585.aspx">MSDN: Observable.Using</a>
-   */
-  def using[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit): Observable[T] = {
-    val jResourceFactory = new rx.functions.Func0[Resource] {
-      override def call: Resource = resourceFactory
-    }
-    val jObservableFactory = new rx.functions.Func1[Resource, rx.Observable[_ <: T]] {
-      override def call(r: Resource) = observableFactory(r).asJavaObservable
-    }
-    toScalaObservable[T](rx.Observable.using[T, Resource](jResourceFactory, jObservableFactory, dispose))
-  }
-
-  /**
-   * Constructs an Observable that creates a dependent resource object.
-   *
-   * <img width="640" height="400" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/using.png" alt="" />
-   *
-   * ===Scheduler:===
-   * `using` does not operate by default on a particular `Scheduler`.
-   *
-   * @param resourceFactory the factory function to create a resource object that depends on the Observable.
-   *                        Note: this is a by-name parameter.
-   * @param observableFactory the factory function to create an Observable
-   * @param dispose the function that will dispose of the resource
    * @param disposeEagerly if `true` then disposal will happen either on unsubscription or just before emission of
    *                       a terminal event (`onComplete` or `onError`).
    * @return the Observable whose lifetime controls the lifetime of the dependent resource object
@@ -5128,7 +5102,7 @@ object Observable {
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
-  def usingWithDisposeEagerly[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit, disposeEagerly: Boolean): Observable[T] = {
+  def using[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit, disposeEagerly: Boolean = false): Observable[T] = {
     val jResourceFactory = new rx.functions.Func0[Resource] {
       override def call: Resource = resourceFactory
     }
