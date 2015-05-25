@@ -106,6 +106,11 @@ import scala.reflect.ClassTag
  *  - [[http://unscriptable.com/2009/03/20/debouncing-javascript-methods/]]
  *  - [[http://www.illyriad.co.uk/blog/index.php/2011/09/javascript-dont-spam-your-server-debounce-and-throttle/]]
  *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+ *
+ * @define beta
+ * <span class="badge badge-red" style="float: right;">BETA</span>
  *
  */
 trait Observable[+T]
@@ -950,7 +955,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits items based on applying a function that you supply to each item emitted
+   * $beta Returns an [[Observable]] that emits items based on applying a function that you supply to each item emitted
    * by the source [[Observable]] , where that function returns an [[Observable]] , and then merging those resulting
    * [[Observable]]s and emitting the results of this merger, while limiting the maximum number of concurrent
    * subscriptions to these [[Observable]]s.
@@ -1002,7 +1007,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that applies a function to each item emitted or notification raised by the source
+   * $beta Returns an [[Observable]] that applies a function to each item emitted or notification raised by the source
    * [[Observable]]  and then flattens the [[Observable]] s returned from these functions and emits the resulting items,
    * while limiting the maximum number of concurrent subscriptions to these [[Observable]]s.
    *
@@ -1053,7 +1058,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that emits the results of a specified function to the pair of values emitted by the
+   * $beta Returns an Observable that emits the results of a specified function to the pair of values emitted by the
    * source Observable and a specified collection Observable.
    *
    * <img width="640" height="390" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt="" />
@@ -2050,7 +2055,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits items emitted by the source [[Observable]], checks the specified predicate
+   * $experimental Returns an [[Observable]] that emits items emitted by the source [[Observable]], checks the specified predicate
    * for each item, and then completes if the condition is satisfied.
    *
    * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/takeUntil.p.png" alt="">
@@ -2349,7 +2354,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an alternate
+   * $experimental Returns an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an alternate
    * [[Observable]] if the source [[Observable]] is empty.
    *
    * $noDefaultScheduler
@@ -4390,7 +4395,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * $beta Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
    * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
    * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
    * items, and unsubscribe from the source.
@@ -4410,7 +4415,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * $beta Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
    * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
    * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
    * items, unsubscribe from the source, and notify `onOverflow`.
@@ -4452,7 +4457,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
+   * $experimental Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
    * rather than emit, those items that its observer is not prepared to observe.
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.drop.png" alt="">
@@ -4475,7 +4480,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an Observable that is emitting items faster than its observer can consume them to
+   * $experimental Instructs an Observable that is emitting items faster than its observer can consume them to
    * hold onto the latest value and emit that on request.
    * <p>
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.latest.png" alt="">
@@ -4511,7 +4516,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
+   * $experimental Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.block.png" alt="">
    *
@@ -4536,7 +4541,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
+   * $experimental Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.block.png" alt="">
    *
@@ -4559,7 +4564,7 @@ trait Observable[+T]
   }
 
   /**
-   * An [[Observable]] wrapping the source one that will invokes the given action when it receives a request for more items.
+   * $beta An [[Observable]] wrapping the source one that will invokes the given action when it receives a request for more items.
    *
    * $noDefaultScheduler
    *
@@ -4576,7 +4581,7 @@ trait Observable[+T]
   }
 
   /**
-   * Merges the specified [[Observable]] into this [[Observable]] sequence by using the `resultSelector`
+   * $experimental Merges the specified [[Observable]] into this [[Observable]] sequence by using the `resultSelector`
    * function only when the source [[Observable]] (this instance) emits an item.
    *
    * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/withLatestFrom.png" alt="">
@@ -4597,6 +4602,122 @@ trait Observable[+T]
       override def call(t1: T, t2: U): R = resultSelector(t1, t2)
     }
     toScalaObservable[R](asJavaObservable.withLatestFrom(other.asJavaObservable, func))
+  }
+
+  /**
+   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
+   * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
+   * items, and unsubscribe from the source.
+   *
+   * <img width="640" height="300" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.buffer.png" alt="">
+   *
+   * $noDefaultScheduler
+   *
+   * @param capacity capacity of the internal buffer.
+   * @return an [[Observable]] that will buffer items up to the given capacity
+   * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
+   */
+  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  def onBackpressureBufferWithCapacity(capacity: Long): Observable[T] = {
+    asJavaObservable.onBackpressureBuffer(capacity)
+  }
+
+  /**
+   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
+   * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
+   * items, unsubscribe from the source, and notify `onOverflow`.
+   *
+   * <img width="640" height="300" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.buffer.png" alt="">
+   *
+   * $noDefaultScheduler
+   *
+   * @param capacity capacity of the internal buffer.
+   * @param onOverflow an action to run when the buffer's capacity is exceeded. This is a by-name parameter.
+   * @return the source Observable modified to buffer items up to the given capacity
+   * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  def onBackpressureBufferWithCapacity(capacity: Long, onOverflow: => Unit): Observable[T] = {
+    asJavaObservable.onBackpressureBuffer(capacity, new Action0 {
+      override def call(): Unit = onOverflow
+    })
+  }
+
+  /**
+   * Returns an [[Observable]] that emits items based on applying a function that you supply to each item emitted
+   * by the source [[Observable]] , where that function returns an [[Observable]] , and then merging those resulting
+   * [[Observable]]s and emitting the results of this merger, while limiting the maximum number of concurrent
+   * subscriptions to these [[Observable]]s.
+   *
+   * $$noDefaultScheduler
+   *
+   * @param f a function that, when applied to an item emitted by the source [[Observable]], returns an [[Observable]]
+   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
+   * @return an [[Observable]] that emits the result of applying the transformation function to each item emitted
+   *         by the source [[Observable]] and merging the results of the [[Observable]]s obtained from this transformation
+   * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
+   */
+  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  def flatMapWithMaxConcurrent[R](f: T => Observable[R], maxConcurrent: Int): Observable[R] = {
+    toScalaObservable[R](asJavaObservable.flatMap[R](new Func1[T, rx.Observable[_ <: R]] {
+      def call(t1: T): rx.Observable[_ <: R] = {
+        f(t1).asJavaObservable
+      }
+    }, maxConcurrent))
+  }
+
+  /**
+   * Returns an [[Observable]] that applies a function to each item emitted or notification raised by the source
+   * [[Observable]]  and then flattens the [[Observable]] s returned from these functions and emits the resulting items,
+   * while limiting the maximum number of concurrent subscriptions to these [[Observable]]s.
+   *
+   * $noDefaultScheduler
+   *
+   * @param onNext a function that returns an [[Observable]] to merge for each item emitted by the source [[Observable]]
+   * @param onError a function that returns an [[Observable]] to merge for an onError notification from the source [[Observable]]
+   * @param onCompleted a function that returns an [[Observable]] to merge for an onCompleted notification from the source [[Observable]]
+   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
+   * @return an [[Observable]] that emits the results of merging the [[Observable]]s returned from applying the
+   *         specified functions to the emissions and notifications of the source [[Observable]]
+   * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
+   */
+  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  def flatMapWithMaxConcurrent[R](onNext: T => Observable[R], onError: Throwable => Observable[R], onCompleted: () => Observable[R], maxConcurrent: Int): Observable[R] = {
+    val jOnNext = new Func1[T, rx.Observable[_ <: R]] {
+      override def call(t: T): rx.Observable[_ <: R] = onNext(t).asJavaObservable
+    }
+    val jOnError = new Func1[Throwable, rx.Observable[_ <: R]] {
+      override def call(e: Throwable): rx.Observable[_ <: R] = onError(e).asJavaObservable
+    }
+    val jOnCompleted = new Func0[rx.Observable[_ <: R]] {
+      override def call(): rx.Observable[_ <: R] = onCompleted().asJavaObservable
+    }
+    toScalaObservable[R](asJavaObservable.flatMap[R](jOnNext, jOnError, jOnCompleted, maxConcurrent))
+  }
+
+  /**
+   * Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
+   * rather than emit, those items that its observer is not prepared to observe.
+   *
+   * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.drop.png" alt="">
+   *
+   * If the downstream request count hits `0` then the [[Observable]] will refrain from calling `onNext` until
+   * the observer invokes `request(n)` again to increase the request count.
+   *
+   * $noDefaultScheduler
+   *
+   * @param onDrop the action to invoke for each item dropped. `onDrop` action should be fast and should never block.
+   * @return an new [[Observable]] that will drop `onNext` notifications on overflow
+   * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
+   */
+  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  def onBackpressureDropDo(onDrop: T => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.onBackpressureDrop(new Action1[T] {
+      override def call(t: T) = onDrop(t)
+    }))
   }
 }
 
@@ -4640,7 +4761,7 @@ object Observable {
    *
    * @tparam T
    *            the type of the items that this Observable emits.
-   * @param func
+   * @param f
    *            a function that accepts an `Observer[T]`, invokes its `onNext`, `onError`, and `onCompleted` methods
    *            as appropriate, and returns a [[rx.lang.scala.Subscription]] to allow the Observer to
    *            canceling the subscription.
@@ -4978,32 +5099,6 @@ object Observable {
    *                        Note: this is a by-name parameter.
    * @param observableFactory the factory function to create an Observable
    * @param dispose the function that will dispose of the resource
-   * @return the Observable whose lifetime controls the lifetime of the dependent resource object
-   * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#using">RxJava wiki: using</a>
-   * @see <a href="http://msdn.microsoft.com/en-us/library/hh229585.aspx">MSDN: Observable.Using</a>
-   */
-  def using[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit): Observable[T] = {
-    val jResourceFactory = new rx.functions.Func0[Resource] {
-      override def call: Resource = resourceFactory
-    }
-    val jObservableFactory = new rx.functions.Func1[Resource, rx.Observable[_ <: T]] {
-      override def call(r: Resource) = observableFactory(r).asJavaObservable
-    }
-    toScalaObservable[T](rx.Observable.using[T, Resource](jResourceFactory, jObservableFactory, dispose))
-  }
-
-  /**
-   * Constructs an Observable that creates a dependent resource object.
-   *
-   * <img width="640" height="400" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/using.png" alt="" />
-   *
-   * ===Scheduler:===
-   * `using` does not operate by default on a particular `Scheduler`.
-   *
-   * @param resourceFactory the factory function to create a resource object that depends on the Observable.
-   *                        Note: this is a by-name parameter.
-   * @param observableFactory the factory function to create an Observable
-   * @param dispose the function that will dispose of the resource
    * @param disposeEagerly if `true` then disposal will happen either on unsubscription or just before emission of
    *                       a terminal event (`onComplete` or `onError`).
    * @return the Observable whose lifetime controls the lifetime of the dependent resource object
@@ -5011,8 +5106,7 @@ object Observable {
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229585.aspx">MSDN: Observable.Using</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
-  @Experimental
-  def usingWithDisposeEagerly[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit, disposeEagerly: Boolean): Observable[T] = {
+  def using[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit, disposeEagerly: Boolean = false): Observable[T] = {
     val jResourceFactory = new rx.functions.Func0[Resource] {
       override def call: Resource = resourceFactory
     }

@@ -20,6 +20,12 @@ import rx.lang.scala.subjects.SerializedSubject
 
 /**
 * A Subject is an Observable and an Observer at the same time.
+ *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+ *
+ * @define beta
+ * <span class="badge badge-red" style="float: right;">BETA</span>
 */
 trait Subject[T] extends Observable[T] with Observer[T] {
   private [scala] val asJavaSubject: rx.subjects.Subject[_ >: T, _<: T]
@@ -59,7 +65,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   }
 
   /**
-   * Check if the Subject has terminated with an exception.
+   * $experimental Check if the Subject has terminated with an exception.
    * <p>The operation is threadsafe.
    *
    * @return `true` if the subject has received a throwable through { @code onError}.
@@ -69,7 +75,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   def hasThrowable: Boolean = asJavaSubject.hasThrowable
 
   /**
-   * Check if the Subject has terminated normally.
+   * $experimental Check if the Subject has terminated normally.
    * <p>The operation is threadsafe.
    *
    * @return `true` if the subject completed normally via { @code onCompleted}
@@ -79,7 +85,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   def hasCompleted: Boolean = asJavaSubject.hasCompleted
 
   /**
-   * Returns the Throwable that terminated the Subject.
+   * $experimental Returns the Throwable that terminated the Subject.
    * <p>The operation is threadsafe.
    *
    * @return the Throwable that terminated the Subject or { @code null} if the subject hasn't terminated yet or
@@ -90,7 +96,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   def getThrowable: Throwable = asJavaSubject.getThrowable
 
   /**
-   * Check if the Subject has any value.
+   * $experimental Check if the Subject has any value.
    * <p>Use the `#getValue()` method to retrieve such a value.
    * <p>Note that unless `#hasCompleted()` or `#hasThrowable()` returns true, the value
    * retrieved by `getValue()` may get outdated.
@@ -103,7 +109,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   def hasValue: Boolean = asJavaSubject.hasValue
 
   /**
-   * Returns the current or latest value of the Subject if there is such a value and
+   * $experimental Returns the current or latest value of the Subject if there is such a value and
    * the subject hasn't terminated with an exception.
    * <p>The method can return `null` for various reasons. Use `#hasValue()`, `#hasThrowable()`
    * and `#hasCompleted()` to determine if such `null` is a valid value, there was an
@@ -118,14 +124,14 @@ trait Subject[T] extends Observable[T] with Observer[T] {
   def getValue: T = asJavaSubject.getValue.asInstanceOf[T]
 
   /**
-   * Returns a snapshot of the currently buffered non-terminal events.
+   * $experimental Returns a snapshot of the currently buffered non-terminal events.
    * <p>The operation is threadsafe.
    *
    * @return a snapshot of the currently buffered non-terminal events.
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
-  def getValues: Seq[AnyRef] = asJavaSubject.getValues
+  def getValues: Seq[T] = asJavaSubject.getValues.map(_.asInstanceOf[T])
 }
 
 /**
