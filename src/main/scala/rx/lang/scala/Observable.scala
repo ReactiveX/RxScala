@@ -1065,15 +1065,15 @@ trait Observable[+T]
    *
    * @tparam U the type of items emitted by the collection Observable
    * @tparam R the type of items emitted by the resulting Observable
+   * @param maxConcurrent the maximum number of Observables that may be subscribed to concurrently
    * @param collectionSelector a function that returns an Observable for each item emitted by the source Observable
    * @param resultSelector a function that combines one item emitted by each of the source and collection Observables and
    *                       returns an item to be emitted by the resulting Observable
-   * @param maxConcurrent the maximum number of Observables that may be subscribed to concurrently
    * @return an Observable that emits the results of applying a function to a pair of values emitted by the
    *         source Observable and the collection Observable
    */
   @Beta
-  def flatMapWithMaxConcurrent[U, R](collectionSelector: T => Observable[U])(resultSelector: (T, U) => R)(maxConcurrent: Int): Observable[R] = {
+  def flatMapWith[U, R](maxConcurrent: Int)(collectionSelector: T => Observable[U])(resultSelector: (T, U) => R): Observable[R] = {
     val jCollectionSelector = new Func1[T, rx.Observable[_ <: U]] {
       override def call(t: T): rx.Observable[_ <: U] = collectionSelector(t).asJavaObservable
     }

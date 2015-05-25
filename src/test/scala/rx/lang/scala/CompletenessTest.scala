@@ -121,7 +121,7 @@ class CompletenessTest extends JUnitSuite {
       "limit(Int)" -> "take(Int)",
       "flatMap(Func1[_ >: T, _ <: Observable[_ <: U]], Func2[_ >: T, _ >: U, _ <: R])" -> "flatMapWith(T => Observable[U])((T, U) => R)",
       "flatMapIterable(Func1[_ >: T, _ <: Iterable[_ <: U]], Func2[_ >: T, _ >: U, _ <: R])" -> "flatMapIterableWith(T => Iterable[U])((T, U) => R)",
-      "flatMap(Func1[_ >: T, _ <: Observable[_ <: U]], Func2[_ >: T, _ >: U, _ <: R], Int)" -> "flatMapWithMaxConcurrent(T => Observable[U])((T, U) => R)(Int)",
+      "flatMap(Func1[_ >: T, _ <: Observable[_ <: U]], Func2[_ >: T, _ >: U, _ <: R], Int)" -> "flatMapWith(Int)(T => Observable[U])((T, U) => R)",
       "groupBy(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: R])" -> "groupBy(T => K, T => V)",
       "mergeWith(Observable[_ <: T])" -> "merge(Observable[U])",
       "ofType(Class[R])" -> "[use `filter(_.isInstanceOf[Class])`]",
