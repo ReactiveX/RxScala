@@ -955,7 +955,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits items based on applying a function that you supply to each item emitted
+   * $beta Returns an [[Observable]] that emits items based on applying a function that you supply to each item emitted
    * by the source [[Observable]] , where that function returns an [[Observable]] , and then merging those resulting
    * [[Observable]]s and emitting the results of this merger, while limiting the maximum number of concurrent
    * subscriptions to these [[Observable]]s.
@@ -1007,7 +1007,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that applies a function to each item emitted or notification raised by the source
+   * $beta Returns an [[Observable]] that applies a function to each item emitted or notification raised by the source
    * [[Observable]]  and then flattens the [[Observable]] s returned from these functions and emits the resulting items,
    * while limiting the maximum number of concurrent subscriptions to these [[Observable]]s.
    *
@@ -1058,7 +1058,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an Observable that emits the results of a specified function to the pair of values emitted by the
+   * $beta Returns an Observable that emits the results of a specified function to the pair of values emitted by the
    * source Observable and a specified collection Observable.
    *
    * <img width="640" height="390" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt="" />
@@ -2055,7 +2055,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits items emitted by the source [[Observable]], checks the specified predicate
+   * $experimental Returns an [[Observable]] that emits items emitted by the source [[Observable]], checks the specified predicate
    * for each item, and then completes if the condition is satisfied.
    *
    * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/takeUntil.p.png" alt="">
@@ -2354,7 +2354,7 @@ trait Observable[+T]
   }
 
   /**
-   * Returns an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an alternate
+   * $experimental Returns an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an alternate
    * [[Observable]] if the source [[Observable]] is empty.
    *
    * $noDefaultScheduler
@@ -5106,7 +5106,6 @@ object Observable {
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229585.aspx">MSDN: Observable.Using</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
-  @Experimental
   def using[T, Resource](resourceFactory: => Resource)(observableFactory: Resource => Observable[T], dispose: Resource => Unit, disposeEagerly: Boolean = false): Observable[T] = {
     val jResourceFactory = new rx.functions.Func0[Resource] {
       override def call: Resource = resourceFactory
