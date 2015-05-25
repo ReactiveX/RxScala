@@ -106,6 +106,11 @@ import scala.reflect.ClassTag
  *  - [[http://unscriptable.com/2009/03/20/debouncing-javascript-methods/]]
  *  - [[http://www.illyriad.co.uk/blog/index.php/2011/09/javascript-dont-spam-your-server-debounce-and-throttle/]]
  *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+ *
+ * @define beta
+ * <span class="badge badge-red" style="float: right;">BETA</span>
  *
  */
 trait Observable[+T]
@@ -4390,7 +4395,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * $beta Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
    * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
    * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
    * items, and unsubscribe from the source.
@@ -4410,7 +4415,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
+   * $beta Instructs an [[Observable]] that is emitting items faster than its [[Observer]] can consume them to buffer up to
    * a given amount of items until they can be emitted. The resulting [[Observable]] will emit
    * `BufferOverflowException` as soon as the buffer's capacity is exceeded, drop all undelivered
    * items, unsubscribe from the source, and notify `onOverflow`.
@@ -4452,7 +4457,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
+   * $experimental Instructs an [[Observable]] that is emitting items faster than its observer can consume them to discard,
    * rather than emit, those items that its observer is not prepared to observe.
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.drop.png" alt="">
@@ -4475,7 +4480,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an Observable that is emitting items faster than its observer can consume them to
+   * $experimental Instructs an Observable that is emitting items faster than its observer can consume them to
    * hold onto the latest value and emit that on request.
    * <p>
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.latest.png" alt="">
@@ -4511,7 +4516,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
+   * $experimental Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.block.png" alt="">
    *
@@ -4536,7 +4541,7 @@ trait Observable[+T]
   }
 
   /**
-   * Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
+   * $experimental Instructs an [[Observable]] will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    *
    * <img width="640" height="245" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/bp.obp.block.png" alt="">
    *
@@ -4559,7 +4564,7 @@ trait Observable[+T]
   }
 
   /**
-   * An [[Observable]] wrapping the source one that will invokes the given action when it receives a request for more items.
+   * $beta An [[Observable]] wrapping the source one that will invokes the given action when it receives a request for more items.
    *
    * $noDefaultScheduler
    *
@@ -4576,7 +4581,7 @@ trait Observable[+T]
   }
 
   /**
-   * Merges the specified [[Observable]] into this [[Observable]] sequence by using the `resultSelector`
+   * $experimental Merges the specified [[Observable]] into this [[Observable]] sequence by using the `resultSelector`
    * function only when the source [[Observable]] (this instance) emits an item.
    *
    * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/withLatestFrom.png" alt="">
