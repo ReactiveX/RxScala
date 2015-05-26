@@ -4618,7 +4618,7 @@ trait Observable[+T]
    * @return an [[Observable]] that will buffer items up to the given capacity
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBuffer(capacity:Long)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBufferWithCapacity(capacity: Long): Observable[T] = {
     asJavaObservable.onBackpressureBuffer(capacity)
   }
@@ -4639,7 +4639,7 @@ trait Observable[+T]
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBuffer(capacity:Long,onOverflow:=>Unit)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBufferWithCapacity(capacity: Long, onOverflow: => Unit): Observable[T] = {
     asJavaObservable.onBackpressureBuffer(capacity, new Action0 {
       override def call(): Unit = onOverflow
@@ -4713,7 +4713,7 @@ trait Observable[+T]
    * @return an new [[Observable]] that will drop `onNext` notifications on overflow
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureDrop(onDrop:T=>Unit)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureDropDo(onDrop: T => Unit): Observable[T] = {
     toScalaObservable[T](asJavaObservable.onBackpressureDrop(new Action1[T] {
       override def call(t: T) = onDrop(t)

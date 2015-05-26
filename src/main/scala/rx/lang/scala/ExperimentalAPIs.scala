@@ -28,7 +28,7 @@ import JavaConversions._
  *
  * `import rx.lang.scala.ExperimentalAPIs._` to enable them.
  */
-@deprecated("This is kept here only for backward compatibility.", "0.25.0")
+@deprecated("Use new methods in [[Observable]] instead. This is kept here only for backward compatibility.", "0.25.0")
 class ExperimentalObservable[+T](private val o: Observable[T]) {
 
   /**
@@ -50,7 +50,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an [[Observable]] that will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBlock(maxQueueLength:Int)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBlock(maxQueueLength: Int): Observable[T] = {
     o.asJavaObservable.onBackpressureBlock(maxQueueLength)
   }
@@ -72,7 +72,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an [[Observable]] that will block the producer thread if the source emits items faster than its [[Observer]] can consume them
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBlock:*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBlock: Observable[T] = {
     o.asJavaObservable.onBackpressureBlock()
   }
@@ -86,7 +86,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an [[Observable]] that will call `onRequest` when appropriate
    * @see <a href="http://reactivex.io/documentation/operators/do.html">ReactiveX operators documentation: Do</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[Observable.doOnRequest]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def doOnRequest(onRequest: Long => Unit): Observable[T] = {
     o.asJavaObservable.doOnRequest(new Action1[java.lang.Long] {
       override def call(request: java.lang.Long): Unit = onRequest(request)
@@ -107,7 +107,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an [[Observable]] that will buffer items up to the given capacity
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBuffer(capacity:Long)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBufferWithCapacity(capacity: Long): Observable[T] = {
     // Use `onBackpressureBufferWithCapacity` because if not, it will conflict with `Observable.onBackpressureBuffer`
     o.asJavaObservable.onBackpressureBuffer(capacity)
@@ -129,7 +129,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.onBackpressureBuffer(capacity:Long,onOverflow:=>Unit)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureBufferWithCapacity(capacity: Long, onOverflow: => Unit): Observable[T] = {
     // Use `onBackpressureBufferWithCapacity` because if not, it will conflict with `Observable.onBackpressureBuffer`
     o.asJavaObservable.onBackpressureBuffer(capacity, new Action0 {
@@ -147,7 +147,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an
    *         alternate [[Observable]] if the source [[Observable]] is empty.
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[Observable.switchIfEmpty]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def switchIfEmpty[U >: T](alternate: Observable[U]): Observable[U] = {
     val jo = o.asJavaObservable.asInstanceOf[rx.Observable[U]]
     toScalaObservable[U](jo.switchIfEmpty(alternate.asJavaObservable))
@@ -168,7 +168,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    *         `resultSelector` function only when the source [[Observable]] sequence (this instance) emits an item
    * @see <a href="http://reactivex.io/documentation/operators/combinelatest.html">ReactiveX operators documentation: CombineLatest</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[Observable.withLatestFrom]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def withLatestFrom[U, R](other: Observable[U])(resultSelector: (T, U) => R): Observable[R] = {
     val func = new Func2[T, U, R] {
       override def call(t1: T, t2: U): R = resultSelector(t1, t2)
@@ -193,7 +193,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @see <a href="http://reactivex.io/documentation/operators/takeuntil.html">ReactiveX operators documentation: TakeUntil</a>
    * @see [[Observable.takeWhile]]
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.takeUntil(stopPredicate:T=>Boolean)*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def takeUntil(stopPredicate: T => Boolean): Observable[T] = {
     val func = new Func1[T, java.lang.Boolean] {
       override def call(t: T): java.lang.Boolean = stopPredicate(t)
@@ -268,7 +268,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    * @return an new [[Observable]] that will drop `onNext` notifications on overflow
    * @see <a href="http://reactivex.io/documentation/operators/backpressure.html">ReactiveX operators documentation: backpressure operators</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[Observable.onBackpressureDrop(onDrop:T=>Unit)*]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def onBackpressureDropDo(onDrop: T => Unit): Observable[T] = {
     toScalaObservable[T](o.asJavaObservable.onBackpressureDrop(new Action1[T] {
       override def call(t: T) = onDrop(t)
@@ -276,7 +276,8 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
   }
 }
 
-@deprecated("This is kept here only for backward compatibility.", "0.25.0")
+@deprecated("Use new methods in [[Observable]] instead. This is kept here only for backward compatibility.", "0.25.0")
 object ExperimentalAPIs {
+  @deprecated("Use new methods in [[Observable]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def toExperimentalObservable[T](o: Observable[T]): ExperimentalObservable[T] = new ExperimentalObservable(o)
 }
