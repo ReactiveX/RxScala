@@ -962,15 +962,15 @@ trait Observable[+T]
    *
    * $$noDefaultScheduler
    *
-   * @param f a function that, when applied to an item emitted by the source [[Observable]], returns an [[Observable]]
    * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
+   * @param f a function that, when applied to an item emitted by the source [[Observable]], returns an [[Observable]]
    * @return an [[Observable]] that emits the result of applying the transformation function to each item emitted
    *         by the source [[Observable]] and merging the results of the [[Observable]]s obtained from this transformation
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Beta
-  def flatMap[R](f: T => Observable[R], maxConcurrent: Int): Observable[R] = {
+  def flatMap[R](maxConcurrent: Int, f: T => Observable[R]): Observable[R] = {
     toScalaObservable[R](asJavaObservable.flatMap[R](new Func1[T, rx.Observable[_ <: R]] {
       def call(t1: T): rx.Observable[_ <: R] = {
         f(t1).asJavaObservable
@@ -1013,17 +1013,17 @@ trait Observable[+T]
    *
    * $noDefaultScheduler
    *
+   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
    * @param onNext a function that returns an [[Observable]] to merge for each item emitted by the source [[Observable]]
    * @param onError a function that returns an [[Observable]] to merge for an onError notification from the source [[Observable]]
    * @param onCompleted a function that returns an [[Observable]] to merge for an onCompleted notification from the source [[Observable]]
-   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
    * @return an [[Observable]] that emits the results of merging the [[Observable]]s returned from applying the
    *         specified functions to the emissions and notifications of the source [[Observable]]
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Beta
-  def flatMap[R](onNext: T => Observable[R], onError: Throwable => Observable[R], onCompleted: () => Observable[R], maxConcurrent: Int): Observable[R] = {
+  def flatMap[R](maxConcurrent: Int, onNext: T => Observable[R], onError: Throwable => Observable[R], onCompleted: () => Observable[R]): Observable[R] = {
     val jOnNext = new Func1[T, rx.Observable[_ <: R]] {
       override def call(t: T): rx.Observable[_ <: R] = onNext(t).asJavaObservable
     }
@@ -4660,7 +4660,7 @@ trait Observable[+T]
    *         by the source [[Observable]] and merging the results of the [[Observable]]s obtained from this transformation
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[[Observable!.flatMap[R](maxConcurrent:Int,f:T=>Observable[R])*]]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def flatMapWithMaxConcurrent[R](f: T => Observable[R], maxConcurrent: Int): Observable[R] = {
     toScalaObservable[R](asJavaObservable.flatMap[R](new Func1[T, rx.Observable[_ <: R]] {
       def call(t1: T): rx.Observable[_ <: R] = {
@@ -4684,7 +4684,8 @@ trait Observable[+T]
    *         specified functions to the emissions and notifications of the source [[Observable]]
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    */
-  @deprecated("This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[[[[[Observable.flatMap[R](maxConcurrent:Int,onNext:T=>Observable[R],onError:Throwable=>Observable[R],onCompleted:()=>Observable[R])*]]]]]]] instead." +
+    "This is kept here only for backward compatibility.", "0.25.0")
   def flatMapWithMaxConcurrent[R](onNext: T => Observable[R], onError: Throwable => Observable[R], onCompleted: () => Observable[R], maxConcurrent: Int): Observable[R] = {
     val jOnNext = new Func1[T, rx.Observable[_ <: R]] {
       override def call(t: T): rx.Observable[_ <: R] = onNext(t).asJavaObservable

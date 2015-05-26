@@ -128,7 +128,7 @@ object ExperimentalAPIExamples {
   @Test def flatMapWithMaxConcurrentExample(): Unit = {
     (1 to 1000000).toObservable
       .doOnNext(v => println(s"Emitted Value: $v"))
-      .flatMap((v: Int) => Observable.just(v).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler()), 10)
+      .flatMap(maxConcurrent = 10, (v: Int) => Observable.just(v).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler()))
       .toBlocking.foreach(v => System.out.println("Received: " + v))
   }
 
@@ -136,10 +136,11 @@ object ExperimentalAPIExamples {
     (1 to 1000000).toObservable
       .doOnNext(v => println(s"Emitted Value: $v"))
       .flatMap(
+        maxConcurrent = 10,
         (v: Int) => Observable.just(v).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler()),
         e => Observable.just(-1).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler()),
-        () => Observable.just(Int.MaxValue).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler()),
-        10)
+        () => Observable.just(Int.MaxValue).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler())
+      )
       .toBlocking.foreach(v => System.out.println("Received: " + v))
   }
 
