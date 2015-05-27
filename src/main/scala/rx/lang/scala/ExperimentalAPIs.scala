@@ -215,7 +215,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    *         by the source [[Observable]] and merging the results of the [[Observable]]s obtained from this transformation
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    */
-  @deprecated("Use [[[[Observable!.flatMap[R](maxConcurrent:Int,f:T=>Observable[R])*]]]] instead. This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.flatMap[R](maxConcurrent:Int,f:T=>rx\\.lang\\.scala\\.Observable[R])*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def flatMapWithMaxConcurrent[R](f: T => Observable[R], maxConcurrent: Int): Observable[R] = {
     toScalaObservable[R](o.asJavaObservable.flatMap[R](new Func1[T, rx.Observable[_ <: R]] {
       def call(t1: T): rx.Observable[_ <: R] = {
@@ -239,8 +239,7 @@ class ExperimentalObservable[+T](private val o: Observable[T]) {
    *         specified functions to the emissions and notifications of the source [[Observable]]
    * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
    */
-  @deprecated("Use [[[[[[[Observable.flatMap[R](maxConcurrent:Int,onNext:T=>Observable[R],onError:Throwable=>Observable[R],onCompleted:()=>Observable[R])*]]]]]]] instead." +
-    "This is kept here only for backward compatibility.", "0.25.0")
+  @deprecated("Use [[[Observable.flatMap[R](maxConcurrent:Int,onNext:T=>rx\\.lang\\.scala\\.Observable[R],onError:Throwable=>rx\\.lang\\.scala\\.Observable[R],onCompleted:()=>rx\\.lang\\.scala\\.Observable[R])*]]] instead. This is kept here only for backward compatibility.", "0.25.0")
   def flatMapWithMaxConcurrent[R](onNext: T => Observable[R], onError: Throwable => Observable[R], onCompleted: () => Observable[R], maxConcurrent: Int): Observable[R] = {
     val jOnNext = new Func1[T, rx.Observable[_ <: R]] {
       override def call(t: T): rx.Observable[_ <: R] = onNext(t).asJavaObservable
