@@ -1073,7 +1073,7 @@ trait Observable[+T]
    *         source Observable and the collection Observable
    */
   @Beta
-  def flatMapWith[U, R](maxConcurrent: Int)(collectionSelector: T => Observable[U])(resultSelector: (T, U) => R): Observable[R] = {
+  def flatMapWith[U, R](maxConcurrent: Int, collectionSelector: T => Observable[U])(resultSelector: (T, U) => R): Observable[R] = {
     val jCollectionSelector = new Func1[T, rx.Observable[_ <: U]] {
       override def call(t: T): rx.Observable[_ <: U] = collectionSelector(t).asJavaObservable
     }

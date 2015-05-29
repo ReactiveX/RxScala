@@ -144,6 +144,16 @@ object ExperimentalAPIExamples {
       .toBlocking.foreach(v => System.out.println("Received: " + v))
   }
 
+  @Test def flatMapWithMaxConcurrentExample3() {
+    (1 to 1000000).toObservable
+      .doOnNext(v => println(s"Emitted Value: $v"))
+      .flatMapWith(
+        maxConcurrent = 10,
+        (v: Int) => Observable.just(v).doOnNext(_ => Thread.sleep(1)).subscribeOn(IOScheduler())
+      )(_ * _).subscribeOn(IOScheduler())
+      .toBlocking.foreach(v => System.out.println("Received: " + v))
+  }
+
   @Test def onBackpressureDropDoExample(): Unit = {
     Observable[Int](subscriber => {
       (1 to 200).foreach(subscriber.onNext)
