@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package rx.lang.scala.examples;
+package examples;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.lang.scala.examples.Movie;
-import rx.lang.scala.examples.MovieLib;
 import static rx.lang.scala.JavaConversions.toScalaObservable;
 
 public class MovieLibUsage {

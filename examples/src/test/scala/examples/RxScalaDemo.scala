@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package rx.lang.scala.examples
+package examples
 
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
@@ -708,8 +708,8 @@ class RxScalaDemo extends JUnitSuite {
     import Notification._
     val oc1: Notification[Nothing] = OnCompleted
     val oc2: Notification[Int] = OnCompleted
-    val oc3: rx.Notification[_ <: Int] = oc2.asJavaNotification
-    val oc4: rx.Notification[_ <: Any] = oc2.asJavaNotification
+    val oc3: rx.Notification[_ <: Int] = JavaConversions.toJavaNotification(oc2)
+    val oc4: rx.Notification[_ <: Any] = JavaConversions.toJavaNotification(oc2)
   }
 
   @Test def takeWhileWithIndexAlternative {

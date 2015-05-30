@@ -37,12 +37,13 @@ object TestScheduler {
  * @Test def testInterval() {
  *   import org.mockito.Matchers._
  *   import org.mockito.Mockito._
+ *   import rx.lang.scala.JavaConversions._
  *
  *   val scheduler = TestScheduler()
  *   val observer = mock(classOf[rx.Observer[Long]])
  *
  *   val o = Observable.interval(1 second, scheduler)
- *   val sub = o.subscribe(observer)
+ *   val sub = o.subscribe(toScalaObserver(new TestObserver(observer)))
  *
  *   verify(observer, never).onNext(0L)
  *   verify(observer, never).onCompleted()
