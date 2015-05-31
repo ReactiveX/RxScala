@@ -15,10 +15,17 @@
  */
 package rx.lang.scala
 
+import rx.annotations.Experimental
 import rx.lang.scala.subjects.SerializedSubject
 
 /**
 * A Subject is an Observable and an Observer at the same time.
+ *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+ *
+ * @define beta
+ * <span class="badge badge-red" style="float: right;">BETA</span>
 */
 trait Subject[T] extends Observable[T] with Observer[T] {
   private [scala] val asJavaSubject: rx.subjects.Subject[_ >: T, _<: T]
@@ -34,7 +41,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * Indicates whether the [[Subject]] has [[Observer]]s subscribed to it.
    * @return `true` if there is at least one [[Observer]] subscribed to this [[Subject]], `false` otherwise
    */
-  def hasObservers: Boolean = asJavaSubject.hasObservers()
+  def hasObservers: Boolean = asJavaSubject.hasObservers
 
   /**
    * Wraps a [[Subject]] so that it is safe to call its various `on` methods from different threads.
@@ -56,6 +63,84 @@ trait Subject[T] extends Observable[T] with Observer[T] {
     case s: SerializedSubject[T] => s
     case s => SerializedSubject(s)
   }
+
+  /**
+   * $experimental Check if the [[Subject]] has terminated with an exception.
+   *
+   * The operation is threadsafe.
+   *
+   * @return `true` if the [[Subject]] has received a throwable through `onError`.
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def hasThrowable: Boolean = asJavaSubject.hasThrowable
+
+  /**
+   * $experimental Check if the [[Subject]] has terminated normally.
+   *
+   * The operation is threadsafe.
+   *
+   * @return `true` if the [[Subject]] completed normally via `onCompleted`
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def hasCompleted: Boolean = asJavaSubject.hasCompleted
+
+  /**
+   * $experimental Returns the `Throwable` that terminated the [[Subject]].
+   *
+   * The operation is threadsafe.
+   *
+   * @return the `Throwable` that terminated the [[Subject]] or `null` if the subject hasn't terminated yet or
+   *         if it terminated normally.
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def getThrowable: Throwable = asJavaSubject.getThrowable
+
+  /**
+   * $experimental Check if the [[Subject]] has any value.
+   *
+   * Use the [[Subject.getValue]] method to retrieve such a value.
+   *
+   * Note that unless [[Subject.hasCompleted]] or [[Subject.hasThrowable]] returns true, the value
+   * retrieved by [[Subject.getValue]] may get outdated.
+   *
+   * The operation is threadsafe.
+   *
+   * @return `true` if and only if the [[Subject]] has some value but not an error
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def hasValue: Boolean = asJavaSubject.hasValue
+
+  /**
+   * $experimental Returns the current or latest value of the [[Subject]] if there is such a value and
+   * the subject hasn't terminated with an exception.
+   *
+   * The method can return `null` for various reasons. Use [[Subject.hasValue]], [[Subject.hasThrowable]]
+   * and [[Subject.hasCompleted]] to determine if such `null` is a valid value, there was an
+   * exception or the [[Subject]] terminated without receiving any value.
+   *
+   * The operation is threadsafe.
+   *
+   * @return the current value or `null` if the [[Subject]] doesn't have a value, has terminated with an
+   *         exception or has an actual `null` as a value.
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def getValue: T = asJavaSubject.getValue.asInstanceOf[T]
+
+  /**
+   * $experimental Returns a snapshot of the currently buffered non-terminal events.
+   *
+   * The operation is threadsafe.
+   *
+   * @return a snapshot of the currently buffered non-terminal events.
+   * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def getValues: Seq[T] = asJavaSubject.getValues.map(_.asInstanceOf[T])
 }
 
 /**
