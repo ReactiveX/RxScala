@@ -31,7 +31,7 @@ o1.switchIfEmpty(alternate).foreach(println)
 o2.switchIfEmpty(alternate).foreach(println)
 ```
 
-See more examples in [ExperimentalAPIExamples](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/rx/lang/scala/examples/ExperimentalAPIExamples.scala)
+See more examples in [ExperimentalAPIExamples](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/ExperimentalAPIExamples.scala)
 
 Because the APIs in ExperimentalAPIs depends on unstable APIs in RxJava, if you would like to use a custom RxJava version,
 it's better to check the compatibility in https://github.com/ReactiveX/RxScala#versioning
