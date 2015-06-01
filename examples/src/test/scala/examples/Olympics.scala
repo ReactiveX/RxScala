@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package rx.lang.scala.examples
+package examples
 
 import rx.lang.scala.Observable
 import scala.concurrent.duration._
