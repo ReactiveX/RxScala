@@ -43,15 +43,6 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   override def onCompleted(): Unit = jTestSubscriber.onCompleted()
 
   /**
-   * Get a number of the `onCompleted` events representing times that the [[Subscriber.onCompleted]] was called.
-   *
-   * @return the number of the `onCompleted` events
-   */
-  def getOnCompletedEventsCount: Int = {
-    jTestSubscriber.getOnCompletedEvents.size
-  }
-
-  /**
    * Get the `Throwable`s this [[Subscriber]] was notified of via [[onError]]
    *
    * @return a sequence of the `Throwable`s that were passed to the [[Subscriber.onError]] method
