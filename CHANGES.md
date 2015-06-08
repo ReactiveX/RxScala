@@ -1,5 +1,50 @@
 # RxScala Releases
 
+## Version 0.25.0 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release upgrades RxJava to 1.0.11 along with the following enhancements:
+
+* Deprecate `ExperimentalAPIs` and use `@Experimental/@Beta` annotations directly. Unstable APIs wil be labeled `Experimental/Beta` in Scaladoc.
+* Change `error[T]` to `error: Observable[Nothing]`
+* Add `TestSubscriber` and its examples. Writing unit tests is much easier now.
+* Add `onBackpressureLatest` and variants of `flatMap` and `using`.
+* Add more experimental methods of `Subject`.
+* Move examples to `examples` package: https://github.com/ReactiveX/RxScala/tree/0.x/examples/src/test/scala/examples
+* Some document fixes
+
+#### Migration from 0.24.1 to 0.25.0
+
+`Observable.error` does not have a type parameter any more. Please remove the type parameter of `Observable.error` in your codes.
+Sometimes removing the type parameter may break your codes. E.g.,
+
+```Scala
+val x = Observable.error[Int](new RuntimeException("Oops")).toBlocking.single
+println(x + 1)
+```
+It won't be compiled if `Int` is removed. For these cases, you can add the explicit type to the variable and make the compiler happy, such as
+
+```Scala
+val x: Int = Observable.error(new RuntimeException("Oops")).toBlocking.single
+println(x + 1)
+```
+
+`ExperimentalAPIs` is deprecated. It's not a breaking change, but we plan to remove `ExperimentalAPIs` in 0.26.0. If you are using `ExperimentalAPIs`,
+please recompile your codes and fix them as per the deprecated messages provided by the compiler as soon as possible. Once `ExperimentalAPIs` is removed,
+you won't get the deprecated messages.
+
+### Pull Requests
+
+* [Pull 157] (https://github.com/ReactiveX/RxScala/pull/157) Update the out-of-date example in "Notification" doc
+* [Pull 159] (https://github.com/ReactiveX/RxScala/pull/159) Correct documentation for Observable.merge
+* [Pull 162] (https://github.com/ReactiveX/RxScala/pull/162) Fixed minor documentation typo
+* [Pull 163] (https://github.com/ReactiveX/RxScala/pull/163) Update to Scala 2.10.5 / 2.11.6
+* [Pull 164] (https://github.com/ReactiveX/RxScala/pull/164) Change `error[T]` to `error: Observable[Nothing]`
+* [Pull 166] (https://github.com/ReactiveX/RxScala/pull/166) Update to using RxJava 1.0.11
+* [Pull 168] (https://github.com/ReactiveX/RxScala/pull/168) Move examples
+* [Pull 170] (https://github.com/ReactiveX/RxScala/pull/170) Add TestSubscriber
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.24.1 - March 31st 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.0.8 along with ExecutionContextScheduler and onBackpressureDropDo.

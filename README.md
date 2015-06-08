@@ -81,6 +81,7 @@ Since RxScala is part of the RxJava family the communication channels are simila
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.25.* | 1.0.* |
 | 0.24.* | 1.0.* |
 | 0.23.*<sup>[1]</sup> | 1.0.* |
 | 0.22.0 | 1.0.0-rc.5 |
@@ -90,11 +91,12 @@ Since RxScala is part of the RxJava family the communication channels are simila
 [1] You can use any release of RxScala 0.23 with any release of RxJava 1.0. E.g, use RxScala 0.23.0 with RxJava 1.0.1 <br/>
 [2] You should use the same version of RxScala with RxJava. E.g, use RxScala 0.20.1 with RxJava 0.20.1
 
-From 0.24.0, RxScala adds ExperimentalAPIs, which contains APIs using RxJava Beta/Experimental APIs. As these APIs are unstable in RxJava,
-if you `import ExperimentalAPIs`, you should use the corresponding version of RxJava as the following table:
+If you are using APIs labeled with `Experimental/Beta`, or `ExperimentalAPIs` (deprecated since 0.25.0), which uses RxJava Beta/Experimental APIs,
+you should use the corresponding version of RxJava as the following table:
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.25.0 | 1.0.11+ |
 | 0.24.1 | 1.0.8+ |
 | 0.24.0 | 1.0.7+ |
 
