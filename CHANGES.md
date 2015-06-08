@@ -1,12 +1,12 @@
 # RxScala Releases
 
-## Version 0.25.0 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.25.0 - June 8th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.0.11 along with the following enhancements:
 
 * Deprecate `ExperimentalAPIs` and use `@Experimental/@Beta` annotations directly. Unstable APIs wil be labeled `Experimental/Beta` in Scaladoc.
 * Change `error[T]` to `error: Observable[Nothing]`
-* Add `TestSubscriber` and its examples. Writing unit tests is much easier now.
+* Add `TestSubscriber` and its examples. Writing unit tests is much easier now. See [TestSubscriberExample](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/TestSubscriberExample.scala) for examples.
 * Add `onBackpressureLatest` and variants of `flatMap` and `using`.
 * Add more experimental methods of `Subject`.
 * Move examples to `examples` package: https://github.com/ReactiveX/RxScala/tree/0.x/examples/src/test/scala/examples
