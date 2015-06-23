@@ -15,7 +15,7 @@ object AsyncWiki extends App {
             if (subscriber.isUnsubscribed) {
               return
             }
-            val url = "http://en.wikipedia.org/wiki/" + articleName
+            val url = "https://en.wikipedia.org/wiki/" + articleName
             val art = new Scanner(new URL(url).openStream()).useDelimiter("\\A").next()
             subscriber.onNext(art)
           }
