@@ -22,20 +22,15 @@ class TestSubscriberCompletenessKit extends CompletenessKit {
 
   override val rxScalaType = typeOf[rx.lang.scala.observers.TestSubscriber[_]]
 
+  override val isOmittingParenthesesForArity0Method = false
+
   override protected def correspondenceChanges: Map[String, String] = Map(
-    "assertCompleted()" -> "assertCompleted()",
     "assertError(Class[_ <: Throwable])" -> "assertError(Class[_ <: Throwable])",
-    "assertNoErrors()" -> "assertNoErrors()",
-    "assertNoTerminalEvent()" -> "assertNoTerminalEvent()",
-    "assertNoValues()" -> "assertNoValues()",
-    "assertNotCompleted()" -> "assertNotCompleted()",
     "assertReceivedOnNext(List[T])" -> "assertValues(T*)",
-    "assertTerminalEvent()" -> "assertTerminalEvent()",
-    "assertUnsubscribed()" -> "assertUnsubscribed()",
-    "awaitTerminalEvent()" -> "awaitTerminalEvent()",
+    "getLastSeenThread()" -> "getLastSeenThread",
     "getOnCompletedEvents()" -> "assertCompleted()",
-    "onCompleted()" -> "onCompleted()",
-    "onStart()" -> "onStart()",
-    "unsubscribe()" -> "unsubscribe()"
+    "getOnErrorEvents()" -> "getOnErrorEvents",
+    "getOnNextEvents()" -> "getOnNextEvents",
+    "isUnsubscribed()" -> "isUnsubscribed"
   )
 }

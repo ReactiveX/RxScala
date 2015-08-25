@@ -37,6 +37,11 @@ trait CompletenessKit extends JUnitSuite {
   def rxScalaType: Type
 
   /**
+   * Whether we should omit parentheses for methods of arity-0 when comparing Java methods and Scala methods
+   */
+  def isOmittingParenthesesForArity0Method: Boolean = true
+
+  /**
    * Manually added mappings from Java methods to Scala methods. Sometimes, it's hard to map some Java methods to Scala methods
    * automatically. Use this one to create the mappings manually.
    */
@@ -111,7 +116,7 @@ trait CompletenessKit extends JUnitSuite {
       getPublicInstanceMethods(tp.typeSymbol.companionSymbol.typeSignature)
 
   private def javaMethodSignatureToScala(s: String): String = {
-    s.replaceAllLiterally("Long, Long, TimeUnit", "Duration, Duration")
+    val r = s.replaceAllLiterally("Long, Long, TimeUnit", "Duration, Duration")
       .replaceAllLiterally("Long, TimeUnit", "Duration")
       .replaceAll("Action0", "() => Unit")
       // nested [] can't be parsed with regex, so these will have to be added manually
@@ -123,7 +128,12 @@ trait CompletenessKit extends JUnitSuite {
       .replaceAllLiterally("_ <: ", "")
       .replaceAllLiterally("_ >: ", "")
       .replaceAllLiterally("<repeated...>[T]", "T*")
-      .replaceAll("(\\w+)\\(\\)", "$1")
+
+    if (isOmittingParenthesesForArity0Method) {
+      r.replaceAll("(\\w+)\\(\\)", "$1")
+    } else {
+      r
+    }
   }
 
   @Test
