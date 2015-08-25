@@ -31,7 +31,6 @@ class BlockingObservableCompletenessKit extends CompletenessKit {
     "last(Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.last`]",
     "lastOrDefault(T)" -> "lastOrElse(=> U)",
     "lastOrDefault(T, Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.lastOrElse(=> U)`]",
-    "mostRecent(T)" -> "mostRecent(U)",
     "single(Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.single`]",
     "singleOrDefault(T)" -> "singleOrElse(=> U)",
     "singleOrDefault(T, Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.singleOrElse(=> U)`]",

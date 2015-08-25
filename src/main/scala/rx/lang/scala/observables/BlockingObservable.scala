@@ -158,9 +158,9 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    *            the initial value that will be yielded by the `Iterable` sequence if the [[Observable]] has not yet emitted an item
    * @return an `Iterable` that on each iteration returns the item that the [[Observable]] has most recently emitted
    */
-  def mostRecent[U >: T](initialValue: U): Iterable[U] = {
-    val asJavaU = asJava.asInstanceOf[rx.observables.BlockingObservable[U]]
-    asJavaU.mostRecent(initialValue).asScala: Iterable[U] // useless ascription because of compiler bug
+  def mostRecent[T](initialValue: T): Iterable[T] = {
+    val asJavaT = asJava.asInstanceOf[rx.observables.BlockingObservable[T]]
+    asJavaT.mostRecent(initialValue).asScala: Iterable[T] // useless ascription because of compiler bug
   }
 
   /**
