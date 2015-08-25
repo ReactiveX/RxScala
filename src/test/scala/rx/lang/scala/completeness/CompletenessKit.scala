@@ -15,7 +15,7 @@
  */
 package rx.lang.scala.completeness
 
-import org.junit.Test
+import org.junit.{Ignore, Test}
 import org.scalatest.junit.JUnitSuite
 
 import scala.collection.immutable.SortedMap
@@ -188,4 +188,50 @@ trait CompletenessKit extends JUnitSuite {
     checkMethodPresenceStatus(good, bad, tp)
   }
 
+  def printMethodSet(title: String, tp: Type) {
+    println("\n" + title)
+    println(title.map(_ => '-') + "\n")
+    getPublicInstanceMethods(tp).toList.sorted.foreach(println(_))
+  }
+
+  @Ignore // because spams output
+  @Test def printJavaInstanceMethods(): Unit = {
+    printMethodSet(s"Instance methods of $rxJavaType", rxJavaType)
+  }
+
+  @Ignore // because spams output
+  @Test def printScalaInstanceMethods(): Unit = {
+    printMethodSet("Instance methods of $rxScalaType", rxScalaType)
+  }
+
+  @Ignore // because spams output
+  @Test def printJavaStaticMethods(): Unit = {
+    printMethodSet(s"Static methods of $rxJavaType", rxJavaType.typeSymbol.companionSymbol.typeSignature)
+  }
+
+  @Ignore // because spams output
+  @Test def printScalaCompanionMethods(): Unit = {
+    printMethodSet(s"Companion methods of $rxScalaType", rxScalaType.typeSymbol.companionSymbol.typeSignature)
+  }
+
+  @Ignore // because spams output
+  @Test def printDefaultMethodCorrespondence(): Unit = {
+    println("\nDefault Method Correspondence")
+    println("-----------------------------\n")
+    val c = SortedMap(defaultMethodCorrespondence.toSeq: _*)
+    val len = c.keys.map(_.length).max + 2
+    for ((javaM, scalaM) <- c) {
+      println( s"""      %-${len}s -> %s,""".format("\"" + javaM + "\"", "\"" + scalaM + "\""))
+    }
+  }
+
+  @Ignore // because spams output
+  @Test def printCorrectedMethodCorrespondence(): Unit = {
+    println("\nCorrected Method Correspondence")
+    println("-------------------------------\n")
+    val c = SortedMap(correspondence.toSeq: _*)
+    for ((javaM, scalaM) <- c) {
+      println("%s -> %s,".format("\"" + javaM + "\"", "\"" + scalaM + "\""))
+    }
+  }
 }
