@@ -18,12 +18,35 @@ package rx.lang.scala.observables
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import org.junit.Assert._
-import org.junit.Test
+import org.junit.{Test, Ignore}
 import org.scalatest.junit.JUnitSuite
 import scala.language.postfixOps
 import rx.lang.scala.Observable
 
 class BlockingObservableTest extends JUnitSuite {
+
+  // Tests which needn't be run:
+
+  @Ignore
+  def testMostRecent() {
+    class Fruit {
+      def printMe(): Unit = println(this)
+    }
+    class Apple extends Fruit
+    class Pear extends Fruit
+    
+    val apples: Observable[Apple] = Observable.just(new Apple) ++ Observable.never
+    
+    // If we give a Pear as initial value for BlockingObservable[Apple].mostRecent,
+    // the Iterable returned by mostRecent contains elements of the least common
+    // supertype of Apple and Pear, which is Fruit.
+    // This works because Scala allows upper bounds for type parameters.
+    val firstFruit = apples.toBlocking.mostRecent(new Pear).head
+    
+    firstFruit.printMe()
+  }
+
+  // Tests which have to be run:
 
   @Test
   def testSingleOption() {
