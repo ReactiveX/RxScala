@@ -220,7 +220,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
   }
 
   /**
-   * Returns an `Iterator` that iterates over all items emitted by this [[Observable]].
+   * Returns an `Iterable` that iterates over all items emitted by this [[Observable]].
    */
   def toIterable: Iterable[T] = {
     asJava.toIterable.asScala: Iterable[T] // useless ascription because of compiler bug

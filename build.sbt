@@ -16,6 +16,8 @@ scalaVersion in ThisBuild := "2.11.6"
 
 crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6")
 
+parallelExecution in Test := false
+
 libraryDependencies ++= Seq(
   "io.reactivex" % "rxjava" % "1.0.12",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
