@@ -79,7 +79,7 @@ trait CompletenessKit extends JUnitSuite {
     for (member <- members; alt <- member.asTerm.alternatives) yield {
       val m = alt.asMethod
       // multiple parameter lists in case of curried functions
-      val paramListStrs = for (paramList <- m.paramss) yield {
+      val paramListStrs = for (paramList <- m.paramLists) yield {
         paramList.map(
           symb => removePackage(symb.typeSignature.toString.replaceAll(",(\\S)", ", $1"))
         ).mkString("(", ", ", ")")
@@ -94,7 +94,7 @@ trait CompletenessKit extends JUnitSuite {
     val superTypes = tp.baseClasses.map(_.asType.toType).filter(!ignoredSuperTypes(_))
     // declarations: => only those declared in
     // members => also those of superclasses
-    methodMembersToMethodStrings(superTypes.flatMap(_.declarations).filter {
+    methodMembersToMethodStrings(superTypes.flatMap(_.decls).filter {
       m =>
         m.isMethod && m.isPublic &&
           m.annotations.forall(_.toString != "java.lang.Deprecated") // don't check deprecated classes
@@ -113,7 +113,7 @@ trait CompletenessKit extends JUnitSuite {
    */
   private def getPublicInstanceAndCompanionMethods(tp: Type): Iterable[String] =
     getPublicInstanceMethods(tp) ++
-      getPublicInstanceMethods(tp.typeSymbol.companionSymbol.typeSignature)
+      getPublicInstanceMethods(tp.typeSymbol.companion.typeSignature)
 
   private def javaMethodSignatureToScala(s: String): String = {
     val r = s.replaceAllLiterally("Long, Long, TimeUnit", "Duration, Duration")
@@ -206,12 +206,12 @@ trait CompletenessKit extends JUnitSuite {
 
   @Ignore // because spams output
   @Test def printJavaStaticMethods(): Unit = {
-    printMethodSet(s"Static methods of $rxJavaType", rxJavaType.typeSymbol.companionSymbol.typeSignature)
+    printMethodSet(s"Static methods of $rxJavaType", rxJavaType.typeSymbol.companion.typeSignature)
   }
 
   @Ignore // because spams output
   @Test def printScalaCompanionMethods(): Unit = {
-    printMethodSet(s"Companion methods of $rxScalaType", rxScalaType.typeSymbol.companionSymbol.typeSignature)
+    printMethodSet(s"Companion methods of $rxScalaType", rxScalaType.typeSymbol.companion.typeSignature)
   }
 
   @Ignore // because spams output
