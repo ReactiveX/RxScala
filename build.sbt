@@ -10,7 +10,7 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
   )
 )
 
-scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
+scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xfatal-warnings")
 
 scalaVersion in ThisBuild := "2.11.6"
 
