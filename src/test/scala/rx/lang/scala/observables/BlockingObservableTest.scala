@@ -161,15 +161,23 @@ class BlockingObservableTest extends JUnitSuite {
     assertEquals(1, r)
   }
 
-  @Test(expected = classOf[NoSuchElementException])
+  @Test
   def testToFutureWithEmpty() {
     val o = Observable.empty
-    Await.result(o.toBlocking.toFuture, 10 seconds)
+    val future = o.toBlocking.toFuture //if this were to throw the original test would wrongly succeed
+    Await.result(future.failed, 10 seconds) match {
+      case t:NoSuchElementException => //this is what we expect
+      case _ => fail("expected the future to fail with a NoSuchElementException")
+    }
   }
 
-  @Test(expected = classOf[IllegalArgumentException])
+  @Test
   def testToFutureWithMultipleItems() {
     val o = Observable.just(1, 2)
-    Await.result(o.toBlocking.toFuture, 10 seconds)
+    val future = o.toBlocking.toFuture //if this were to throw the original test would wrongly succeed
+    Await.result(future.failed, 10 seconds) match {
+      case t:IllegalArgumentException => //this is what we expect
+      case _ => fail("expected the future to fail with a NoSuchElementException")
+    }
   }
 }
