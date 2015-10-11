@@ -177,7 +177,7 @@ class BlockingObservableTest extends JUnitSuite {
     val future = o.toBlocking.toFuture //if this were to throw the original test would wrongly succeed
     Await.result(future.failed, 10 seconds) match {
       case t:IllegalArgumentException => //this is what we expect
-      case _ => fail("expected the future to fail with a NoSuchElementException")
+      case _ => fail("expected the future to fail with an IllegalArgumentException")
     }
   }
 }
