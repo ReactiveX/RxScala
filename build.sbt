@@ -10,7 +10,7 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
   )
 )
 
-scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xfatal-warnings")
+scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
 scalaVersion in ThisBuild := "2.11.6"
 
@@ -19,7 +19,7 @@ crossScalaVersions in ThisBuild := Seq("2.10.5", "2.11.6")
 parallelExecution in Test := false
 
 libraryDependencies ++= Seq(
-  "io.reactivex" % "rxjava" % "1.0.12",
+  "io.reactivex" % "rxjava" % "1.0.16",
   "org.mockito" % "mockito-core" % "1.9.5" % "test",
   "junit" % "junit" % "4.11" % "test",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test")
