@@ -1730,4 +1730,32 @@ class RxScalaDemo extends JUnitSuite {
     val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
     Observable.just(o1, o2, o3, o4).flattenDelayError(2).subscribe(println(_), _.printStackTrace())
   }
+
+  @Test def blockingObservableSubscribeExample(): Unit = {
+    val b = Observable.just(1, 2, 3).toBlocking
+    println("---b.subscribe()---")
+    b.subscribe()
+    println("---b.subscribe(onNext)---")
+    b.subscribe(println(_))
+    println("---b.subscribe(onNext, onError)---")
+    b.subscribe(println(_), _.printStackTrace())
+    println("---b.subscribe(onNext, onError, onCompleted)---")
+    b.subscribe(println(_), _.printStackTrace(), () => println("onCompleted"))
+    println("---b.subscribe(Observer)---")
+    b.subscribe(new Observer[Int] {
+      override def onNext(v: Int): Unit = println(v)
+
+      override def onError(e: Throwable): Unit = e.printStackTrace()
+
+      override def onCompleted(): Unit = println("onCompleted")
+    })
+    println("---b.subscribe(Subscriber)---")
+    b.subscribe(new Subscriber[Int] {
+      override def onNext(v: Int): Unit = println(v)
+
+      override def onError(e: Throwable): Unit = e.printStackTrace()
+
+      override def onCompleted(): Unit = println("onCompleted")
+    })
+  }
 }

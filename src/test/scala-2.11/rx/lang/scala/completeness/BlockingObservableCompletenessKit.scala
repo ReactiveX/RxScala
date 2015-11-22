@@ -35,6 +35,7 @@ class BlockingObservableCompletenessKit extends CompletenessKit {
     "single(Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.single`]",
     "singleOrDefault(T)" -> "singleOrElse(=> U)",
     "singleOrDefault(T, Func1[_ >: T, Boolean])" -> "[use `Observable.filter(p).toBlocking.singleOrElse(=> U)`]",
+    "subscribe()" -> "subscribe()",
     "getIterator()" -> "[use `toIterable.toIterator`]"
   )
 }
