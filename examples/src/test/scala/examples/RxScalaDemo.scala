@@ -1682,4 +1682,34 @@ class RxScalaDemo extends JUnitSuite {
     val o2 = Observable.error(new RuntimeException("Oops"))
     (o1 ++ o2).subscribe(v => println(v), e => e.printStackTrace(), () => println("completed"))
   }
+
+  @Test def concatEagerExample(): Unit = {
+    val o1 = Observable.interval(100 millis).take(3).map(l => s"o1 emit $l").doOnSubscribe(println("subscribe to o1"))
+    val o2 = Observable.interval(100 millis).take(3).map(l => s"o2 emit $l").doOnSubscribe(println("subscribe to o2"))
+    o1.concatEager(o2).subscribe(println(_))
+  }
+
+  @Test def concatEagerExample2(): Unit = {
+    (0 until 10).map { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.toObservable.concatEager.subscribe(println(_))
+  }
+
+  @Test def concatEagerExample3(): Unit = {
+    (0 until 10).map { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.toObservable.concatEager(capacityHint = 3).subscribe(println(_))
+  }
+
+  @Test def concatMapEagerExample(): Unit = {
+    (0 until 10).toObservable.concatMapEager { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.subscribe(println(_))
+  }
+
+  @Test def concatMapEagerExample2(): Unit = {
+    (0 until 10).toObservable.concatMapEager(i => {
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }, capacityHint = 10).subscribe(println(_))
+  }
 }

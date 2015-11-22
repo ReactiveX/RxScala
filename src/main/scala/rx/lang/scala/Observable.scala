@@ -332,6 +332,143 @@ trait Observable[+T]
   }
 
   /**
+   * $experimental Concatenates `this` and `that` source [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them
+   * in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param that the source to concat with.
+   * @return an [[Observable]] that emits items all of the items emitted by `this` and `that`, one after the other,
+   *         without interleaving them.
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U >: T](that: Observable[U]): Observable[U] = {
+    val o1: rx.Observable[_ <: U] = this.asJavaObservable
+    val o2: rx.Observable[_ <: U] = that.asJavaObservable
+    toScalaObservable(rx.Observable.concatEager(o1, o2))
+  }
+
+  /**
+   * $experimental Concatenates an [[Observable]] sequence of [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * emitted source [[Observable]]s as they are observed. The operator buffers the values emitted by these
+   * [[Observable]]s and then drains them in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s emitted by
+   *         `this`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.concatEager[U](o4)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * $experimental Concatenates an [[Observable]] sequence of [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * emitted source [[Observable]]s as they are observed. The operator buffers the values emitted by these
+   * [[Observable]]s and then drains them in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param capacityHint hints about the number of expected values in an [[Observable]]
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s emitted by
+   *         `this`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U](capacityHint: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.concatEager[U](o4, capacityHint)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * Observable.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them in
+   * order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param f the function that maps a sequence of values into a sequence of [[Observable]]s that will be
+   *          eagerly concatenated
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s returned by
+   *         `f`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatMapEager[R](f: T => Observable[R]): Observable[R] = {
+    toScalaObservable[R](asJavaObservable.concatMapEager[R](new Func1[T, rx.Observable[_ <: R]] {
+      def call(t1: T): rx.Observable[_ <: R] = {
+        f(t1).asJavaObservable
+      }
+    }))
+  }
+
+  /**
+   * Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * Observable.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them in
+   * order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param f the function that maps a sequence of values into a sequence of [[Observable]]s that will be
+   *          eagerly concatenated
+   * @param capacityHint hints about the number of expected values in an [[Observable]]
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s returned by
+   *         `f`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatMapEager[R](f: T => Observable[R], capacityHint: Int): Observable[R] = {
+    toScalaObservable[R](asJavaObservable.concatMapEager[R](new Func1[T, rx.Observable[_ <: R]] {
+      def call(t1: T): rx.Observable[_ <: R] = {
+        f(t1).asJavaObservable
+      }
+    }, capacityHint))
+  }
+
+  /**
    * Wraps this Observable in another Observable that ensures that the resulting
    * Observable is chronologically well-behaved.
    *

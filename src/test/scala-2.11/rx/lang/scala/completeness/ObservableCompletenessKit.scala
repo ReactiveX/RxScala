@@ -187,6 +187,10 @@ class ObservableCompletenessKit extends CompletenessKit {
     "combineLatest(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "combineLatest(Observable[U])",
     "combineLatest(List[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Seq[Observable[T]])(Seq[T] => R)",
     "concat(Observable[_ <: Observable[_ <: T]])" -> "concat(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Observable[_ <: Observable[_ <: T]])" -> "concatEager(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Observable[_ <: Observable[_ <: T]], Int)" -> "concatEager(Int)(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Iterable[_ <: Observable[_ <: T]])" -> "[use `iter.toObservable.concatEager`]",
+    "concatEager(Iterable[_ <: Observable[_ <: T]], Int)" -> "[use `iter.toObservable.concatEager(Int)`]",
     "defer(Func0[Observable[T]])" -> "defer(=> Observable[T])",
     "from(Array[T])" -> "from(Iterable[T])",
     "from(Iterable[_ <: T])" -> "from(Iterable[T])",
@@ -199,6 +203,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "merge(Observable[_ <: Observable[_ <: T]], Int)" -> "flatten(Int)(<:<[Observable[T], Observable[Observable[U]]])",
     "merge(Array[Observable[_ <: T]])" -> "[use `Observable.from(array).flatten`]",
     "merge(Iterable[_ <: Observable[_ <: T]])" -> "[use `Observable.from(iter).flatten`]",
+    "merge(Array[Observable[_ <: T]], Int)" -> "[use `Observable.from(array).flatten(n)`]",
     "merge(Iterable[_ <: Observable[_ <: T]], Int)" -> "[use `Observable.from(iter).flatten(n)`]",
     "mergeDelayError(Observable[_ <: T], Observable[_ <: T])" -> "mergeDelayError(Observable[U])",
     "mergeDelayError(Observable[_ <: Observable[_ <: T]])" -> "flattenDelayError(<:<[Observable[T], Observable[Observable[U]]])",
@@ -243,5 +248,8 @@ class ObservableCompletenessKit extends CompletenessKit {
   }).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
     // amb 2-9
     "amb(" + _ + ")" -> "[unnecessary because we can use `o1 amb o2` instead or `amb(List(o1, o2, o3, ...)`]"
+  ).drop(1).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
+    // concatEager 2-9
+    "concatEager(" + _ + ")" -> "[unnecessary because we can use `concatEager` instead or `Observable(o1, o2, ...).concatEager`]"
   ).drop(1).toMap
 }
