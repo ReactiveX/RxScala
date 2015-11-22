@@ -895,10 +895,10 @@ class RxScalaDemo extends JUnitSuite {
 
   @Test def timeoutExample2(): Unit = {
     val firstTimeoutSelector = () => {
-      Observable.timer(10 seconds, 10 seconds, ComputationScheduler()).take(1)
+      Observable.interval(10 seconds, 10 seconds, ComputationScheduler()).take(1)
     }
     val timeoutSelector = (t: Long) => {
-      Observable.timer(
+      Observable.interval(
         (500 - t * 100) max 1 millis,
         (500 - t * 100) max 1 millis,
         ComputationScheduler()).take(1)

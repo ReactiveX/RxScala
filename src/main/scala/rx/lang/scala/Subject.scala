@@ -73,6 +73,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def hasThrowable: Boolean = asJavaSubject.hasThrowable
 
   /**
@@ -84,6 +85,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def hasCompleted: Boolean = asJavaSubject.hasCompleted
 
   /**
@@ -96,6 +98,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def getThrowable: Throwable = asJavaSubject.getThrowable
 
   /**
@@ -112,6 +115,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def hasValue: Boolean = asJavaSubject.hasValue
 
   /**
@@ -129,6 +133,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def getValue: T = asJavaSubject.getValue.asInstanceOf[T]
 
   /**
@@ -140,6 +145,7 @@ trait Subject[T] extends Observable[T] with Observer[T] {
    * @since (If this graduates from being an Experimental class method, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("this method will be moved to each Subject class individually", "0.25.1")
   def getValues: Seq[T] = asJavaSubject.getValues.map(_.asInstanceOf[T])
 }
 

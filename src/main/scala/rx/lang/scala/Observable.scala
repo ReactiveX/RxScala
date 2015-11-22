@@ -4701,6 +4701,7 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("The operator doesn't work properly with [[Observable.subscribeOn]]` and is prone to deadlocks.It will be removed / unavailable in future", "0.25.1")
   def onBackpressureBlock(maxQueueLength: Int): Observable[T] = {
     asJavaObservable.onBackpressureBlock(maxQueueLength)
   }
@@ -4724,6 +4725,7 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("The operator doesn't work properly with [[Observable.subscribeOn]]` and is prone to deadlocks.It will be removed / unavailable in future", "0.25.1")
   def onBackpressureBlock: Observable[T] = {
     asJavaObservable.onBackpressureBlock()
   }
@@ -5201,10 +5203,10 @@ object Observable {
    *
    * ===Backpressure Support:===
    * This operator does not support backpressure as it uses time. If the downstream needs a slower rate
-   * it should slow the timer or use something like [[Observable.onBackpressureDrop]].</dd>
+   * it should slow the timer or use something like [[Observable.onBackpressureDrop:* onBackpressureDrop]].
    *
    * ===Scheduler:===
-   * `interval` operates by default on the `computation` [[Scheduler]].</dd>
+   * `interval` operates by default on the `computation` [[Scheduler]].
    *
    * @param initialDelay the initial delay time to wait before emitting the first value of 0L
    * @param period the period of time between emissions of the subsequent numbers
@@ -5224,7 +5226,7 @@ object Observable {
    *
    * ===Backpressure Support:===
    * This operator does not support backpressure as it uses time. If the downstream needs a slower rate
-   * it should slow the timer or use something like [[Observable.onBackpressureDrop]].
+   * it should slow the timer or use something like [[Observable.onBackpressureDrop:* onBackpressureDrop]].
    *
    * ===Scheduler:===
    * you specify which [[Scheduler]] this operator will use.
@@ -5253,7 +5255,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    *         numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
-  @deprecated("Use [[[Observable.interval(initialDelay:Duration,period:Duration):rx.lang.scala.Observable[Long]]]] instead.", "0.25.1")
+  @deprecated("Use [[Observable$.interval(initialDelay:* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS)).map(_.longValue())
   }
@@ -5273,7 +5275,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
-  @deprecated("Use [[[Observable.interval(initialDelay:Duration,period:Duration,scheduler:rx.lang.scala.Scheduler):rx.lang.scala.Observable[Long]]]] instead.", "0.25.1")
+  @deprecated("Use [[Observable$.interval(initialDelay:* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
   }
