@@ -2622,33 +2622,61 @@ trait Observable[+T]
   }
 
   /**
-   * This behaves like `flatten` except that if any of the merged Observables
-   * notify of an error via [[rx.lang.scala.Observer.onError onError]], this method will
-   * refrain from propagating that error notification until all of the merged Observables have
-   * finished emitting items.
+   * Flattens an [[Observable]] that emits [[Observable]]s into one [[Observable]], in a way that allows an [[Observer]] to
+   * receive all successfully emitted items from all of the source [[Observable]]s without being interrupted by
+   * an error notification from one of them, while limiting the
+   * number of concurrent subscriptions to these [[Observable]]s.
    *
-   * <img width="640" height="380" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="" />
+   * This behaves like `flatten` except that if any of the merged [[Observable]]s notify of an
+   * error via `onError`, `flattenDelayError` will refrain from propagating that
+   * error notification until all of the merged [[Observable]]s have finished emitting items.
    *
-   * Even if multiple merged Observables send `onError` notifications, this method will only invoke the `onError` method of its
-   * Observers once.
+   * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
    *
-   * This method allows an Observer to receive all successfully emitted items from all of the
-   * source Observables without being interrupted by an error notification from one of them.
+   * Even if multiple merged [[Observable]]s send `onError` notifications, `flattenDelayError` will only
+   * invoke the `onError` method of its `Observer`s once.
    *
-   * This operation is only available if `this` is of type `Observable[Observable[U]]` for some `U`,
-   * otherwise you'll get a compilation error.
+   * $noDefaultScheduler
    *
-   * @return an Observable that emits items that are the result of flattening the items emitted by
-   *         the Observables emitted by the this Observable
-   *
-   * @usecase def flattenDelayError[U]: Observable[U]
-   *   @inheritdoc
+   * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
+   * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
    */
   def flattenDelayError[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
     val o2: Observable[Observable[U]] = this
     val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
     val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
     val o5 = rx.Observable.mergeDelayError[U](o4)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * $experimental Flattens an [[Observable]] that emits [[Observable]]s into one [[Observable]], in a way that allows an [[Observer]] to
+   * receive all successfully emitted items from all of the source [[Observable]]s without being interrupted by
+   * an error notification from one of them, while limiting the
+   * number of concurrent subscriptions to these [[Observable]]s.
+   *
+   * This behaves like `flatten` except that if any of the merged [[Observable]]s notify of an
+   * error via `onError`, `flattenDelayError` will refrain from propagating that
+   * error notification until all of the merged [[Observable]]s have finished emitting items.
+   *
+   * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
+   *
+   * Even if multiple merged [[Observable]]s send `onError` notifications, `flattenDelayError` will only
+   * invoke the `onError` method of its `Observer`s once.
+   *
+   * $noDefaultScheduler
+   *
+   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
+   * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
+   * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def flattenDelayError[U](maxConcurrent: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.mergeDelayError[U](o4, maxConcurrent)
     toScalaObservable[U](o5)
   }
 
