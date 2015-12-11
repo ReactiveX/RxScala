@@ -132,7 +132,7 @@ trait Observable[+T]
    * $noDefaultScheduler
    *
    * @return $subscribeAllReturn
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(): Subscription = {
@@ -212,7 +212,7 @@ trait Observable[+T]
    *
    * @param onNext $subscribeCallbacksParamOnNext
    * @return $subscribeAllReturn
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(onNext: T => Unit): Subscription = {
@@ -1557,7 +1557,7 @@ trait Observable[+T]
    * @return an Observable that emits items that are the results of invoking the selector on items emitted by
    *         a `ConnectableObservable` that shares a single subscription to the source Observable, and
    *         replays no more than `bufferSize` items that were emitted within the window defined by `time`
-   * @throws IllegalArgumentException if `bufferSize` is less than zero
+   * @throws java.lang.IllegalArgumentException if `bufferSize` is less than zero
    */
   def replay[R](selector: Observable[T] => Observable[R], bufferSize: Int, time: Duration, scheduler: Scheduler): Observable[R] = {
     val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
@@ -1655,7 +1655,7 @@ trait Observable[+T]
    * @param scheduler the scheduler that is used as a time source for the window
    * @return a `ConnectableObservable` that shares a single subscription to the source Observable and
    *         replays at most `bufferSize` items that were emitted during the window defined by `time`
-   *@throws IllegalArgumentException if `bufferSize` is less than zero
+   *@throws java.lang.IllegalArgumentException if `bufferSize` is less than zero
    */
   def replay(bufferSize: Int, time: Duration, scheduler: Scheduler): ConnectableObservable[T] = {
     new ConnectableObservable[T](asJavaObservable.replay(bufferSize, time.length, time.unit, scheduler))
@@ -2089,7 +2089,7 @@ trait Observable[+T]
    * @param n number of items to drop from the end of the source sequence
    * @return an Observable that emits the items emitted by the source Observable except for the dropped ones
    *         at the end
-   * @throws IndexOutOfBoundsException if `n` is less than zero
+   * @throws java.lang.IndexOutOfBoundsException if `n` is less than zero
    */
   def dropRight(n: Int): Observable[T] = {
     toScalaObservable(asJavaObservable.skipLast(n))
@@ -2290,7 +2290,7 @@ trait Observable[+T]
    * @param time the length of the time window
    * @return an Observable that emits at most `count` items from the source Observable that were emitted
    *         in a specified window of time before the Observable completed
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    */
   def takeRight(count: Int, time: Duration): Observable[T] = {
     toScalaObservable[T](asJavaObservable.takeLast(count, time.length, time.unit))
@@ -2309,7 +2309,7 @@ trait Observable[+T]
    * @return an Observable that emits at most `count` items from the source Observable that were emitted
    *         in a specified window of time before the Observable completed, where the timing information is
    *         provided by the given `scheduler`
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    */
   def takeRight(count: Int, time: Duration, scheduler: Scheduler): Observable[T] = {
     toScalaObservable[T](asJavaObservable.takeLast(count, time.length, time.unit, scheduler.asJavaScheduler))
@@ -2611,7 +2611,7 @@ trait Observable[+T]
    *
    * @param maxConcurrent the maximum number of Observables that may be subscribed to concurrently
    * @return an Observable that emits items that are the result of flattening the Observables emitted by the `source` Observable
-   * @throws IllegalArgumentException  if `maxConcurrent` is less than or equal to 0
+   * @throws java.lang.IllegalArgumentException  if `maxConcurrent` is less than or equal to 0
    */
   def flatten[U](maxConcurrent: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
     val o2: Observable[Observable[U]] = this
@@ -3225,8 +3225,8 @@ trait Observable[+T]
    * <img width="640" height="315" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/single.png" alt="" />
    * 
    * @return an Observable that emits the single item emitted by the source Observable
-   * @throws IllegalArgumentException if the source emits more than one item
-   * @throws NoSuchElementException if the source emits no items
+   * @throws java.lang.IllegalArgumentException if the source emits more than one item
+   * @throws java.util.NoSuchElementException if the source emits no items
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#wiki-single-and-singleordefault">RxJava Wiki: single()</a>
    * @see "MSDN: Observable.singleAsync()"
    */
@@ -3243,7 +3243,7 @@ trait Observable[+T]
    *
    * @return an Observable that emits an `Option` with the single item emitted by the source Observable, or
    *         `None` if the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOption: Observable[Option[T]] = {
     val jObservableOption = map(Some(_)).asJavaObservable.asInstanceOf[rx.Observable[Option[T]]]
@@ -3261,7 +3261,7 @@ trait Observable[+T]
    *                This is a by-name parameter, so it is only evaluated if the source Observable doesn't emit anything.
    * @return an Observable that emits the single item emitted by the source Observable, or a default item if
    *         the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOrElse[U >: T](default: => U): Observable[U] = {
     singleOption.map {
@@ -3548,7 +3548,7 @@ trait Observable[+T]
    * @param count the number of times the source Observable items are repeated,
    *              a count of 0 will yield an empty sequence
    * @return an Observable that repeats the sequence of items emitted by the source Observable at most `count` times
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Creating-Observables#wiki-repeat">RxJava Wiki: repeat()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
    */
@@ -3998,7 +3998,7 @@ trait Observable[+T]
    *            the zero-based index of the item to retrieve
    * @return an Observable that emits a single item: the item at the specified position in the sequence of
    *         those emitted by the source Observable
-   * @throws IndexOutOfBoundsException
+   * @throws java.lang.IndexOutOfBoundsException
    *             if index is greater than or equal to the number of items emitted by the source
    *             Observable, or index is less than 0
    */
@@ -4018,7 +4018,7 @@ trait Observable[+T]
    *            the default item
    * @return an Observable that emits the item at the specified position in the sequence emitted by the source
    *         Observable, or the default item if that index is outside the bounds of the source sequence
-   * @throws IndexOutOfBoundsException
+   * @throws java.lang.IndexOutOfBoundsException
    *             if `index` is less than 0
    */
   def elementAtOrDefault[U >: T](index: Int, default: U): Observable[U] = {
@@ -4218,8 +4218,8 @@ trait Observable[+T]
    * $noDefaultScheduler
    *
    * @param onNext function to execute for each item.
-   * @throws IllegalArgumentException if `onNext` is null
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws java.lang.IllegalArgumentException if `onNext` is null
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -4236,7 +4236,7 @@ trait Observable[+T]
    *
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
-   * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null
+   * @throws java.lang.IllegalArgumentException if `onNext` is null, or if `onError` is null
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -4254,7 +4254,7 @@ trait Observable[+T]
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
    * @param onComplete function to execute when completion is signalled.
-   * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null, or if `onComplete` is null
+   * @throws java.lang.IllegalArgumentException if `onNext` is null, or if `onError` is null, or if `onComplete` is null
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -5255,7 +5255,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    *         numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
-  @deprecated("Use [[Observable$.interval(initialDelay:* interval]] instead.", "0.25.1")
+  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration)* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS)).map(_.longValue())
   }
@@ -5275,7 +5275,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
-  @deprecated("Use [[Observable$.interval(initialDelay:* interval]] instead.", "0.25.1")
+  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration,scheduler:rx\\.lang\\.scala\\.Scheduler)* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
   }
