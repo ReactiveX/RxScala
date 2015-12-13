@@ -410,7 +410,7 @@ trait Observable[+T]
   }
 
   /**
-   * Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * $experimental Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
    * Observable.
    *
    * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
@@ -439,7 +439,7 @@ trait Observable[+T]
   }
 
   /**
-   * Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * $experimental Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
    * Observable.
    *
    * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
