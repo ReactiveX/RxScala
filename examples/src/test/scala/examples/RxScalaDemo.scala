@@ -1708,9 +1708,9 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def concatMapEagerExample2(): Unit = {
-    (0 until 10).toObservable.concatMapEager(i => {
+    (0 until 10).toObservable.concatMapEager(capacityHint = 10, i => {
       Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
-    }, capacityHint = 10).subscribe(println(_))
+    }).subscribe(println(_))
   }
 
   @Test def flattenDelayErrorExample() {

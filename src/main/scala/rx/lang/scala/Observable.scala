@@ -460,7 +460,7 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
-  def concatMapEager[R](f: T => Observable[R], capacityHint: Int): Observable[R] = {
+  def concatMapEager[R](capacityHint: Int, f: T => Observable[R]): Observable[R] = {
     toScalaObservable[R](asJavaObservable.concatMapEager[R](new Func1[T, rx.Observable[_ <: R]] {
       def call(t1: T): rx.Observable[_ <: R] = {
         f(t1).asJavaObservable
