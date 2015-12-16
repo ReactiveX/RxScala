@@ -61,6 +61,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "cast(Class[R])" -> "[RxJava needs this one because `rx.Observable` is invariant. `Observable` in RxScala is covariant and does not need this operator.]",
     "collect(Func0[R], Action2[R, _ >: T])" -> "[TODO: See https://github.com/ReactiveX/RxScala/issues/63]",
     "compose(Transformer[_ >: T, _ <: R])" -> "[use extension methods instead]",
+    "concatMapEager(Func1[_ >: T, _ <: Observable[_ <: R]], Int)" -> "concatMapEager(Int, T => Observable[R])",
     "concatWith(Observable[_ <: T])" -> "[use `o1 ++ o2`]",
     "contains(Any)" -> "contains(U)",
     "count()" -> "length",
@@ -76,6 +77,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "doOnUnsubscribe(Action0)" -> "doOnUnsubscribe(=> Unit)",
     "doOnTerminate(Action0)" -> "doOnTerminate(=> Unit)",
     "elementAtOrDefault(Int, T)" -> "elementAtOrDefault(Int, U)",
+    "extend(Func1[_ >: OnSubscribe[T], _ <: R])" -> "[use Scala implicit feature to extend `Observable`]",
     "finallyDo(Action0)" -> "finallyDo(=> Unit)",
     "first(Func1[_ >: T, Boolean])" -> commentForFirstWithPredicate,
     "firstOrDefault(T)" -> "firstOrElse(=> U)",
@@ -163,6 +165,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V])" -> "toMultiMap(T => K, T => V)",
     "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]])" -> "toMultiMap(T => K, T => V, => M)",
     "toMultimap(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: V], Func0[_ <: Map[K, Collection[V]]], Func1[_ >: K, _ <: Collection[V]])" -> commentForToMultimapWithCollectionFactory,
+    "toSingle()" -> "[TODO]",
     "toSortedList()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
     "toSortedList(Int)" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
     "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
@@ -186,8 +189,13 @@ class ObservableCompletenessKit extends CompletenessKit {
     "combineLatest(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "combineLatest(Observable[U])",
     "combineLatest(List[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Seq[Observable[T]])(Seq[T] => R)",
     "concat(Observable[_ <: Observable[_ <: T]])" -> "concat(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Observable[_ <: Observable[_ <: T]])" -> "concatEager(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Observable[_ <: Observable[_ <: T]], Int)" -> "concatEager(Int)(<:<[Observable[T], Observable[Observable[U]]])",
+    "concatEager(Iterable[_ <: Observable[_ <: T]])" -> "[use `iter.toObservable.concatEager`]",
+    "concatEager(Iterable[_ <: Observable[_ <: T]], Int)" -> "[use `iter.toObservable.concatEager(Int)`]",
     "defer(Func0[Observable[T]])" -> "defer(=> Observable[T])",
     "from(Array[T])" -> "from(Iterable[T])",
+    "fromCallable(Callable[_ <: T])" -> "[use `Observable.defer(Observable.just(expensiveComputation))`]",
     "from(Iterable[_ <: T])" -> "from(Iterable[T])",
     "from(Future[_ <: T])" -> fromFuture,
     "from(Future[_ <: T], Long, TimeUnit)" -> fromFuture,
@@ -198,9 +206,11 @@ class ObservableCompletenessKit extends CompletenessKit {
     "merge(Observable[_ <: Observable[_ <: T]], Int)" -> "flatten(Int)(<:<[Observable[T], Observable[Observable[U]]])",
     "merge(Array[Observable[_ <: T]])" -> "[use `Observable.from(array).flatten`]",
     "merge(Iterable[_ <: Observable[_ <: T]])" -> "[use `Observable.from(iter).flatten`]",
+    "merge(Array[Observable[_ <: T]], Int)" -> "[use `Observable.from(array).flatten(n)`]",
     "merge(Iterable[_ <: Observable[_ <: T]], Int)" -> "[use `Observable.from(iter).flatten(n)`]",
     "mergeDelayError(Observable[_ <: T], Observable[_ <: T])" -> "mergeDelayError(Observable[U])",
     "mergeDelayError(Observable[_ <: Observable[_ <: T]])" -> "flattenDelayError(<:<[Observable[T], Observable[Observable[U]]])",
+    "mergeDelayError(Observable[_ <: Observable[_ <: T]], Int)" -> "flattenDelayError(Int)(<:<[Observable[T], Observable[Observable[U]]])",
     "sequenceEqual(Observable[_ <: T], Observable[_ <: T])" -> "sequenceEqual(Observable[U])",
     "sequenceEqual(Observable[_ <: T], Observable[_ <: T], Func2[_ >: T, _ >: T, Boolean])" -> "sequenceEqualWith(Observable[U])((U, U) => Boolean)",
     "range(Int, Int)" -> commentForRange,
@@ -242,5 +252,8 @@ class ObservableCompletenessKit extends CompletenessKit {
   }).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
     // amb 2-9
     "amb(" + _ + ")" -> "[unnecessary because we can use `o1 amb o2` instead or `amb(List(o1, o2, o3, ...)`]"
+  ).drop(1).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
+    // concatEager 2-9
+    "concatEager(" + _ + ")" -> "[unnecessary because we can use `concatEager` instead or `Observable(o1, o2, ...).concatEager`]"
   ).drop(1).toMap
 }

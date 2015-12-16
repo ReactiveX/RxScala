@@ -39,26 +39,6 @@ object ExperimentalAPIExamples {
     )
   }
 
-  @Test def onBackpressureBlockExample(): Unit = {
-    Observable[Int](subscriber => {
-      (1 to 200).foreach(subscriber.onNext)
-    }).doOnNext(v => println(s"emit $v")).onBackpressureBlock.observeOn(IOScheduler()).subscribe {
-      v =>
-        Thread.sleep(10) // A slow consumer
-        println(s"process $v")
-    }
-  }
-
-  @Test def onBackpressureBlockExample2(): Unit = {
-    Observable[Int](subscriber => {
-      (1 to 200).foreach(subscriber.onNext)
-    }).doOnNext(v => println(s"emit $v")).onBackpressureBlock(10).observeOn(IOScheduler()).subscribe {
-      v =>
-        Thread.sleep(10) // A slow consumer
-        println(s"process $v")
-    }
-  }
-
   @Test def doOnRequestExample(): Unit = {
     (1 to 300).toObservable.doOnRequest(request => println(s"request $request")).subscribe(new Subscriber[Int]() {
       override def onStart(): Unit = request(1)
@@ -112,7 +92,7 @@ object ExperimentalAPIExamples {
 
   @Test def withLatestFromExample2(): Unit = {
     val a = Observable.interval(1 second).take(7)
-    val b = Observable.timer(3 seconds, 250 millis)
+    val b = Observable.interval(3 seconds, 250 millis)
     a.withLatestFrom(b)((x, y) => (x, y)).toBlocking.foreach {
       case (x, y) => println(s"a: $x b: $y")
     }

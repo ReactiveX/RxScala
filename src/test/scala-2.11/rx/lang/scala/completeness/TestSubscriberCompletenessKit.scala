@@ -31,6 +31,12 @@ class TestSubscriberCompletenessKit extends CompletenessKit {
     "getOnCompletedEvents()" -> "assertCompleted()",
     "getOnErrorEvents()" -> "getOnErrorEvents",
     "getOnNextEvents()" -> "getOnNextEvents",
-    "isUnsubscribed()" -> "isUnsubscribed"
+    "isUnsubscribed()" -> "isUnsubscribed",
+
+    "create()" -> "apply()",
+    "create(Long)" -> "apply(Long)",
+    "create(Observer[T])" -> "apply(Observer[T])",
+    "create(Observer[T], Long)" -> "apply(Observer[T], Long)",
+    "create(Subscriber[T])" -> "apply(Subscriber[T])"
   )
 }

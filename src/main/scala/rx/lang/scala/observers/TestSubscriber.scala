@@ -73,7 +73,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * Assert that a single terminal event occurred, either `onCompleted` or `onError`.
    *
-   * @throws AssertionError if not exactly one terminal event notification was received
+   * @throws java.lang.AssertionError if not exactly one terminal event notification was received
    */
   @throws[AssertionError]
   def assertTerminalEvent(): Unit = {
@@ -83,7 +83,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * Assert that this [[Subscriber]] is unsubscribed.
    *
-   * @throws AssertionError if this [[Subscriber]] is not unsubscribed
+   * @throws java.lang.AssertionError if this [[Subscriber]] is not unsubscribed
    */
   @throws[AssertionError]
   def assertUnsubscribed(): Unit = {
@@ -93,7 +93,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * Assert that this [[Subscriber]] has received no `onError` notifications.
    *
-   * @throws AssertionError if this [[Subscriber]] has received one or more `onError` notifications
+   * @throws java.lang.AssertionError if this [[Subscriber]] has received one or more `onError` notifications
    */
   @throws[AssertionError]
   def assertNoErrors(): Unit = {
@@ -104,7 +104,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * Blocks until this [[Subscriber]] receives a notification that the [[Observable]] is complete
    * (either an `onCompleted` or `onError` notification).
    *
-   * @throws RuntimeException if the Subscriber is interrupted before the Observable is able to complete
+   * @throws java.lang.RuntimeException if the Subscriber is interrupted before the Observable is able to complete
    */
   @throws[RuntimeException]
   def awaitTerminalEvent(): Unit = {
@@ -116,7 +116,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * (either an `onCompleted` or `onError` notification), or until a timeout expires.
    *
    * @param timeout the duration of the timeout
-   * @throws RuntimeException if the Subscriber is interrupted before the Observable is able to complete
+   * @throws java.lang.RuntimeException if the Subscriber is interrupted before the Observable is able to complete
    */
   @throws[RuntimeException]
   def awaitTerminalEvent(timeout: Duration): Unit = {
@@ -148,7 +148,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * $experimental Assert if there is exactly a single completion event.
    *
-   * @throws AssertionError if there were zero, or more than one, onCompleted events
+   * @throws java.lang.AssertionError if there were zero, or more than one, onCompleted events
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -160,7 +160,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * $experimental Assert if there is no completion event.
    *
-   * @throws AssertionError if there were one or more than one onCompleted events
+   * @throws java.lang.AssertionError if there were one or more than one onCompleted events
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -173,7 +173,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * $experimental Assert if there is exactly one error event which is a subclass of the given class.
    *
    * @param clazz the class to check the error against.
-   * @throws AssertionError if there were zero, or more than one, onError events, or if the single onError
+   * @throws java.lang.AssertionError if there were zero, or more than one, onError events, or if the single onError
    *                        event did not carry an error of a subclass of the given class
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
@@ -187,7 +187,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * $experimental Assert there is a single onError event with the exact exception.
    *
    * @param throwable the throwable to check
-   * @throws AssertionError if there were zero, or more than one, onError events, or if the single onError
+   * @throws java.lang.AssertionError if there were zero, or more than one, onError events, or if the single onError
    *                        event did not carry an error that matches the specified throwable
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
@@ -200,7 +200,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * $experimental Assert for no onError and onCompleted events.
    *
-   * @throws AssertionError if there was either an onError or onCompleted event
+   * @throws java.lang.AssertionError if there was either an onError or onCompleted event
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -212,7 +212,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   /**
    * $experimental Assert if there are no onNext events received.
    *
-   * @throws AssertionError if there were any onNext events
+   * @throws java.lang.AssertionError if there were any onNext events
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -225,7 +225,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * $experimental Assert if the given number of onNext events are received.
    *
    * @param count the expected number of onNext events
-   * @throws AssertionError if there were more or fewer onNext events than specified by `count`
+   * @throws java.lang.AssertionError if there were more or fewer onNext events than specified by `count`
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -238,7 +238,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * $experimental Assert if the received onNext events, in order, are the specified items.
    *
    * @param values the items to check
-   * @throws AssertionError if the items emitted do not exactly match those specified by `values`
+   * @throws java.lang.AssertionError if the items emitted do not exactly match those specified by `values`
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental
@@ -251,7 +251,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * $experimental Assert if there is only a single received onNext event and that it marks the emission of a specific item.
    *
    * @param value the item to check
-   * @throws AssertionError if the [[Observable]] does not emit only the single item specified by `value`
+   * @throws java.lang.AssertionError if the [[Observable]] does not emit only the single item specified by `value`
    * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
    */
   @Experimental

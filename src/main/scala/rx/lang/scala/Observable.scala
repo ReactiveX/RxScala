@@ -132,7 +132,7 @@ trait Observable[+T]
    * $noDefaultScheduler
    *
    * @return $subscribeAllReturn
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(): Subscription = {
@@ -212,7 +212,7 @@ trait Observable[+T]
    *
    * @param onNext $subscribeCallbacksParamOnNext
    * @return $subscribeAllReturn
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
   def subscribe(onNext: T => Unit): Subscription = {
@@ -329,6 +329,143 @@ trait Observable[+T]
         f(t1).asJavaObservable
       }
     }))
+  }
+
+  /**
+   * $experimental Concatenates `this` and `that` source [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them
+   * in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param that the source to concat with.
+   * @return an [[Observable]] that emits items all of the items emitted by `this` and `that`, one after the other,
+   *         without interleaving them.
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U >: T](that: Observable[U]): Observable[U] = {
+    val o1: rx.Observable[_ <: U] = this.asJavaObservable
+    val o2: rx.Observable[_ <: U] = that.asJavaObservable
+    toScalaObservable(rx.Observable.concatEager(o1, o2))
+  }
+
+  /**
+   * $experimental Concatenates an [[Observable]] sequence of [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * emitted source [[Observable]]s as they are observed. The operator buffers the values emitted by these
+   * [[Observable]]s and then drains them in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s emitted by
+   *         `this`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.concatEager[U](o4)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * $experimental Concatenates an [[Observable]] sequence of [[Observable]]s eagerly into a single stream of values.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * emitted source [[Observable]]s as they are observed. The operator buffers the values emitted by these
+   * [[Observable]]s and then drains them in order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param capacityHint hints about the number of expected values in an [[Observable]]
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s emitted by
+   *         `this`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatEager[U](capacityHint: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.concatEager[U](o4, capacityHint)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * $experimental Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * Observable.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them in
+   * order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param f the function that maps a sequence of values into a sequence of [[Observable]]s that will be
+   *          eagerly concatenated
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s returned by
+   *         `f`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatMapEager[R](f: T => Observable[R]): Observable[R] = {
+    toScalaObservable[R](asJavaObservable.concatMapEager[R](new Func1[T, rx.Observable[_ <: R]] {
+      def call(t1: T): rx.Observable[_ <: R] = {
+        f(t1).asJavaObservable
+      }
+    }))
+  }
+
+  /**
+   * $experimental Maps a sequence of values into [[Observable]]s and concatenates these [[Observable]]s eagerly into a single
+   * Observable.
+   *
+   * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
+   * source [[Observable]]s. The operator buffers the values emitted by these [[Observable]]s and then drains them in
+   * order, each one after the previous one completes.
+   *
+   * ===Backpressure:===
+   * Backpressure is honored towards the downstream, however, due to the eagerness requirement, sources
+   * are subscribed to in unbounded mode and their values are queued up in an unbounded buffer.
+   *
+   * $noDefaultScheduler
+   *
+   * @param f the function that maps a sequence of values into a sequence of [[Observable]]s that will be
+   *          eagerly concatenated
+   * @param capacityHint hints about the number of expected values in an [[Observable]]
+   * @return an [[Observable]] that emits items all of the items emitted by the [[Observable]]s returned by
+   *         `f`, one after the other, without interleaving them
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def concatMapEager[R](capacityHint: Int, f: T => Observable[R]): Observable[R] = {
+    toScalaObservable[R](asJavaObservable.concatMapEager[R](new Func1[T, rx.Observable[_ <: R]] {
+      def call(t1: T): rx.Observable[_ <: R] = {
+        f(t1).asJavaObservable
+      }
+    }, capacityHint))
   }
 
   /**
@@ -1420,7 +1557,7 @@ trait Observable[+T]
    * @return an Observable that emits items that are the results of invoking the selector on items emitted by
    *         a `ConnectableObservable` that shares a single subscription to the source Observable, and
    *         replays no more than `bufferSize` items that were emitted within the window defined by `time`
-   * @throws IllegalArgumentException if `bufferSize` is less than zero
+   * @throws java.lang.IllegalArgumentException if `bufferSize` is less than zero
    */
   def replay[R](selector: Observable[T] => Observable[R], bufferSize: Int, time: Duration, scheduler: Scheduler): Observable[R] = {
     val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
@@ -1518,7 +1655,7 @@ trait Observable[+T]
    * @param scheduler the scheduler that is used as a time source for the window
    * @return a `ConnectableObservable` that shares a single subscription to the source Observable and
    *         replays at most `bufferSize` items that were emitted during the window defined by `time`
-   *@throws IllegalArgumentException if `bufferSize` is less than zero
+   *@throws java.lang.IllegalArgumentException if `bufferSize` is less than zero
    */
   def replay(bufferSize: Int, time: Duration, scheduler: Scheduler): ConnectableObservable[T] = {
     new ConnectableObservable[T](asJavaObservable.replay(bufferSize, time.length, time.unit, scheduler))
@@ -1952,7 +2089,7 @@ trait Observable[+T]
    * @param n number of items to drop from the end of the source sequence
    * @return an Observable that emits the items emitted by the source Observable except for the dropped ones
    *         at the end
-   * @throws IndexOutOfBoundsException if `n` is less than zero
+   * @throws java.lang.IndexOutOfBoundsException if `n` is less than zero
    */
   def dropRight(n: Int): Observable[T] = {
     toScalaObservable(asJavaObservable.skipLast(n))
@@ -2153,7 +2290,7 @@ trait Observable[+T]
    * @param time the length of the time window
    * @return an Observable that emits at most `count` items from the source Observable that were emitted
    *         in a specified window of time before the Observable completed
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    */
   def takeRight(count: Int, time: Duration): Observable[T] = {
     toScalaObservable[T](asJavaObservable.takeLast(count, time.length, time.unit))
@@ -2172,7 +2309,7 @@ trait Observable[+T]
    * @return an Observable that emits at most `count` items from the source Observable that were emitted
    *         in a specified window of time before the Observable completed, where the timing information is
    *         provided by the given `scheduler`
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    */
   def takeRight(count: Int, time: Duration, scheduler: Scheduler): Observable[T] = {
     toScalaObservable[T](asJavaObservable.takeLast(count, time.length, time.unit, scheduler.asJavaScheduler))
@@ -2474,7 +2611,7 @@ trait Observable[+T]
    *
    * @param maxConcurrent the maximum number of Observables that may be subscribed to concurrently
    * @return an Observable that emits items that are the result of flattening the Observables emitted by the `source` Observable
-   * @throws IllegalArgumentException  if `maxConcurrent` is less than or equal to 0
+   * @throws java.lang.IllegalArgumentException  if `maxConcurrent` is less than or equal to 0
    */
   def flatten[U](maxConcurrent: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
     val o2: Observable[Observable[U]] = this
@@ -2485,33 +2622,61 @@ trait Observable[+T]
   }
 
   /**
-   * This behaves like `flatten` except that if any of the merged Observables
-   * notify of an error via [[rx.lang.scala.Observer.onError onError]], this method will
-   * refrain from propagating that error notification until all of the merged Observables have
-   * finished emitting items.
+   * Flattens an [[Observable]] that emits [[Observable]]s into one [[Observable]], in a way that allows an [[Observer]] to
+   * receive all successfully emitted items from all of the source [[Observable]]s without being interrupted by
+   * an error notification from one of them, while limiting the
+   * number of concurrent subscriptions to these [[Observable]]s.
    *
-   * <img width="640" height="380" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="" />
+   * This behaves like `flatten` except that if any of the merged [[Observable]]s notify of an
+   * error via `onError`, `flattenDelayError` will refrain from propagating that
+   * error notification until all of the merged [[Observable]]s have finished emitting items.
    *
-   * Even if multiple merged Observables send `onError` notifications, this method will only invoke the `onError` method of its
-   * Observers once.
+   * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
    *
-   * This method allows an Observer to receive all successfully emitted items from all of the
-   * source Observables without being interrupted by an error notification from one of them.
+   * Even if multiple merged [[Observable]]s send `onError` notifications, `flattenDelayError` will only
+   * invoke the `onError` method of its `Observer`s once.
    *
-   * This operation is only available if `this` is of type `Observable[Observable[U]]` for some `U`,
-   * otherwise you'll get a compilation error.
+   * $noDefaultScheduler
    *
-   * @return an Observable that emits items that are the result of flattening the items emitted by
-   *         the Observables emitted by the this Observable
-   *
-   * @usecase def flattenDelayError[U]: Observable[U]
-   *   @inheritdoc
+   * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
+   * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
    */
   def flattenDelayError[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
     val o2: Observable[Observable[U]] = this
     val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
     val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
     val o5 = rx.Observable.mergeDelayError[U](o4)
+    toScalaObservable[U](o5)
+  }
+
+  /**
+   * $experimental Flattens an [[Observable]] that emits [[Observable]]s into one [[Observable]], in a way that allows an [[Observer]] to
+   * receive all successfully emitted items from all of the source [[Observable]]s without being interrupted by
+   * an error notification from one of them, while limiting the
+   * number of concurrent subscriptions to these [[Observable]]s.
+   *
+   * This behaves like `flatten` except that if any of the merged [[Observable]]s notify of an
+   * error via `onError`, `flattenDelayError` will refrain from propagating that
+   * error notification until all of the merged [[Observable]]s have finished emitting items.
+   *
+   * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
+   *
+   * Even if multiple merged [[Observable]]s send `onError` notifications, `flattenDelayError` will only
+   * invoke the `onError` method of its `Observer`s once.
+   *
+   * $noDefaultScheduler
+   *
+   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
+   * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
+   * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def flattenDelayError[U](maxConcurrent: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
+    val o2: Observable[Observable[U]] = this
+    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
+    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
+    val o5 = rx.Observable.mergeDelayError[U](o4, maxConcurrent)
     toScalaObservable[U](o5)
   }
 
@@ -3060,8 +3225,8 @@ trait Observable[+T]
    * <img width="640" height="315" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/single.png" alt="" />
    * 
    * @return an Observable that emits the single item emitted by the source Observable
-   * @throws IllegalArgumentException if the source emits more than one item
-   * @throws NoSuchElementException if the source emits no items
+   * @throws java.lang.IllegalArgumentException if the source emits more than one item
+   * @throws java.util.NoSuchElementException if the source emits no items
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#wiki-single-and-singleordefault">RxJava Wiki: single()</a>
    * @see "MSDN: Observable.singleAsync()"
    */
@@ -3078,7 +3243,7 @@ trait Observable[+T]
    *
    * @return an Observable that emits an `Option` with the single item emitted by the source Observable, or
    *         `None` if the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOption: Observable[Option[T]] = {
     val jObservableOption = map(Some(_)).asJavaObservable.asInstanceOf[rx.Observable[Option[T]]]
@@ -3096,7 +3261,7 @@ trait Observable[+T]
    *                This is a by-name parameter, so it is only evaluated if the source Observable doesn't emit anything.
    * @return an Observable that emits the single item emitted by the source Observable, or a default item if
    *         the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOrElse[U >: T](default: => U): Observable[U] = {
     singleOption.map {
@@ -3383,7 +3548,7 @@ trait Observable[+T]
    * @param count the number of times the source Observable items are repeated,
    *              a count of 0 will yield an empty sequence
    * @return an Observable that repeats the sequence of items emitted by the source Observable at most `count` times
-   * @throws IllegalArgumentException if `count` is less than zero
+   * @throws java.lang.IllegalArgumentException if `count` is less than zero
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Creating-Observables#wiki-repeat">RxJava Wiki: repeat()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229428.aspx">MSDN: Observable.Repeat</a>
    */
@@ -3833,7 +3998,7 @@ trait Observable[+T]
    *            the zero-based index of the item to retrieve
    * @return an Observable that emits a single item: the item at the specified position in the sequence of
    *         those emitted by the source Observable
-   * @throws IndexOutOfBoundsException
+   * @throws java.lang.IndexOutOfBoundsException
    *             if index is greater than or equal to the number of items emitted by the source
    *             Observable, or index is less than 0
    */
@@ -3853,7 +4018,7 @@ trait Observable[+T]
    *            the default item
    * @return an Observable that emits the item at the specified position in the sequence emitted by the source
    *         Observable, or the default item if that index is outside the bounds of the source sequence
-   * @throws IndexOutOfBoundsException
+   * @throws java.lang.IndexOutOfBoundsException
    *             if `index` is less than 0
    */
   def elementAtOrDefault[U >: T](index: Int, default: U): Observable[U] = {
@@ -4053,8 +4218,8 @@ trait Observable[+T]
    * $noDefaultScheduler
    *
    * @param onNext function to execute for each item.
-   * @throws IllegalArgumentException if `onNext` is null
-   * @throws OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
+   * @throws java.lang.IllegalArgumentException if `onNext` is null
+   * @throws rx.exceptions.OnErrorNotImplementedException if the [[Observable]] tries to call `onError`
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -4071,7 +4236,7 @@ trait Observable[+T]
    *
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
-   * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null
+   * @throws java.lang.IllegalArgumentException if `onNext` is null, or if `onError` is null
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -4089,7 +4254,7 @@ trait Observable[+T]
    * @param onNext function to execute for each item.
    * @param onError function to execute when an error is emitted.
    * @param onComplete function to execute when completion is signalled.
-   * @throws IllegalArgumentException if `onNext` is null, or if `onError` is null, or if `onComplete` is null
+   * @throws java.lang.IllegalArgumentException if `onNext` is null, or if `onError` is null, or if `onComplete` is null
    * @since 0.19
    * @see <a href="http://reactivex.io/documentation/operators/subscribe.html">ReactiveX operators documentation: Subscribe</a>
    */
@@ -4536,6 +4701,7 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("The operator doesn't work properly with [[Observable.subscribeOn]]` and is prone to deadlocks.It will be removed / unavailable in future", "0.25.1")
   def onBackpressureBlock(maxQueueLength: Int): Observable[T] = {
     asJavaObservable.onBackpressureBlock(maxQueueLength)
   }
@@ -4559,6 +4725,7 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Experimental
+  @deprecated("The operator doesn't work properly with [[Observable.subscribeOn]]` and is prone to deadlocks.It will be removed / unavailable in future", "0.25.1")
   def onBackpressureBlock: Observable[T] = {
     asJavaObservable.onBackpressureBlock()
   }
@@ -5029,6 +5196,53 @@ object Observable {
   }
 
   /**
+   * Returns an [[Observable]] that emits a `0L` after the `initialDelay` and ever increasing numbers
+   * after each `period` of time thereafter.
+   *
+   * <img width="640" height="200" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/timer.p.png" alt="" />
+   *
+   * ===Backpressure Support:===
+   * This operator does not support backpressure as it uses time. If the downstream needs a slower rate
+   * it should slow the timer or use something like [[Observable.onBackpressureDrop:* onBackpressureDrop]].
+   *
+   * ===Scheduler:===
+   * `interval` operates by default on the `computation` [[Scheduler]].
+   *
+   * @param initialDelay the initial delay time to wait before emitting the first value of 0L
+   * @param period the period of time between emissions of the subsequent numbers
+   * @return an [[Observable]] that emits a `0L` after the `initialDelay` and ever increasing numbers after
+   *         each `period` of time thereafter
+   * @see <a href="http://reactivex.io/documentation/operators/interval.html">ReactiveX operators documentation: Interval</a>
+   */
+  def interval(initialDelay: Duration, period: Duration): Observable[Long] = {
+    toScalaObservable[java.lang.Long](rx.Observable.interval(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS)).map(_.longValue())
+  }
+
+  /**
+   * Returns an [[Observable]] that emits a `0L` after the `initialDelay` and ever increasing numbers
+   * after each `period` of time thereafter, on a specified [[Scheduler]].
+   *
+   * <img width="640" height="200" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/timer.ps.png" alt="" />
+   *
+   * ===Backpressure Support:===
+   * This operator does not support backpressure as it uses time. If the downstream needs a slower rate
+   * it should slow the timer or use something like [[Observable.onBackpressureDrop:* onBackpressureDrop]].
+   *
+   * ===Scheduler:===
+   * you specify which [[Scheduler]] this operator will use.
+   *
+   * @param initialDelay the initial delay time to wait before emitting the first value of `0L`
+   * @param period the period of time between emissions of the subsequent numbers
+   * @param scheduler the [[Scheduler]] on which the waiting happens and items are emitted
+   * @return an [[Observable]] that emits a `0L` after the `initialDelay` and ever increasing numbers after
+   *         each `period` of time thereafter, while running on the given [[Scheduler]]
+   * @see <a href="http://reactivex.io/documentation/operators/interval.html">ReactiveX operators documentation: Interval</a>
+   */
+  def interval(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
+    toScalaObservable[java.lang.Long](rx.Observable.interval(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
+  }
+
+  /**
    * Return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, on a specified Scheduler.
    * <p>
@@ -5041,6 +5255,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    *         numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
+  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration)* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS)).map(_.longValue())
   }
@@ -5060,6 +5275,7 @@ object Observable {
    * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
    * numbers after each `period` of time thereafter, while running on the given `scheduler`
    */
+  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration,scheduler:rx\\.lang\\.scala\\.Scheduler)* interval]] instead.", "0.25.1")
   def timer(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
     toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
   }

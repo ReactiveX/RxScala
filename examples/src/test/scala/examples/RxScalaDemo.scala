@@ -895,10 +895,10 @@ class RxScalaDemo extends JUnitSuite {
 
   @Test def timeoutExample2(): Unit = {
     val firstTimeoutSelector = () => {
-      Observable.timer(10 seconds, 10 seconds, ComputationScheduler()).take(1)
+      Observable.interval(10 seconds, 10 seconds, ComputationScheduler()).take(1)
     }
     val timeoutSelector = (t: Long) => {
-      Observable.timer(
+      Observable.interval(
         (500 - t * 100) max 1 millis,
         (500 - t * 100) max 1 millis,
         ComputationScheduler()).take(1)
@@ -1681,5 +1681,81 @@ class RxScalaDemo extends JUnitSuite {
     val o1 = Observable.just(1, 2, 3)
     val o2 = Observable.error(new RuntimeException("Oops"))
     (o1 ++ o2).subscribe(v => println(v), e => e.printStackTrace(), () => println("completed"))
+  }
+
+  @Test def concatEagerExample(): Unit = {
+    val o1 = Observable.interval(100 millis).take(3).map(l => s"o1 emit $l").doOnSubscribe(println("subscribe to o1"))
+    val o2 = Observable.interval(100 millis).take(3).map(l => s"o2 emit $l").doOnSubscribe(println("subscribe to o2"))
+    o1.concatEager(o2).subscribe(println(_))
+  }
+
+  @Test def concatEagerExample2(): Unit = {
+    (0 until 10).map { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.toObservable.concatEager.subscribe(println(_))
+  }
+
+  @Test def concatEagerExample3(): Unit = {
+    (0 until 10).map { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.toObservable.concatEager(capacityHint = 3).subscribe(println(_))
+  }
+
+  @Test def concatMapEagerExample(): Unit = {
+    (0 until 10).toObservable.concatMapEager { i =>
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }.subscribe(println(_))
+  }
+
+  @Test def concatMapEagerExample2(): Unit = {
+    (0 until 10).toObservable.concatMapEager(capacityHint = 10, i => {
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }).subscribe(println(_))
+  }
+
+  @Test def flattenDelayErrorExample() {
+    val o1 = Observable.just(1).delay(200 millis).
+      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(println(s"subscribe to o1"))
+    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
+    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
+    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
+    Observable.just(o1, o2, o3, o4).flattenDelayError.subscribe(println(_), _.printStackTrace())
+  }
+
+  @Test def flattenDelayErrorExample2() {
+    val o1 = Observable.just(1).delay(200 millis).
+      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(println(s"subscribe to o1"))
+    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
+    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
+    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
+    Observable.just(o1, o2, o3, o4).flattenDelayError(2).subscribe(println(_), _.printStackTrace())
+  }
+
+  @Test def blockingObservableSubscribeExample(): Unit = {
+    val b = Observable.just(1, 2, 3).toBlocking
+    println("---b.subscribe()---")
+    b.subscribe()
+    println("---b.subscribe(onNext)---")
+    b.subscribe(println(_))
+    println("---b.subscribe(onNext, onError)---")
+    b.subscribe(println(_), _.printStackTrace())
+    println("---b.subscribe(onNext, onError, onCompleted)---")
+    b.subscribe(println(_), _.printStackTrace(), () => println("onCompleted"))
+    println("---b.subscribe(Observer)---")
+    b.subscribe(new Observer[Int] {
+      override def onNext(v: Int): Unit = println(v)
+
+      override def onError(e: Throwable): Unit = e.printStackTrace()
+
+      override def onCompleted(): Unit = println("onCompleted")
+    })
+    println("---b.subscribe(Subscriber)---")
+    b.subscribe(new Subscriber[Int] {
+      override def onNext(v: Int): Unit = println(v)
+
+      override def onError(e: Throwable): Unit = e.printStackTrace()
+
+      override def onCompleted(): Unit = println("onCompleted")
+    })
   }
 }

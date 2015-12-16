@@ -17,8 +17,9 @@ package rx.lang.scala.observables
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{Future, Promise}
+import rx.annotations.Experimental
 import rx.lang.scala.ImplicitFunctionConversions._
-import rx.lang.scala.Observable
+import rx.lang.scala.{Observable, Observer, Subscriber}
 import rx.observables.{BlockingObservable => JBlockingObservable}
 
 
@@ -26,6 +27,9 @@ import rx.observables.{BlockingObservable => JBlockingObservable}
  * An Observable that provides blocking operators.
  * 
  * You can obtain a BlockingObservable from an Observable using [[rx.lang.scala.Observable.toBlocking]]
+ *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
  */
 // constructor is private because users should use Observable.toBlocking
 class BlockingObservable[+T] private[scala] (val o: Observable[T])
@@ -34,20 +38,18 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
   // This is def because "field definition is not allowed in value class"
   private def asJava: JBlockingObservable[_ <: T] = o.asJavaObservable.toBlocking
   /**
-   * Invoke a method on each item emitted by the {@link Observable}; block until the Observable
+   * Invoke a method on each item emitted by the [[Observable]]; block until the Observable
    * completes.
    * 
-   * NOTE: This will block even if the Observable is asynchronous.
+   * NOTE: This will block even if the [[Observable]] is asynchronous.
    * 
-   * This is similar to {@link Observable#subscribe(Observer)}, but it blocks. Because it blocks it does
-   * not need the {@link Observer#onCompleted()} or {@link Observer#onError(Throwable)} methods.
+   * This is similar to [[Observable.subscribe()*]], but it blocks. Because it blocks it does
+   * not need the [[Observer.onCompleted]] or [[Observer.onError]] methods.
    * 
    * <img width="640" height="330" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/B.forEach.png" alt="" />
    *
-   * @param f
-   *            the {@link Action1} to invoke for every item emitted by the {@link Observable}
-   * @throws RuntimeException
-   *             if an error occurs
+   * @param f the action to invoke for every item emitted by the [[Observable]]
+   * @throws java.lang.RuntimeException if an error occurs
    */
   def foreach(f: T => Unit): Unit = {
     asJava.forEach(f)
@@ -64,8 +66,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    * <img width="640" height="315" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/B.last.png" alt="" />
    * 
    * @return the last item emitted by the source [[Observable]]
-   * @throws NoSuchElementException
-   *             if source contains no elements
+   * @throws java.util.NoSuchElementException if source contains no elements
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Blocking-Observable-Operators#last-and-lastordefault">RxJava Wiki: last()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.last.aspx">MSDN: Observable.Last</a>
    */
@@ -103,8 +104,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    * `NoSuchElementException` if source contains no elements.
    * 
    * @return the first item emitted by the source [[Observable]]
-   * @throws NoSuchElementException
-   *             if source contains no elements
+   * @throws java.util.NoSuchElementException if source contains no elements
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Blocking-Observable-Operators#first-and-firstordefault">RxJava Wiki: first()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229177.aspx">MSDN: Observable.First</a>
    */
@@ -117,8 +117,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    * `NoSuchElementException` if source contains no elements.
    * 
    * @return the first item emitted by the source [[Observable]]
-   * @throws NoSuchElementException
-   *             if source contains no elements
+   * @throws java.util.NoSuchElementException if source contains no elements
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Blocking-Observable-Operators#first-and-firstordefault">RxJava Wiki: first()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229177.aspx">MSDN: Observable.First</a>
    * @see [[BlockingObservable.first]]
@@ -182,8 +181,8 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    * <img width="640" height="315" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/single.png" alt="" />
    *
    * @return an Observable that emits the single item emitted by the source Observable
-   * @throws IllegalArgumentException if the source emits more than one item
-   * @throws NoSuchElementException if the source emits no items
+   * @throws java.lang.IllegalArgumentException if the source emits more than one item
+   * @throws java.util.NoSuchElementException if the source emits no items
    */
   def single: T = {
     asJava.single(): T // useless ascription because of compiler bug
@@ -196,7 +195,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    *
    * @return an `Option` with the single item emitted by the source Observable, or
    *         `None` if the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOption: Option[T] = {
     o.singleOption.toBlocking.single
@@ -213,7 +212,7 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
    *                This is a by-name parameter, so it is only evaluated if the source Observable doesn't emit anything.
    * @return the single item emitted by the source Observable, or a default item if
    *         the source Observable is empty
-   * @throws IllegalArgumentException if the source Observable emits more than one item
+   * @throws java.lang.IllegalArgumentException if the source Observable emits more than one item
    */
   def singleOrElse[U >: T](default: => U): U = {
     singleOption getOrElse default
@@ -264,6 +263,70 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
     val p = Promise[T]()
     o.single.subscribe(t => p.success(t), e => p.failure(e))
     p.future
+  }
+
+  /**
+   * $experimental Runs the source observable to a terminal event, ignoring any values and rethrowing any exception.
+   */
+  @Experimental
+  def subscribe(): Unit = {
+    asJava.subscribe()
+  }
+
+  /**
+   * $experimental Subscribes to the source and calls the given functions on the current thread, or
+   * rethrows any exception wrapped into [[rx.exceptions.OnErrorNotImplementedException]].
+   *
+   * @param onNext this function will be called whenever the Observable emits an item
+   */
+  @Experimental
+  def subscribe(onNext: T => Unit): Unit = {
+    asJava.subscribe(onNext)
+  }
+
+  /**
+   * $experimental Subscribes to the source and calls the given functions on the current thread.
+   *
+   * @param onNext this function will be called whenever the Observable emits an item
+   * @param onError this function will be called if an error occurs
+   */
+  @Experimental
+  def subscribe(onNext: T => Unit, onError: Throwable => Unit): Unit = {
+    asJava.subscribe(onNext, onError)
+  }
+
+  /**
+   * $experimental Subscribes to the source and calls the given functions on the current thread.
+   *
+   * @param onNext this function will be called whenever the Observable emits an item
+   * @param onError this function will be called if an error occurs
+   * @param onCompleted this function will be called when this Observable has finished emitting items
+   */
+  @Experimental
+  def subscribe(onNext: T => Unit, onError: Throwable => Unit, onCompleted: () => Unit): Unit = {
+    asJava.subscribe(onNext, onError, onCompleted)
+  }
+
+  /**
+   * $experimental Subscribes to the source and calls back the [[Observer]] methods on the current thread.
+   *
+   * @param observer the [[Observer]] to call event methods on
+   */
+  @Experimental
+  def subscribe(observer: Observer[T]): Unit = {
+    asJava.subscribe(observer.asJavaObserver)
+  }
+
+  /**
+   * $experimental Subscribes to the source and calls the [[Subscriber]] methods on the current thread.
+   *
+   * The unsubscription and backpressure is composed through.
+   *
+   * @param subscriber the [[Subscriber]] to forward events and calls to in the current thread
+   */
+  @Experimental
+  def subscribe(subscriber: Subscriber[T]): Unit = {
+    asJava.subscribe(subscriber.asJavaSubscriber)
   }
 }
 
