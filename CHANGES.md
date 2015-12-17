@@ -1,5 +1,19 @@
 # RxScala Releases
 
+## Version 0.25.1 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release upgrades RxJava to 1.0.17 along with several experimental APIs including new `interval` overloads, `concatEager`, `concatMapEager`, `flattenDelayError` and `BlockingObservable.subscribe`.
+
+### Pull Requests
+
+* [Pull 172] (https://github.com/ReactiveX/RxScala/pull/172) Fix invalid wikipedia url in AsyncWiki example
+* [Pull 174] (https://github.com/ReactiveX/RxScala/pull/174) Refactor CompletenessTest to support adding completeness tests for other classes
+* [Pull 176] (https://github.com/ReactiveX/RxScala/pull/176) Upgrade sbt to 0.13.8; move completeness package to scala-2.11; enable fatal-warnings
+* [Pull 178] (https://github.com/ReactiveX/RxScala/pull/178) Eliminated two possible false positives from BlockingObservableTest
+* [Pull 182] (https://github.com/ReactiveX/RxScala/pull/182) Upgrade to RxJava 1.0.17
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.25.0 - June 8th 2015 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.0.11 along with the following enhancements:
