@@ -5077,44 +5077,6 @@ object Observable {
   }
 
   /**
-   * Return an Observable that emits a 0L after the `initialDelay` and ever increasing
-   * numbers after each `period` of time thereafter, on a specified Scheduler.
-   * <p>
-   * <img width="640" height="200" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/timer.ps.png" alt="" />
-   *
-   * @param initialDelay
-   * the initial delay time to wait before emitting the first value of 0L
-   * @param period
-   * the period of time between emissions of the subsequent numbers
-   * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
-   *         numbers after each `period` of time thereafter, while running on the given `scheduler`
-   */
-  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration)* interval]] instead.", "0.25.1")
-  def timer(initialDelay: Duration, period: Duration): Observable[Long] = {
-    toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS)).map(_.longValue())
-  }
-
-  /**
-   * Return an Observable that emits a 0L after the `initialDelay` and ever increasing
-   * numbers after each `period` of time thereafter, on a specified Scheduler.
-   * <p>
-   * <img width="640" height="200" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/timer.ps.png" alt="" />
-   *
-   * @param initialDelay
-   * the initial delay time to wait before emitting the first value of 0L
-   * @param period
-   * the period of time between emissions of the subsequent numbers
-   * @param scheduler
-   * the scheduler on which the waiting happens and items are emitted
-   * @return an Observable that emits a 0L after the `initialDelay` and ever increasing
-   * numbers after each `period` of time thereafter, while running on the given `scheduler`
-   */
-  @deprecated("Use [[Observable$.interval(initialDelay:scala\\.concurrent\\.duration\\.Duration,period:scala\\.concurrent\\.duration\\.Duration,scheduler:rx\\.lang\\.scala\\.Scheduler)* interval]] instead.", "0.25.1")
-  def timer(initialDelay: Duration, period: Duration, scheduler: Scheduler): Observable[Long] = {
-    toScalaObservable[java.lang.Long](rx.Observable.timer(initialDelay.toNanos, period.toNanos, duration.NANOSECONDS, scheduler)).map(_.longValue())
-  }
-
-  /**
    * Returns an Observable that emits `0L` after a specified delay, and then completes.
    *
    * <img width="640" height="200" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/timer.png" alt="" />
