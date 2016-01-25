@@ -81,6 +81,7 @@ Since RxScala is part of the RxJava family the communication channels are simila
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.26.* | 1.0.* |
 | 0.25.* | 1.0.* |
 | 0.24.* | 1.0.* |
 | 0.23.*<sup>[1]</sup> | 1.0.* |
@@ -96,6 +97,7 @@ you should use the corresponding version of RxJava as the following table:
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.26.0 | 1.1.0+ |
 | 0.25.1 | 1.0.17+ |
 | 0.25.0 | 1.0.11+ |
 | 0.24.1 | 1.0.8+ |
