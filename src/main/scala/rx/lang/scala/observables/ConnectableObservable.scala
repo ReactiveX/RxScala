@@ -16,9 +16,24 @@
 
 package rx.lang.scala.observables
 
-import rx.lang.scala.{Observable, Subscription}
+import rx.annotations.Beta
+import rx.lang.scala.{Observable, Subscription, Subscriber}
 import rx.lang.scala.JavaConversions._
 
+/**
+ * A [[ConnectableObservable]] resembles an ordinary [[Observable]], except that it does not begin
+ * emitting items when it is subscribed to, but only when its [[ConnectableObservable.connect connect]] method is called.
+ * In this way you can wait for all intended [[Subscriber]]s to subscribe to the [[Observable]]
+ * before the [[Observable]] begins emitting items.
+ *
+ * <img width="640" height="510" src="https://github.com/ReactiveX/RxJava/wiki/images/rx-operators/publishConnect.png" alt="">
+ *
+ * @define beta
+ * <span class="badge badge-red" style="float: right;">BETA</span>
+ *
+ * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Connectable-Observable-Operators">RxJava Wiki: Connectable Observable Operators</a>
+ * @tparam T the type of items emitted
+ */
 class ConnectableObservable[+T] private[scala](val asJavaObservable: rx.observables.ConnectableObservable[_ <: T])
   extends Observable[T] {
 
@@ -35,4 +50,31 @@ class ConnectableObservable[+T] private[scala](val asJavaObservable: rx.observab
    * @return a [[rx.lang.scala.Observable]]
    */
   def refCount: Observable[T] = toScalaObservable[T](asJavaObservable.refCount())
+
+  /**
+   * $beta Return an [[Observable]] that automatically connects to this [[ConnectableObservable]]
+   * when the first [[Subscriber]] subscribes.
+   *
+   * @return an [[Observable]] that automatically connects to this [[ConnectableObservable]]
+   *         when the first [[Subscriber]] subscribes
+   */
+  @Beta
+  def autoConnect: Observable[T] = {
+    toScalaObservable(asJavaObservable.autoConnect())
+  }
+
+  /**
+   * $beta Return an [[Observable]] that automatically connects to this [[ConnectableObservable]]
+   * when the specified number of [[Subscriber]]s subscribe to it.
+   *
+   * @param numberOfSubscribers the number of [[Subscriber]]s to await before calling connect
+   *                            on the [[ConnectableObservable]]. A non-positive value indicates
+   *                            an immediate connection.
+   * @return an [[Observable]] that automatically connects to this [[ConnectableObservable]]
+   *         when the specified number of [[Subscriber]]s subscribe to it
+   */
+  @Beta
+  def autoConnect(numberOfSubscribers: Int): Observable[T] = {
+    toScalaObservable(asJavaObservable.autoConnect(numberOfSubscribers))
+  }
 }
