@@ -1067,8 +1067,24 @@ trait Observable[+T]
    *            an function to be invoked when the source Observable finishes
    * @return an Observable that emits the same items as the source Observable, then invokes the function
    */
+  @deprecated("Use [[Observable.doAfterTerminate]] instead", "0.26.1")
   def finallyDo(action: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.finallyDo(() => action))
+    toScalaObservable[T](asJavaObservable.doAfterTerminate(() => action))
+  }
+
+  /**
+   * Registers an function to be called when this [[Observable]] invokes either [[Observer.onCompleted onCompleted]] or [[Observer.onError onError]].
+   *
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/finallyDo.png" alt="">
+   *
+   * $noDefaultScheduler
+   *
+   * @param action an function to be invoked when the source [[Observable]] finishes
+   * @return an [[Observable]] that emits the same items as the source [[Observable]], then invokes the `action`
+   * @see <a href="http://reactivex.io/documentation/operators/do.html">ReactiveX operators documentation: Do</a>
+   */
+  def doAfterTerminate(action: => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doAfterTerminate(() => action))
   }
 
   /**
@@ -1324,6 +1340,27 @@ trait Observable[+T]
    */
   def observeOn(scheduler: Scheduler): Observable[T] = {
     toScalaObservable[T](asJavaObservable.observeOn(scheduler))
+  }
+
+  /**
+   * Return an [[Observable]] to perform its emissions and notifications on a specified [[Scheduler]],
+   * asynchronously with a bounded buffer and optionally delays [[Observer.onError onError]] notifications.
+   *
+   * <img width="640" height="308" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/observeOn.png" alt="">
+   *
+   * ===Scheduler:===
+   * you specify which [[Scheduler]] this operator will use
+   *
+   * @param scheduler the [[Scheduler]] to notify [[Observer]]s on
+   * @param delayError indicates if the [[Observer.onError onError]] notification may not cut ahead of onNext notification on the
+   *                   other side of the scheduling boundary. If true a sequence ending in onError will be replayed in the same order
+   *                   as was received from upstream
+   * @return the source [[Observable]] that its [[Observer]]s are notified on the specified [[Scheduler]]
+   * @see <a href="http://reactivex.io/documentation/operators/observeon.html">ReactiveX operators documentation: ObserveOn</a>
+   * @see <a href="http://www.grahamlea.com/2014/07/rxjava-threading-examples/">RxJava Threading Examples</a>
+   */
+  def observeOn(scheduler: Scheduler, delayError: Boolean): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.observeOn(scheduler, delayError))
   }
 
   /**
@@ -1809,8 +1846,46 @@ trait Observable[+T]
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#cache">RxJava wiki: cache</a>
    * @since 0.20
    */
+  @deprecated("Use [[Observable.cacheWithInitialCapacity]] instead", "0.26.1")
   def cache(capacity: Int): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.cache(capacity))
+    toScalaObservable[T](asJavaObservable.cacheWithInitialCapacity(capacity))
+  }
+
+  /**
+   * Caches emissions from the source [[Observable]] and replays them in order to any subsequent [[Subscriber]]s.
+   * This method has similar behavior to [[Observable.replay:* replay]] except that this auto-subscribes to the source
+   * [[Observable]] rather than returning a [[rx.lang.scala.observables.ConnectableObservable ConnectableObservable]]
+   * for which you must call [[rx.lang.scala.observables.ConnectableObservable.connect connect]] to activate the subscription.
+   *
+   * <img width="640" height="410" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/cache.png" alt="">
+   *
+   * This is useful when you want an [[Observable]] to cache responses and you can't control the
+   * subscribe/unsubscribe behavior of all the [[Subscriber]]s.
+   *
+   * When you call this method, it does not yet subscribe to the source Observable and so does not yet
+   * begin caching items. This only happens when the first [[Subscriber]] calls the resulting [[Observable]]'s `subscribe` method.
+   *
+   * **Note:** You sacrifice the ability to unsubscribe from the origin when you use the this method.
+   * So be careful not to use this method on [[Observable]]s that emit an infinite or very large number
+   * of items that will use up memory.
+   *
+   * ===Backpressure Support:===
+   * This operator does not support upstream backpressure as it is purposefully requesting and caching
+   * everything emitted.
+   *
+   * $noDefaultScheduler
+   *
+   * **Note:** The `capacity` hint is not an upper bound on cache size. For that, consider
+   * [[Observable.replay(bufferSize:Int):* replay(Int)]] in combination with
+   * [[rx.lang.scala.observables.ConnectableObservable.autoConnect:* ConnectableObservable.autoConnect]] or similar.
+   *
+   * @param capacity hint for number of items to cache (for optimizing underlying data structure)
+   * @return an [[Observable]] that, when first subscribed to, caches all of its items and notifications for the
+   *         benefit of subsequent [[Subscriber]]s
+   * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
+   */
+  def cacheWithInitialCapacity(capacity: Int): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.cacheWithInitialCapacity(capacity))
   }
 
   /**
@@ -3809,7 +3884,7 @@ trait Observable[+T]
    * <p>
    * <img width="640" height="305" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/doOnTerminate.png" alt="" />
    * <p>
-   * This differs from `finallyDo` in that this happens **before** `onCompleted/onError` are emitted.
+   * This differs from [[Observable.doAfterTerminate doAfterTerminate]] in that this happens **before** onCompleted/onError` are emitted.
    *
    * @param onTerminate the action to invoke when the source Observable calls `onCompleted` or `onError`
    * @return the source Observable with the side-effecting behavior applied

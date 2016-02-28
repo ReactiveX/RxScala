@@ -877,8 +877,8 @@ class RxScalaDemo extends JUnitSuite {
     // unsubscribed
   }
 
-  @Test def finallyDoExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.finallyDo { println("finally") }
+  @Test def doAfterTerminateExample(): Unit = {
+    val o = List("red", "green", "blue").toObservable.doAfterTerminate { println("finally") }
     o.subscribe(v => println(v), e => e.printStackTrace, () => println("onCompleted"))
     // red
     // green
@@ -1757,5 +1757,25 @@ class RxScalaDemo extends JUnitSuite {
 
       override def onCompleted(): Unit = println("onCompleted")
     })
+  }
+
+  def autoConnectExample(): Unit = {
+    val o = Observable.just(1, 2, 3).doOnSubscribe {
+      println("Start to emit items")
+    }.publish.autoConnect
+    println("1st Observer is subscribing")
+    o.subscribe(println(_))
+  }
+
+  def autoConnectExample2(): Unit = {
+    val o = Observable.just(1, 2, 3).doOnSubscribe {
+      println("Start to emit items")
+    }.publish.autoConnect(3)
+    println("1st Observer is subscribing")
+    o.subscribe(i => println(s"s1: $i"))
+    println("2nd Observer is subscribing")
+    o.subscribe(i => println(s"s2: $i"))
+    println("3rd Observer is subscribing")
+    o.subscribe(i => println(s"s3: $i"))
   }
 }
