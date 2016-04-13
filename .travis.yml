@@ -1,8 +1,14 @@
 language: scala
-jdk:
-- oraclejdk7
+matrix:
+  include:
+    - jdk: oraclejdk7
+      scala: 2.10.6
+    - jdk: oraclejdk7
+      scala: 2.11.8
+    - jdk: oraclejdk8
+      scala: 2.12.0-M4
 script:
-- sbt +test +examples/test +doc
+- sbt ++$TRAVIS_SCALA_VERSION test examples/test doc
 after_success:
 - "./publishViaTravis.sh"
 env:
