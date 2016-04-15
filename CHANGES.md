@@ -1,6 +1,6 @@
 # RxScala Releases
 
-## Version 0.26.1 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.26.1 - April 14th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.1.1 and add Scala 2.12 support. Now you can use RxScala with Scala 2.12.0-M4.
 
