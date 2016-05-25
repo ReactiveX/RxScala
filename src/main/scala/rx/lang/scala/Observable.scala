@@ -3220,33 +3220,7 @@ trait Observable[+T]
    *         if the source Observable is empty.
    */
   def tail: Observable[T] = {
-    lift {
-      (subscriber: Subscriber[T]) => {
-        new Subscriber[T](subscriber) {
-          var isFirst = true
-
-          override def onNext(v: T): Unit = {
-            if (isFirst) {
-              isFirst = false
-              request(1)
-            }
-            else {
-              subscriber.onNext(v)
-            }
-          }
-
-          override def onError(e: Throwable): Unit = subscriber.onError(e)
-
-          override def onCompleted(): Unit = {
-            if (isFirst) {
-              subscriber.onError(new UnsupportedOperationException("tail of empty Observable"))
-            } else {
-              subscriber.onCompleted
-            }
-          }
-        }
-      }
-    }
+    switchIfEmpty(Observable.error(new UnsupportedOperationException("tail of empty Observable"))).drop(1)
   }
 
   /**
@@ -4115,30 +4089,13 @@ trait Observable[+T]
    *         Observable
    */
   def to[M[_, _], K, V](keySelector: T => K, valueSelector: T => V)(implicit cbf: CanBuildFrom[Nothing, (K, V), M[K, V]]): Observable[M[K, V]] = {
-    lift {
-      (subscriber: Subscriber[M[K, V]]) => {
-        new Subscriber[T](subscriber) {
-          val b = cbf()
-
-          override def onStart(): Unit = request(Long.MaxValue)
-
-          override def onNext(t: T): Unit = {
-            val key = keySelector(t)
-            val value = valueSelector(t)
-            b += key -> value
-          }
-
-          override def onError(e: Throwable): Unit = {
-            subscriber.onError(e)
-          }
-
-          override def onCompleted(): Unit = {
-            subscriber.onNext(b.result)
-            subscriber.onCompleted()
-          }
-        }
-      }
+    val stateFactory = new rx.functions.Func0[mutable.Builder[(K, V), M[K, V]]] {
+      override def call(): mutable.Builder[(K, V), M[K, V]] = cbf()
     }
+    val collector = new rx.functions.Action2[mutable.Builder[(K, V), M[K, V]], T] {
+      override def call(builder: mutable.Builder[(K, V), M[K, V]], t: T): Unit = builder += keySelector(t) -> valueSelector(t)
+    }
+    toScalaObservable(asJavaObservable.collect[mutable.Builder[(K, V), M[K, V]]](stateFactory, collector)).map(_.result)
   }
 
   /**
@@ -4404,30 +4361,13 @@ trait Observable[+T]
    * @return an Observable that emits a single item: a `mutable.MultiMap` that contains keys and values mapped from the source Observable.
    */
   def toMultiMap[K, V, M <: mutable.MultiMap[K, V]](keySelector: T => K, valueSelector: T => V, multiMapFactory: => M): Observable[M] = {
-    lift {
-      (subscriber: Subscriber[M]) => {
-        new Subscriber[T](subscriber) {
-          val mm = multiMapFactory
-
-          override def onStart(): Unit = request(Long.MaxValue)
-
-          override def onNext(t: T): Unit = {
-            val key = keySelector(t)
-            val value = valueSelector(t)
-            mm.addBinding(key, value)
-          }
-
-          override def onError(e: Throwable): Unit = {
-            subscriber.onError(e)
-          }
-
-          override def onCompleted(): Unit = {
-            subscriber.onNext(mm)
-            subscriber.onCompleted()
-          }
-        }
-      }
+    val stateFactory = new rx.functions.Func0[M] {
+      override def call(): M = multiMapFactory
     }
+    val collector = new rx.functions.Action2[M, T] {
+      override def call(mm: M, t: T): Unit = mm.addBinding(keySelector(t), valueSelector(t))
+    }
+    toScalaObservable(asJavaObservable.collect[M](stateFactory, collector))
   }
 
   /**
@@ -4441,25 +4381,14 @@ trait Observable[+T]
    * @return an Observable that emits a single item, a collection containing all of the items emitted by
    *         the source Observable.
    */
-  def to[Col[_]](implicit cbf: CanBuildFrom[Nothing, T, Col[T @uncheckedVariance]]): Observable[Col[T @uncheckedVariance]] = {
-    lift {
-      (subscriber: Subscriber[Col[T]]) => {
-        new Subscriber[T](subscriber) {
-          val b = cbf()
-
-          override def onStart(): Unit = request(Long.MaxValue)
-
-          override def onNext(t: T): Unit = b += t
-
-          override def onError(e: Throwable): Unit = subscriber.onError(e)
-
-          override def onCompleted(): Unit = {
-            subscriber.onNext(b.result)
-            subscriber.onCompleted()
-          }
-        }
-      }
+  def to[Col[_]](implicit cbf: CanBuildFrom[Nothing, T, Col[T@uncheckedVariance]]): Observable[Col[T@uncheckedVariance]] = {
+    val stateFactory = new rx.functions.Func0[mutable.Builder[T, Col[T]]] {
+      override def call(): mutable.Builder[T, Col[T]] = cbf()
     }
+    val collector = new rx.functions.Action2[mutable.Builder[T, Col[T]], T] {
+      override def call(builder: mutable.Builder[T, Col[T]], t: T): Unit = builder += t
+    }
+    toScalaObservable(asJavaObservable.collect[mutable.Builder[T, Col[T]]](stateFactory, collector)).map(_.result)
   }
 
   /**
