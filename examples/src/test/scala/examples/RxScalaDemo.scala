@@ -409,11 +409,26 @@ class RxScalaDemo extends JUnitSuite {
     val firstCounter = Observable.interval(250 millis)
     val secondCounter = Observable.interval(550 millis)
     val thirdCounter = Observable.interval(850 millis)
-    val sources = Seq(firstCounter, secondCounter, thirdCounter)
+    val sources = Iterable(firstCounter, secondCounter, thirdCounter)
     val combinedCounter = Observable.combineLatest(sources)(_.toList).take(10)
 
     combinedCounter subscribe {x => println(s"Emitted group: $x")}
     waitFor(combinedCounter)
+  }
+
+  @Test def combineLatestDelayErrorExample() {
+    val firstCounter = Observable.just(1) ++ Observable.error(new RuntimeException("Oops!"))
+    val secondCounter = Observable.interval(550 millis).take(3)
+    val sources = Iterable(firstCounter, secondCounter)
+
+    Observable.combineLatest(sources)(_.toList).subscribe(
+      i => println("combineLatest: " + i),
+      e => println("combineLatest: " + e.getMessage))
+    Thread.sleep(2000)
+    Observable.combineLatestDelayError(sources)(_.toList).subscribe(
+      i => println("combineLatestDelayError: " + i),
+      e => println("combineLatestDelayError: " + e.getMessage))
+    Thread.sleep(2000)
   }
 
   @Test def olympicsExampleWithoutPublish() {
@@ -1489,6 +1504,20 @@ class RxScalaDemo extends JUnitSuite {
       .toBlocking.foreach(println)
   }
 
+  @Test def concatMapDelayErrorExample() {
+    println("=== concatMap ===")
+    (1 to 10).toObservable
+      .concatMap { i =>
+        if (i == 2) Observable.error(new IOException("Oops")) else Observable.just(i)
+      }.subscribe(println(_), _.printStackTrace)
+
+    println("=== concatMapDelayError ===")
+    (1 to 10).toObservable
+      .concatMapDelayError{ i =>
+        if (i == 2) Observable.error(new IOException("Oops")) else Observable.just(i)
+      }.subscribe(println(_), _.printStackTrace)
+  }
+
   @Test def onErrorResumeNextExample() {
     val o = Observable {
       (subscriber: Subscriber[Int]) =>
@@ -1512,11 +1541,76 @@ class RxScalaDemo extends JUnitSuite {
     }.subscribe(println(_))
   }
 
+  @Test def switchExample(): Unit = {
+    Observable.interval(300 millis).take(3).map { n =>
+      Observable.interval(100 millis)
+        .map(l => s"o$n emit $l")
+        .take(3)
+        .doOnSubscribe(println(s"subscribe to o$n"))
+    }.switch.take(5).subscribe(println(_))
+  }
+
+  @Test def switchDelayErrorExample(): Unit = {
+    println("=== switch ===")
+    Observable.interval(300 millis).take(3).map { n =>
+      if (n == 0) {
+        Observable.error(new RuntimeException("Oops!"))
+      } else {
+        Observable.interval(100 millis)
+          .map(l => s"o$n emit $l")
+          .take(3)
+          .doOnSubscribe(println(s"subscribe to o$n"))
+      }
+    }.switch.subscribe(println(_), _.printStackTrace())
+
+    Thread.sleep(2000)
+
+    println("=== switchDelayError ===")
+    Observable.interval(300 millis).take(3).map { n =>
+      if (n == 0) {
+        Observable.error(new RuntimeException("Oops!"))
+      } else {
+        Observable.interval(100 millis)
+          .map(l => s"o$n emit $l")
+          .take(3)
+          .doOnSubscribe(println(s"subscribe to o$n"))
+      }
+    }.switchDelayError.subscribe(println(_), _.printStackTrace())
+  }
+
   @Test def switchMapExample() {
     val o = Observable.interval(300 millis).take(5).switchMap[String] {
       n => Observable.interval(50 millis).take(10).map(i => s"Seq ${n}: ${i}")
     }
     o.toBlocking.foreach(println)
+  }
+
+  @Test def switchMapDelayErrorExample() {
+    println("=== switchMap ===")
+    Observable.interval(300 millis).take(3).switchMap { n =>
+      if (n == 0) {
+        Observable.error(new RuntimeException("Oops!"))
+      } else {
+        Observable.interval(100 millis)
+          .map(l => s"o$n emit $l")
+          .take(3)
+          .doOnSubscribe(println(s"subscribe to o$n"))
+      }
+    }.subscribe(println(_), _.printStackTrace())
+
+    Thread.sleep(2000)
+
+    println("=== switchMapDelayError ===")
+    Observable.interval(300 millis).take(3).switchMapDelayError { n =>
+      if (n == 0) {
+        Observable.error(new RuntimeException("Oops!"))
+      } else {
+        Observable.interval(100 millis)
+          .map(l => s"o$n emit $l")
+          .take(3)
+          .doOnSubscribe(println(s"subscribe to o$n"))
+      }
+    }.subscribe(println(_), _.printStackTrace())
   }
 
   @Test def joinExample() {
@@ -1591,6 +1685,7 @@ class RxScalaDemo extends JUnitSuite {
   @Test def onBackpressureDropExample() {
     val o = createFastObservable.onBackpressureDrop
     val l = new CountDownLatch(1)
+    // Use a small buffer to demonstrate the drop behavior
     o.observeOn(NewThreadScheduler()).subscribe(new Subscriber[Int] {
       override def onStart() {
         request(1)
@@ -1713,6 +1808,12 @@ class RxScalaDemo extends JUnitSuite {
     }).subscribe(println(_))
   }
 
+  @Test def concatMapEagerExample3(): Unit = {
+    (0 until 10).toObservable.concatMapEager(capacityHint = 10, maxConcurrent = 3, i => {
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+    }).subscribe(println(_))
+  }
+
   @Test def flattenDelayErrorExample() {
     val o1 = Observable.just(1).delay(200 millis).
       flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(println(s"subscribe to o1"))
@@ -1777,5 +1878,36 @@ class RxScalaDemo extends JUnitSuite {
     o.subscribe(i => println(s"s2: $i"))
     println("3rd Observer is subscribing")
     o.subscribe(i => println(s"s3: $i"))
+  }
+
+  def concatDelayErrorExample(): Unit = {
+    val o1 = Observable.error(new RuntimeException("Oops!"))
+    val o2 = Observable.just(1, 2, 3)
+    val os = Observable.just(o1, o2)
+    os.concat.subscribe(i => println("concat: " + i), e => println("concat: " + e.getMessage))
+    os.concatDelayError.subscribe(i => println("concatDelayError: " + i), e => println("concatDelayError: " + e.getMessage))
+  }
+
+  def onTerminateDetachExample(): Unit = {
+    {
+      var o = new Object
+      val weakReference = new scala.ref.WeakReference[Object](o)
+      // s will have a reference to "o" without onTerminateDetach
+      val s = Observable.just(o).size.subscribe(println(_))
+      o = null
+      System.gc() // It's fine for a demo even if it's just a best effort
+      Thread.sleep(2000)
+      println(s"without onTerminateDetach: isUnsubscribed=${s.isUnsubscribed}, weakReference=${weakReference.get}")
+    }
+    {
+      var o = new Object
+      val weakReference = new scala.ref.WeakReference[Object](o)
+      // s won't have a reference to "o" since they are detached.
+      val s = Observable.just(o).size.onTerminateDetach.subscribe(println(_))
+      o = null
+      System.gc() // It's fine for a demo even if it's just a best effort
+      Thread.sleep(2000)
+      println(s"onTerminateDetach: isUnsubscribed=${s.isUnsubscribed}, weakReference=${weakReference.get}")
+    }
   }
 }
