@@ -19,9 +19,10 @@ package rx.lang.scala
 import rx.annotations.{Beta, Experimental}
 import rx.exceptions.OnErrorNotImplementedException
 import rx.functions.FuncN
-import rx.lang.scala.observables.ConnectableObservable
+import rx.lang.scala.observables.{ConnectableObservable, ErrorDelayingObservable}
 import scala.concurrent.duration
 import java.util
+
 import collection.JavaConversions._
 import scala.collection.generic.CanBuildFrom
 import scala.annotation.unchecked.uncheckedVariance
@@ -317,26 +318,6 @@ trait Observable[+T]
   }
 
   /**
-   * $experimental Concatenates the [[Observable]] sequence of [[Observable]]s into a single sequence by subscribing to
-   * each inner [[Observable]], one after the other, one at a time and delays any errors till the all inner and the
-   * outer [[Observable]]s terminate.
-   *
-   * $supportBackpressure
-   *
-   * $noDefaultScheduler
-   *
-   * @return the new [[Observable]] with the concatenating behavior
-   */
-  @Experimental
-  def concatDelayError[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
-    val o2: Observable[Observable[U]] = this
-    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
-    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
-    val o5 = rx.Observable.concatDelayError[U](o4)
-    toScalaObservable[U](o5)
-  }
-
-  /**
    * Returns a new Observable that emits items resulting from applying a function that you supply to each item
    * emitted by the source Observable, where that function returns an Observable, and then emitting the items
    * that result from concatinating those resulting Observables.
@@ -349,27 +330,6 @@ trait Observable[+T]
    */
   def concatMap[R](f: T => Observable[R]): Observable[R] = {
     toScalaObservable[R](asJavaObservable.concatMap[R](new Func1[T, rx.Observable[_ <: R]] {
-      def call(t1: T): rx.Observable[_ <: R] = {
-        f(t1).asJavaObservable
-      }
-    }))
-  }
-
-  /**
-   * $experimental Maps each of the items into an [[Observable]], subscribes to them one after the other,
-   * one at a time and emits their values in order while delaying any error from either this or any of the inner [[Observable]]s
-   * till all of them terminate.
-   *
-   * $supportBackpressure
-   *
-   * $noDefaultScheduler
-   *
-   * @param f the function that maps the items of this [[Observable]] into the inner [[Observable]]s.
-   * @return the new [[Observable]] instance with the concatenation behavior
-   */
-  @Experimental
-  def concatMapDelayError[R](f: T => Observable[R]): Observable[R] = {
-    toScalaObservable[R](asJavaObservable.concatMapDelayError[R](new Func1[T, rx.Observable[_ <: R]] {
       def call(t1: T): rx.Observable[_ <: R] = {
         f(t1).asJavaObservable
       }
@@ -2683,27 +2643,6 @@ trait Observable[+T]
   }
 
   /**
-   * $experimental Returns a new [[Observable]] by applying a function that you supply to each item emitted by the source
-   * [[Observable]] that returns an [[Observable]], and then emitting the items emitted by the most recently emitted
-   * of these [[Observable]]s and delays any error until all [[Observable]]s terminate.
-   *
-   * <img width="640" height="350" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/switchMap.png" alt="" />
-   *
-   * $noDefaultScheduler
-   *
-   * @param f a function that, when applied to an item emitted by the source [[Observable]], returns an [[Observable]]
-   * @return an [[Observable]] that emits the items emitted by the [[Observable]] returned from applying `f` to the most
-   *         recently emitted item emitted by the source [[Observable]]
-   * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
-   */
-  @Experimental
-  def switchMapDelayError[R](f: T => Observable[R]): Observable[R] = {
-    toScalaObservable[R](asJavaObservable.switchMapDelayError[R](new Func1[T, rx.Observable[_ <: R]] {
-      def call(t: T): rx.Observable[_ <: R] = f(t).asJavaObservable
-    }))
-  }
-
-  /**
    * $experimental Returns an [[Observable]] that emits the items emitted by the source [[Observable]] or the items of an alternate
    * [[Observable]] if the source [[Observable]] is empty.
    *
@@ -2744,33 +2683,6 @@ trait Observable[+T]
   }
   // Naming: We follow C# (switch), not Java (switchOnNext), because Java just had to avoid clash with keyword
 
-
-  /**
-   * $experimental Converts this [[Observable]] that emits [[Observable]]s into an [[Observable]] that emits the items emitted by the
-   * most recently emitted of those [[Observable]]s and delays any exception until all [[Observable]]s terminate.
-   *
-   * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/switchDo.png" alt="" />
-   *
-   * It subscribes to an [[Observable]] that emits [[Observable]]s. Each time it observes one of
-   * these emitted [[Observable]]s, the [[Observable]] returned by this method begins emitting the items
-   * emitted by that [[Observable]]. When a new [[Observable]] is emitted, it stops emitting items
-   * from the earlier-emitted [[Observable]] and begins emitting items from the new one.
-   *
-   * $noDefaultScheduler
-   *
-   * @return an [[Observable]] that emits the items emitted by the [[Observable]] most recently emitted by the source
-   *         [[Observable]]
-   * @see <a href="http://reactivex.io/documentation/operators/switch.html">ReactiveX operators documentation: Switch</a>
-   */
-  @Experimental
-  def switchDelayError[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
-    val o2: Observable[Observable[U]] = this
-    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
-    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
-    val o5 = rx.Observable.switchOnNextDelayError[U](o4)
-    toScalaObservable[U](o5)
-  }
-
   /**
    * Flattens two Observables into one Observable, without any transformation.
    *
@@ -2790,7 +2702,7 @@ trait Observable[+T]
     toScalaObservable[U](rx.Observable.merge(thisJava, thatJava))
   }
 
-  /**
+ /**
    * This behaves like [[rx.lang.scala.Observable.merge]] except that if any of the merged Observables
    * notify of an error via [[rx.lang.scala.Observer.onError onError]], `mergeDelayError` will
    * refrain from propagating that error notification until all of the merged Observables have
@@ -2809,6 +2721,7 @@ trait Observable[+T]
    * @return an Observable that emits items that are the result of flattening the items emitted by
    *         `this` and `that`
    */
+  @deprecated("Use [[[rx.lang.scala.observables.ErrorDelayingObservable.merge delayError.merge]]] instead", "0.26.2")
   def mergeDelayError[U >: T](that: Observable[U]): Observable[U] = {
     toScalaObservable[U](rx.Observable.mergeDelayError[U](this.asJavaObservable, that.asJavaObservable))
   }
@@ -2881,42 +2794,12 @@ trait Observable[+T]
    * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
    * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
    */
+  @deprecated("Use [[[rx.lang.scala.observables.ErrorDelayingObservable.flatten[U](implicit* delayError.flatten]]] instead", "0.26.2")
   def flattenDelayError[U](implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
     val o2: Observable[Observable[U]] = this
     val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
     val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
     val o5 = rx.Observable.mergeDelayError[U](o4)
-    toScalaObservable[U](o5)
-  }
-
-  /**
-   * $experimental Flattens an [[Observable]] that emits [[Observable]]s into one [[Observable]], in a way that allows an [[Observer]] to
-   * receive all successfully emitted items from all of the source [[Observable]]s without being interrupted by
-   * an error notification from one of them, while limiting the
-   * number of concurrent subscriptions to these [[Observable]]s.
-   *
-   * This behaves like `flatten` except that if any of the merged [[Observable]]s notify of an
-   * error via `onError`, `flattenDelayError` will refrain from propagating that
-   * error notification until all of the merged [[Observable]]s have finished emitting items.
-   *
-   * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
-   *
-   * Even if multiple merged [[Observable]]s send `onError` notifications, `flattenDelayError` will only
-   * invoke the `onError` method of its `Observer`s once.
-   *
-   * $noDefaultScheduler
-   *
-   * @param maxConcurrent the maximum number of [[Observable]]s that may be subscribed to concurrently
-   * @return an [[Observable]] that emits all of the items emitted by the [[Observable]]s emitted by `this`
-   * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
-   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
-   */
-  @Experimental
-  def flattenDelayError[U](maxConcurrent: Int)(implicit evidence: Observable[T] <:< Observable[Observable[U]]): Observable[U] = {
-    val o2: Observable[Observable[U]] = this
-    val o3: Observable[rx.Observable[_ <: U]] = o2.map(_.asJavaObservable)
-    val o4: rx.Observable[_ <: rx.Observable[_ <: U]] = o3.asJavaObservable
-    val o5 = rx.Observable.mergeDelayError[U](o4, maxConcurrent)
     toScalaObservable[U](o5)
   }
 
@@ -3888,6 +3771,15 @@ trait Observable[+T]
    */
   def toBlocking: BlockingObservable[T] = {
     new BlockingObservable[T](this)
+  }
+
+  /**
+   * $experimental Converts an [[Observable]] into a [[rx.lang.scala.observables.ErrorDelayingObservable ErrorDelayingObservable]]
+   * that provides operators which delay errors when composing multiple [[Observable]]s.
+   */
+  @Experimental
+  def delayError: ErrorDelayingObservable[T] = {
+    new ErrorDelayingObservable[T](this)
   }
 
   /** Tests whether a predicate holds for some of the elements of this `Observable`.

@@ -1511,9 +1511,9 @@ class RxScalaDemo extends JUnitSuite {
         if (i == 2) Observable.error(new IOException("Oops")) else Observable.just(i)
       }.subscribe(println(_), _.printStackTrace)
 
-    println("=== concatMapDelayError ===")
+    println("=== delayError.concatMap ===")
     (1 to 10).toObservable
-      .concatMapDelayError{ i =>
+      .delayError.concatMap { i =>
         if (i == 2) Observable.error(new IOException("Oops")) else Observable.just(i)
       }.subscribe(println(_), _.printStackTrace)
   }
@@ -1565,7 +1565,7 @@ class RxScalaDemo extends JUnitSuite {
 
     Thread.sleep(2000)
 
-    println("=== switchDelayError ===")
+    println("=== delayError.switch ===")
     Observable.interval(300 millis).take(3).map { n =>
       if (n == 0) {
         Observable.error(new RuntimeException("Oops!"))
@@ -1575,7 +1575,7 @@ class RxScalaDemo extends JUnitSuite {
           .take(3)
           .doOnSubscribe(println(s"subscribe to o$n"))
       }
-    }.switchDelayError.subscribe(println(_), _.printStackTrace())
+    }.delayError.switch.subscribe(println(_), _.printStackTrace())
   }
 
   @Test def switchMapExample() {
@@ -1600,8 +1600,8 @@ class RxScalaDemo extends JUnitSuite {
 
     Thread.sleep(2000)
 
-    println("=== switchMapDelayError ===")
-    Observable.interval(300 millis).take(3).switchMapDelayError { n =>
+    println("=== delayError.switchMap ===")
+    Observable.interval(300 millis).take(3).delayError.switchMap { n =>
       if (n == 0) {
         Observable.error(new RuntimeException("Oops!"))
       } else {
@@ -1820,7 +1820,7 @@ class RxScalaDemo extends JUnitSuite {
     val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
     val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
     val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
-    Observable.just(o1, o2, o3, o4).flattenDelayError.subscribe(println(_), _.printStackTrace())
+    Observable.just(o1, o2, o3, o4).delayError.flatten.subscribe(println(_), _.printStackTrace())
   }
 
   @Test def flattenDelayErrorExample2() {
@@ -1829,7 +1829,7 @@ class RxScalaDemo extends JUnitSuite {
     val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
     val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
     val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
-    Observable.just(o1, o2, o3, o4).flattenDelayError(2).subscribe(println(_), _.printStackTrace())
+    Observable.just(o1, o2, o3, o4).delayError.flatten(2).subscribe(println(_), _.printStackTrace())
   }
 
   @Test def blockingObservableSubscribeExample(): Unit = {
@@ -1885,7 +1885,7 @@ class RxScalaDemo extends JUnitSuite {
     val o2 = Observable.just(1, 2, 3)
     val os = Observable.just(o1, o2)
     os.concat.subscribe(i => println("concat: " + i), e => println("concat: " + e.getMessage))
-    os.concatDelayError.subscribe(i => println("concatDelayError: " + i), e => println("concatDelayError: " + e.getMessage))
+    os.delayError.concat.subscribe(i => println("concatDelayError: " + i), e => println("concatDelayError: " + e.getMessage))
   }
 
   def onTerminateDetachExample(): Unit = {
