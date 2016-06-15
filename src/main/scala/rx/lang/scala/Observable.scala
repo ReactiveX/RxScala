@@ -4853,6 +4853,7 @@ object Observable {
    * @return
    *         an Observable that, when an [[rx.lang.scala.Observer]] subscribes to it, will execute the given function.
    */
+  @deprecated("Use [[Observable.apply]] instead", "0.26.2")
   def create[T](f: Observer[T] => Subscription): Observable[T] = {
     Observable(
       (subscriber: Subscriber[T]) => {

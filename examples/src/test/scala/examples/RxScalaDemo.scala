@@ -740,21 +740,7 @@ class RxScalaDemo extends JUnitSuite {
       case _ => throw new IllegalArgumentException
     }
   }
-  
-  /**
-   * This is a bad way of using Observable.create, because even if the consumer unsubscribes,
-   * all elements are calculated.
-   */
-  @Test def createExampleBad() {
-    val o = Observable.create[String](observer => {
-      observer.onNext(calculateElement(0))
-      observer.onNext(calculateElement(1))
-      observer.onCompleted()
-      Subscription {}
-    })
-    o.take(1).subscribe(println(_))
-  }
-  
+
   /**
    * This is the good way of doing it: If the consumer unsubscribes, no more elements are 
    * calculated.

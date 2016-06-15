@@ -256,22 +256,6 @@ class ObservableTests extends JUnitSuite {
   }
 
   @Test
-  def testCreate() {
-    var called = false
-    val o = Observable.create[String](observer => {
-      observer.onNext("a")
-      observer.onNext("b")
-      observer.onNext("c")
-      observer.onCompleted()
-      Subscription {
-        called = true
-      }
-    })
-    assertEquals(List("a", "b", "c"), o.toBlocking.toList)
-    assertTrue(called)
-  }
-
-  @Test
   def testToTraversable() {
     val o = Observable.just(1, 2, 3).toTraversable
     assertEquals(Seq(1, 2, 3), o.toBlocking.single)
