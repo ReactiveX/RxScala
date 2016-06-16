@@ -1362,6 +1362,26 @@ trait Observable[+T]
   }
 
   /**
+   * $experimental Returns an [[Observable]] that requests `n` initially from the upstream and then 75% of `n` subsequently after 75% of `n` values have
+   * been emitted to the downstream.
+   *
+   * This operator allows preventing the downstream to trigger unbounded mode via `request(Long.MaxValue)` or compensate for the per-item
+   * overhead of small and frequent requests.
+   *
+   * ===Backpressure:===
+   * The operator expects backpressure from upstream and honors backpressure from downstream.</dd>
+   *
+   * $noDefaultScheduler
+   *
+   * @param n the initial request amount, further request will happen after 75% of this value
+   * @return the [[Observable]] that rebatches request amounts from downstream
+   */
+  @Experimental
+  def rebatchRequests(n: Int): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.rebatchRequests(n))
+  }
+
+  /**
    * Asynchronously notify [[rx.lang.scala.Observer]]s on the specified [[rx.lang.scala.Scheduler]].
    *
    * <img width="640" height="308" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/observeOn.png" alt="" />
