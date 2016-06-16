@@ -2,14 +2,14 @@
 
 ## Version 0.26.2 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
-This release upgrades RxJava to 1.1.6 and add new experimental `ErrorDelayingObservable` class.
+This release upgrades RxJava to 1.1.6 and adds the new experimental `ErrorDelayingObservable` class.
 
 ### What is the new `ErrorDelayingObservable` class?
 
-`ErrorDelayingObservable` contains a variety of operators that support delaying errors. Sometimes when you compose multiples
+`ErrorDelayingObservable` contains a variety of operators that support delaying errors. Sometimes when you compose multiple
 `Observable`s together (e.g., `flatMap`, `concat`), you may want to refrain from propagating error notifications until all of
-the `Observable`s have finished emitting items. In such case, you can call `Observable.delayError` to get `ErrorDelayingObservable`
-and use the `ErrorDelayingObservable`'s methods to compose your `Observable`s. Search `delayError` in
+the `Observable`s have finished emitting items. In such cases, you can call `Observable.delayError` to get an `ErrorDelayingObservable`
+and use the `ErrorDelayingObservable`'s methods to compose your `Observable`s. Search for `delayError` in
 [RxScalaDemo.scala](examples/src/test/scala/examples/RxScalaDemo.scala) for examples.
 
 ### Pull Requests
