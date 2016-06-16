@@ -1,5 +1,26 @@
 # RxScala Releases
 
+## Version 0.26.2 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release upgrades RxJava to 1.1.6 and add new experimental `ErrorDelayingObservable` class.
+
+### What is the new `ErrorDelayingObservable` class?
+
+`ErrorDelayingObservable` contains a variety of operators that support delaying errors. Sometimes when you compose multiples
+`Observable`s together (e.g., `flatMap`, `concat`), you may want to refrain from propagating error notifications until all of
+the `Observable`s have finished emitting items. In such case, you can call `Observable.delayError` to get `ErrorDelayingObservable`
+and use the `ErrorDelayingObservable`'s methods to compose your `Observable`s. Search `delayError` in
+[RxScalaDemo.scala](examples/src/test/scala/examples/RxScalaDemo.scala) for examples.
+
+### Pull Requests
+
+* [Pull 193] (https://github.com/ReactiveX/RxScala/pull/193) Reimplement tail, to and toMultimap
+* [Pull 194] (https://github.com/ReactiveX/RxScala/pull/194) Bump to RxJava 1.1.5
+* [Pull 196] (https://github.com/ReactiveX/RxScala/pull/196) Deprecate Observable.create
+* [Pull 197] (https://github.com/ReactiveX/RxScala/pull/197) Bump to RxJava 1.1.6
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.26.1 - April 14th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.1.1 and add Scala 2.12 support. Now you can use RxScala with Scala 2.12.0-M4.
