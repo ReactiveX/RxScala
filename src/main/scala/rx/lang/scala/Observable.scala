@@ -2359,7 +2359,7 @@ trait Observable[+T]
    * @return an Observable that emits those items emitted by the source Observable before the time runs out,
    *         according to the specified Scheduler
    */
-  def take(time: Duration, scheduler: Scheduler) {
+  def take(time: Duration, scheduler: Scheduler): Observable[T] = {
     toScalaObservable[T](asJavaObservable.take(time.length, time.unit, scheduler.asJavaScheduler))
   }
 
