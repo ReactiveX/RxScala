@@ -16,7 +16,7 @@
 package rx.lang.scala.observers
 
 import java.util.concurrent.TimeUnit
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
 import rx.{Subscriber => JSubscriber, Observer => JObserver, Subscription => JSubscription}
 import rx.annotations.Experimental
@@ -48,7 +48,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * @return a sequence of the `Throwable`s that were passed to the [[Subscriber.onError]] method
    */
   def getOnErrorEvents: Seq[Throwable] = {
-    jTestSubscriber.getOnErrorEvents()
+    jTestSubscriber.getOnErrorEvents().asScala
   }
 
   /**
@@ -57,7 +57,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * @return a sequence of items observed by this [[Subscriber]], in the order in which they were observed
    */
   def getOnNextEvents: Seq[T] = {
-    jTestSubscriber.getOnNextEvents()
+    jTestSubscriber.getOnNextEvents().asScala
   }
 
   /**
