@@ -259,6 +259,44 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   def assertValue(value: T): Unit = {
     jTestSubscriber.assertValue(value)
   }
+
+  /**
+   * $experimental Assert values if the received onNext events, in order, are the specified items
+   * and if so, clears the internal list of values.
+   *
+   * @param values the items to check
+   * @throws java.lang.AssertionError if the items emitted do not exactly match those specified by `values`
+   * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
+   */
+  @Experimental
+  @throws[AssertionError]
+  def assertValuesAndClear(values: T*): Unit = {
+    jTestSubscriber.assertValuesAndClear(values.head, values.tail: _*)
+  }
+
+  /**
+   * Returns the committed number of onNext elements that are safe to be
+   * read from {@link #getOnNextEvents()} other threads.
+   *
+   * @return the committed number of onNext elements
+   */
+  def getValueCount(): Int = jTestSubscriber.getValueCount
+
+  /**
+   * Wait until the current committed value count is less than the expected amount
+   * by sleeping 1 unit at most timeout times and return true if at least
+   * the required amount of onNext values have been received.
+   *
+   * @param expected the expected number of onNext events
+   * @param timeout  the time to wait for the events
+   * @return true if the expected number of onNext events happened
+   * @throws InterruptedException if the sleep is interrupted
+   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   */
+  @Experimental
+  def awaitValueCount(expected: Int, timeout: Duration): Boolean = {
+    jTestSubscriber.awaitValueCount(expected, timeout.length, timeout.unit)
+  }
 }
 
 /**
