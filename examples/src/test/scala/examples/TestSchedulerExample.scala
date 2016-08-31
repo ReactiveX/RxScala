@@ -21,7 +21,7 @@ import org.mockito.Mockito._
 import org.scalatest.junit.JUnitSuite
 import rx.lang.scala._
 import rx.lang.scala.schedulers.TestScheduler
-import rx.observers.TestObserver
+import rx.observers.TestSubscriber
 import rx.lang.scala.JavaConversions._
 
 class TestSchedulerExample extends JUnitSuite {
@@ -34,7 +34,7 @@ class TestSchedulerExample extends JUnitSuite {
     val o = Observable.interval(1 second, scheduler)
 
     // Wrap Java Observer in Scala Observer, then subscribe
-    val sub = o.subscribe(toScalaObserver(new TestObserver(observer)))
+    val sub = o.subscribe(toScalaSubscriber(new TestSubscriber(observer)))
 
     verify(observer, never).onNext(0L)
     verify(observer, never).onCompleted()

@@ -105,6 +105,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "flatMap(Func1[_ >: T, _ <: Observable[_ <: R]], Int)" -> "flatMap(Int, T => Observable[R])",
     "flatMap(Func1[_ >: T, _ <: Observable[_ <: R]], Func1[_ >: Throwable, _ <: Observable[_ <: R]], Func0[_ <: Observable[_ <: R]], Int)" -> "flatMap(Int, T => Observable[R], Throwable => Observable[R], () => Observable[R])",
     "groupBy(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: R])" -> "groupBy(T => K, T => V)",
+    "groupBy(Func1[_ >: T, _ <: K], Func1[_ >: T, _ <: R], Func1[Action1[K], Map[K, Object]])" -> "[TODO]",
     "mergeWith(Observable[_ <: T])" -> "merge(Observable[U])",
     "ofType(Class[R])" -> "[use `filter(_.isInstanceOf[Class])`]",
     "onBackpressureBuffer(Long, Action0)" -> "onBackpressureBuffer(Long, => Unit)",
@@ -179,6 +180,8 @@ class ObservableCompletenessKit extends CompletenessKit {
     "toSortedList(Int)" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
     "toSortedList(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
     "toSortedList(Func2[_ >: T, _ >: T, Integer], Int)" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
+    "sorted()" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sorted)`]",
+    "sorted(Func2[_ >: T, _ >: T, Integer])" -> "[Sorting is already done in Scala's collection library, use `.toSeq.map(_.sortWith(f))`]",
     "window(Int)" -> "tumbling(Int)",
     "window(Int, Int)" -> "sliding(Int, Int)",
     "window(Long, TimeUnit)" -> "tumbling(Duration)",
@@ -202,6 +205,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "combineLatest(Iterable[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Iterable[Observable[T]])(Seq[T] => R)",
     "combineLatestDelayError(Iterable[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Iterable[Observable[T]])(Seq[T] => R)",
     "concat(Observable[_ <: Observable[_ <: T]])" -> "concat(<:<[Observable[T], Observable[Observable[U]]])",
+    "concat(Iterable[_ <: Observable[_ <: T]])" -> "[use `iter.toObservable.concat`]",
     "concatDelayError(Observable[_ <: Observable[_ <: T]])" -> "[use `delayError.concat`]",
     "concatDelayError(Iterable[_ <: Observable[_ <: T]])" -> "[use `iter.toObservable.delayError.concat`]",
     "concatEager(Observable[_ <: Observable[_ <: T]])" -> "concatEager(<:<[Observable[T], Observable[Observable[U]]])",
@@ -215,6 +219,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "from(Future[_ <: T])" -> fromFuture,
     "from(Future[_ <: T], Long, TimeUnit)" -> fromFuture,
     "from(Future[_ <: T], Scheduler)" -> fromFuture,
+    "fromAsync(Action1[AsyncEmitter[T]], BackpressureMode)" -> "[TODO]",
     "just(T)" -> "just(T*)",
     "merge(Observable[_ <: T], Observable[_ <: T])" -> "merge(Observable[U])",
     "merge(Observable[_ <: Observable[_ <: T]])" -> "flatten(<:<[Observable[T], Observable[Observable[U]]])",
@@ -237,8 +242,11 @@ class ObservableCompletenessKit extends CompletenessKit {
     "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource])" -> "using(=> Resource)(Resource => Observable[T], Resource => Unit, Boolean)",
     "using(Func0[Resource], Func1[_ >: Resource, _ <: Observable[_ <: T]], Action1[_ >: Resource], Boolean)" -> "using(=> Resource)(Resource => Observable[T], Resource => Unit, Boolean)",
     "withLatestFrom(Observable[_ <: U], Func2[_ >: T, _ >: U, _ <: R])" -> "withLatestFrom(Observable[U])((T, U) => R)",
+    "withLatestFrom(Array[Observable[_]], FuncN[R])" -> "[TODO]",
+    "withLatestFrom(Iterable[Observable[_]], FuncN[R])" -> "[TODO]",
     "zip(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "[use instance method `zip` and `map`]",
     "zip(Observable[_ <: Observable[_]], FuncN[_ <: R])" -> "[use `zip` in companion object and `map`]",
+    "zip(Array[Observable[_]], FuncN[_ <: R])" -> "[use `zip` in companion object and `map`]",
     "zip(Iterable[_ <: Observable[_]], FuncN[_ <: R])" -> "[use `zip` in companion object and `map`]",
     "zipWith(Observable[_ <: T2], Func2[_ >: T, _ >: T2, _ <: R])" -> "zipWith(Observable[U])((T, U) => R)",
     "zipWith(Iterable[_ <: T2], Func2[_ >: T, _ >: T2, _ <: R])" -> "zipWith(Iterable[U])((T, U) => R)"
@@ -273,5 +281,8 @@ class ObservableCompletenessKit extends CompletenessKit {
   ).drop(1).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
     // concatEager 2-9
     "concatEager(" + _ + ")" -> "[unnecessary because we can use `concatEager` instead or `Observable(o1, o2, ...).concatEager`]"
+  ).drop(1).toMap ++ List.iterate("Observable[_ <: T]", 9)(s => s + ", Observable[_ <: T]").map(
+    // concatDelayError 2-9
+    "concatDelayError(" + _ + ")" -> "[unnecessary because we can use `Observable(o1, o2, ...).delayError.concat`]"
   ).drop(1).toMap
 }

@@ -261,41 +261,37 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   }
 
   /**
-   * $experimental Assert values if the received onNext events, in order, are the specified items
+   * $experimental Assert that the [[TestSubscriber]] contains the given first and optional rest values exactly
    * and if so, clears the internal list of values.
+   * {{{
+   * val ts = TestSubscriber()
    *
-   * @param values the items to check
-   * @throws java.lang.AssertionError if the items emitted do not exactly match those specified by `values`
-   * @since (if this graduates from "Experimental" replace this parenthetical with the release number)
+   * ts.onNext(1)
+   *
+   * ts.assertValuesAndClear(1)
+   *
+   * ts.onNext(2)
+   * ts.onNext(3)
+   *
+   * ts.assertValuesAndClear(2, 3) // no mention of 1
+   * }}}
+   *
+   * @param expectedFirstValue the expected first value
+   * @param expectedRestValues the optional rest values
    */
   @Experimental
-  @throws[AssertionError]
-  def assertValuesAndClear(values: T*): Unit = {
-    jTestSubscriber.assertValuesAndClear(values.head, values.tail: _*)
+  def assertValuesAndClear(expectedFirstValue: T, expectedRestValues: T*): Unit = {
+    jTestSubscriber.assertValuesAndClear(expectedFirstValue, expectedRestValues: _*)
   }
 
   /**
-   * Returns the committed number of onNext elements that are safe to be
-   * read from {@link #getOnNextEvents()} other threads.
+   * $experimental Returns the number of times onCompleted was called on this [[TestSubscriber]].
    *
-   * @return the committed number of onNext elements
-   */
-  def getValueCount(): Int = jTestSubscriber.getValueCount
-
-  /**
-   * Wait until the current committed value count is less than the expected amount
-   * by sleeping 1 unit at most timeout times and return true if at least
-   * the required amount of onNext values have been received.
-   *
-   * @param expected the expected number of onNext events
-   * @param timeout  the time to wait for the events
-   * @return true if the expected number of onNext events happened
-   * @throws InterruptedException if the sleep is interrupted
-   * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
+   * @return the number of times onCompleted was called on this [[TestSubscriber]].
    */
   @Experimental
-  def awaitValueCount(expected: Int, timeout: Duration): Boolean = {
-    jTestSubscriber.awaitValueCount(expected, timeout.length, timeout.unit)
+  def getCompletions: Int = {
+    jTestSubscriber.getCompletions
   }
 }
 

@@ -106,6 +106,8 @@ trait CompletenessKit extends JUnitSuite {
       .filter(! _.contains("access$000"))
       // Ignore constructors
       .filter(! _.startsWith("<init>"))
+      // TODO Skips withLatestFrom right now due to https://github.com/ReactiveX/RxJava/pull/4447
+      .filter(! _.startsWith("withLatestFrom(Observable[T1]"))
   }
 
   /**
