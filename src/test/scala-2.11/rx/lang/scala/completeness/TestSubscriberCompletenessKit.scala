@@ -31,7 +31,7 @@ class TestSubscriberCompletenessKit extends CompletenessKit {
     "getOnErrorEvents()" -> "getOnErrorEvents",
     "getOnNextEvents()" -> "getOnNextEvents",
     "isUnsubscribed()" -> "isUnsubscribed",
-    "getCompletions()" -> "getCompletions",
+    "getCompletions()" -> "completions",
     "getValueCount()" -> "[TODO]",
     "awaitValueCount(Int, Long, TimeUnit)" -> "[TODO]",
 

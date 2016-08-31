@@ -290,7 +290,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * @return the number of times onCompleted was called on this [[TestSubscriber]].
    */
   @Experimental
-  def getCompletions: Int = {
+  def completions: Int = {
     jTestSubscriber.getCompletions
   }
 }
