@@ -16,7 +16,7 @@
 package rx.lang.scala.observers
 
 import java.util.concurrent.TimeUnit
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
 import rx.{Subscriber => JSubscriber, Observer => JObserver, Subscription => JSubscription}
 import rx.annotations.Experimental
@@ -48,7 +48,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * @return a sequence of the `Throwable`s that were passed to the [[Subscriber.onError]] method
    */
   def getOnErrorEvents: Seq[Throwable] = {
-    jTestSubscriber.getOnErrorEvents()
+    jTestSubscriber.getOnErrorEvents().asScala
   }
 
   /**
@@ -57,7 +57,7 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
    * @return a sequence of items observed by this [[Subscriber]], in the order in which they were observed
    */
   def getOnNextEvents: Seq[T] = {
-    jTestSubscriber.getOnNextEvents()
+    jTestSubscriber.getOnNextEvents().asScala
   }
 
   /**
@@ -258,6 +258,40 @@ class TestSubscriber[T] private[scala](jTestSubscriber: JTestSubscriber[T]) exte
   @throws[AssertionError]
   def assertValue(value: T): Unit = {
     jTestSubscriber.assertValue(value)
+  }
+
+  /**
+   * $experimental Assert that the [[TestSubscriber]] contains the given first and optional rest values exactly
+   * and if so, clears the internal list of values.
+   * {{{
+   * val ts = TestSubscriber()
+   *
+   * ts.onNext(1)
+   *
+   * ts.assertValuesAndClear(1)
+   *
+   * ts.onNext(2)
+   * ts.onNext(3)
+   *
+   * ts.assertValuesAndClear(2, 3) // no mention of 1
+   * }}}
+   *
+   * @param expectedFirstValue the expected first value
+   * @param expectedRestValues the optional rest values
+   */
+  @Experimental
+  def assertValuesAndClear(expectedFirstValue: T, expectedRestValues: T*): Unit = {
+    jTestSubscriber.assertValuesAndClear(expectedFirstValue, expectedRestValues: _*)
+  }
+
+  /**
+   * $experimental Returns the number of times onCompleted was called on this [[TestSubscriber]].
+   *
+   * @return the number of times onCompleted was called on this [[TestSubscriber]].
+   */
+  @Experimental
+  def completions: Int = {
+    jTestSubscriber.getCompletions
   }
 }
 

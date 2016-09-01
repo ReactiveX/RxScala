@@ -3434,6 +3434,27 @@ trait Observable[+T]
   }
 
   /**
+   * $experimental Returns an [[Observable]] that emits all items emitted by the source [[Observable]] that are distinct from their
+   * immediate predecessors when compared with each other via the provided comparator function.
+   *
+   * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/distinctUntilChanged.png" alt="" />
+   *
+   * ===Backpressure:===
+   * The operator doesn't interfere with backpressure which is determined by the source [[Observable]]'s backpressure behavior.
+   *
+   * $noDefaultScheduler
+   *
+   * @param comparator the function that receives the previous item and the current item and is
+   *                   expected to return true if the two are equal, thus skipping the current value.
+   * @return an [[Observable]] that emits those items from the source Observable that are distinct from their immediate predecessors
+   * @see <a href="http://reactivex.io/documentation/operators/distinct.html">ReactiveX operators documentation: Distinct</a>
+   */
+  @Experimental
+  def distinctUntilChanged[U](comparator: (T, T) => Boolean): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.distinctUntilChanged(comparator))
+  }
+
+  /**
    * Returns an Observable that forwards all distinct items emitted from the source Observable.
    *
    * <img width="640" height="310" src="https://raw.githubusercontent.com/wiki/ReactiveX/RxJava/images/rx-operators/distinct.png" alt="" />

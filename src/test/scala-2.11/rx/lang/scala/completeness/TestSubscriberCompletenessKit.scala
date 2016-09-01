@@ -28,10 +28,12 @@ class TestSubscriberCompletenessKit extends CompletenessKit {
     "assertError(Class[_ <: Throwable])" -> "assertError(Class[_ <: Throwable])",
     "assertReceivedOnNext(List[T])" -> "assertValues(T*)",
     "getLastSeenThread()" -> "getLastSeenThread",
-    "getOnCompletedEvents()" -> "assertCompleted()",
     "getOnErrorEvents()" -> "getOnErrorEvents",
     "getOnNextEvents()" -> "getOnNextEvents",
     "isUnsubscribed()" -> "isUnsubscribed",
+    "getCompletions()" -> "completions",
+    "getValueCount()" -> "[TODO]",
+    "awaitValueCount(Int, Long, TimeUnit)" -> "[TODO]",
 
     "create()" -> "apply()",
     "create(Long)" -> "apply(Long)",

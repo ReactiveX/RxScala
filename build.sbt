@@ -14,15 +14,19 @@ scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-en
 
 scalaVersion in ThisBuild := "2.11.8"
 
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0-M4")
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0-M5")
 
 parallelExecution in Test := false
 
-libraryDependencies ++= Seq(
-  "io.reactivex" % "rxjava" % "1.1.6",
-  "org.mockito" % "mockito-core" % "1.9.5" % "test",
-  "junit" % "junit" % "4.11" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test")
+libraryDependencies ++= {
+  // Scalatest 3.0.0 supports 2.12.0-M5 but it drops Scala 2.10 support. So just use 2.2.6 for Scala 2.10.
+  val scalatestVersion = if (scalaVersion.value.startsWith("2.10")) "2.2.6" else "3.0.0"
+  Seq(
+    "io.reactivex" % "rxjava" % "1.1.9",
+    "org.mockito" % "mockito-core" % "1.9.5" % "test",
+    "junit" % "junit" % "4.11" % "test",
+    "org.scalatest" %% "scalatest" % scalatestVersion % "test")
+}
 
 // Set up the doc mappings
 // See http://stackoverflow.com/questions/16934488/how-to-link-classes-from-jdk-into-scaladoc-generated-doc

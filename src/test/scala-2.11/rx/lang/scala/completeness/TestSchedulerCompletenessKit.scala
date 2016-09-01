@@ -23,5 +23,8 @@ class TestSchedulerCompletenessKit extends CompletenessKit {
   override val rxScalaType = typeOf[rx.lang.scala.schedulers.TestScheduler]
 
   // There are two methods without "()", so using `isOmittingParenthesesForArity0Method = true` by default is simpler
-  override protected def correspondenceChanges: Map[String, String] = Map("triggerActions()" -> "triggerActions()")
+  override protected def correspondenceChanges: Map[String, String] = Map(
+    "triggerActions()" -> "triggerActions()",
+    "when(Func1[Observable[Observable[Completable]], Completable])" -> "[TODO]"
+  )
 }

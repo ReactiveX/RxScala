@@ -15,6 +15,8 @@
  */
 package rx.lang.scala
 
+import rx.lang.scala.observers.TestSubscriber
+
 import scala.collection.mutable
 
 import org.junit.Test
@@ -181,5 +183,20 @@ class SubscriberTests extends JUnitSuite {
     assertTrue("onCompleted isn't called", completed)
     val zeros = new Array[Int](10).toList
     assertEquals(zeros, l)
+  }
+
+  @Test def testIssue202() {
+    // https://github.com/ReactiveX/RxScala/issues/202
+    val subject = Subject[Option[Unit]]()
+    val testSubscriber = TestSubscriber[Option[Unit]]()
+    subject.filter(_.isDefined).subscribe(testSubscriber)
+    testSubscriber.assertNoValues()
+    subject.onNext(None)
+    testSubscriber.assertNoValues()
+    subject.onNext(Some(()))
+    testSubscriber.assertValuesAndClear(Some(()))
+    testSubscriber.assertNoValues()
+    subject.onNext(None)
+    testSubscriber.assertNoValues()
   }
 }
