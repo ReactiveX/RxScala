@@ -16,7 +16,7 @@
 package rx.lang.scala
 
 /**
- * These functions convert between RxScala types RxJava types.
+ * These functions convert between RxScala types and RxJava types.
  * Pure Scala projects won't need them, but they will be useful for polyglot projects.
  * This object only contains conversions between types. For conversions between functions,
  * use [[rx.lang.scala.ImplicitFunctionConversions]].
