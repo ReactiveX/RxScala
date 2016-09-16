@@ -5,6 +5,17 @@ import Decorators.AsJava
 import Decorators.AsScala
 import Decorators.AsJavaSubscription
 
+/**
+	* Provides conversion functions `asJava` and `asScala` to convert
+	* between RxScala types and RxJava types.
+	*
+	* Example:
+	* {{{
+	* import rx.lang.scala.JavaConverters._
+	* val javaObs = Observable.just(1, 2, 3).asJava
+	* val scalaObs = javaObs.asScala
+	* }}}
+	*/
 object JavaConverters extends DecorateAsJava with DecorateAsScala
 
 private[scala] trait Decorators {
@@ -23,6 +34,10 @@ private[scala] trait Decorators {
 
 private[scala] object Decorators extends Decorators
 
+/**
+	* These functions convert RxScala types to RxJava types.
+	* Pure Scala projects won't need them, but they will be useful for polyglot projects.
+	*/
 trait DecorateAsJava {
 
 	implicit def toJavaNotification[T](s: Notification[T]): AsJava[rx.Notification[_ <: T]] =
@@ -46,8 +61,10 @@ trait DecorateAsJava {
 	implicit def toJavaObservable[T](s: Observable[T]): AsJava[rx.Observable[_ <: T]] =
 		new AsJava(s.asJavaObservable)
 
-	implicit def toJavaOperator[T, R](operator: Subscriber[R] => Subscriber[T]): AsJava[rx.Observable.Operator[R, T]] = {
-		val jOp = new rx.Observable.Operator[R, T] {
+	private type jOperator[R, T] = rx.Observable.Operator[R, T]
+
+	implicit def toJavaOperator[T, R](operator: Subscriber[R] => Subscriber[T]): AsJava[jOperator[R, T]] = {
+		val jOp = new jOperator[R, T] {
 			override def call(subscriber: rx.Subscriber[_ >: R]): rx.Subscriber[_ >: T] = {
 				import JavaConverters.toScalaSubscriber
 				operator(subscriber.asScala).asJava
@@ -57,6 +74,10 @@ trait DecorateAsJava {
 	}
 }
 
+/**
+	* These functions convert RxJava types to RxScala types.
+	* Pure Scala projects won't need them, but they will be useful for polyglot projects.
+	*/
 trait DecorateAsScala {
 
 	implicit def toScalaNotification[T](s: rx.Notification[_ <: T]): AsScala[Notification[T]] =
