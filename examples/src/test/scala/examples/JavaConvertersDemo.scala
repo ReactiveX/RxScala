@@ -14,7 +14,7 @@ import scala.language.postfixOps
 class JavaConvertersDemo extends JUnitSuite {
 
   @Test
-  def javaObservableToScalaObservableConverter() = {
+  def javaObservableToScalaObservableConverter(): Unit = {
 
     // given a RxJava Observable (for example from some third party library)...
     def getJavaObservableFromSomewhere: rx.Observable[Int] =
@@ -29,7 +29,7 @@ class JavaConvertersDemo extends JUnitSuite {
   }
 
   @Test
-  def scalaObservableToJavaObservableConverter() = {
+  def scalaObservableToJavaObservableConverter(): Unit = {
 
     // given a function that takes a RxJava Observable as its input and returns a RxJava Subscription ...
     def useJavaObservableSomewhere(obs: rx.Observable[_ <: Int]): rx.Subscription =
@@ -46,7 +46,7 @@ class JavaConvertersDemo extends JUnitSuite {
   }
 
   @Test
-  def schedulerConverting() = {
+  def schedulerConverting(): Unit = {
     // the next line is not part of the actual example, but is just to prevent early termination due to scheduling
     val latch = new CountDownLatch(1)
 
