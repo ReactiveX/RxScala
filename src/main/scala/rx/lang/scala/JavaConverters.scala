@@ -16,9 +16,7 @@
 package rx.lang.scala
 
 import scala.language.implicitConversions
-import Decorators.AsJava
-import Decorators.AsScala
-import Decorators.AsJavaSubscription
+import Decorators._
 
 /**
  * Provides conversion functions `asJava` and `asScala` to convert
@@ -43,10 +41,21 @@ private[scala] trait Decorators {
     def asJavaSubscription: rx.Subscription = s.asJavaSubscription
   }
 
+  class AsJavaSubscriber[A](s: Subscriber[A]) {
+    def asJavaSubscriber: rx.Subscriber[_ >: A] = s.asJavaSubscriber
+  }
+
   class AsScala[A](op: => A) {
     def asScala: A = op
   }
 
+  class AsScalaSubscription(s: rx.Subscription) {
+    def asScalaSubscription: Subscription = Subscription(s)
+  }
+
+  class AsScalaSubscriber[A](s: rx.Subscriber[_ >: A]) {
+    def asScalaSubscriber: Subscriber[A] = Subscriber(s)
+  }
 }
 
 private[scala] object Decorators extends Decorators
@@ -63,8 +72,8 @@ trait DecorateAsJava {
   implicit def toJavaSubscription(s: Subscription): AsJavaSubscription =
     new AsJavaSubscription(s)
 
-  implicit def toJavaSubscriber[T](s: Subscriber[T]): AsJava[rx.Subscriber[_ >: T]] =
-    new AsJava(s.asJavaSubscriber)
+  implicit def toJavaSubscriber[T](s: Subscriber[T]): AsJavaSubscriber[T] =
+    new AsJavaSubscriber(s)
 
   implicit def toJavaScheduler(s: Scheduler): AsJava[rx.Scheduler] =
     new AsJava(s.asJavaScheduler)
@@ -84,10 +93,10 @@ trait DecorateAsJava {
     val jOp = new jOperator[R, T] {
       override def call(subscriber: rx.Subscriber[_ >: R]): rx.Subscriber[_ >: T] = {
         import JavaConverters.toScalaSubscriber
-        operator(subscriber.asScala).asJava
+        operator(subscriber.asScalaSubscriber).asJavaSubscriber
       }
     }
-    new AsJava(jOp)
+    new AsJava[jOperator[R, T]](jOp)
   }
 }
 
@@ -100,11 +109,11 @@ trait DecorateAsScala {
   implicit def toScalaNotification[T](s: rx.Notification[_ <: T]): AsScala[Notification[T]] =
     new AsScala(Notification(s))
 
-  implicit def toScalaSubscription(s: rx.Subscription): AsScala[Subscription] =
-    new AsScala(Subscription(s))
+  implicit def toScalaSubscription(s: rx.Subscription): AsScalaSubscription =
+    new AsScalaSubscription(s)
 
-  implicit def toScalaSubscriber[T](s: rx.Subscriber[_ >: T]): AsScala[Subscriber[T]] =
-    new AsScala(Subscriber(s))
+  implicit def toScalaSubscriber[T](s: rx.Subscriber[_ >: T]): AsScalaSubscriber[T] =
+    new AsScalaSubscriber(s)
 
   implicit def toScalaScheduler(s: rx.Scheduler): AsScala[Scheduler] =
     new AsScala(Scheduler(s))
@@ -119,6 +128,6 @@ trait DecorateAsScala {
     val obs = new Observable[T] {
       val asJavaObservable: rx.Observable[_ <: T] = s
     }
-    new AsScala(obs)
+    new AsScala[Observable[T]](obs)
   }
 }
