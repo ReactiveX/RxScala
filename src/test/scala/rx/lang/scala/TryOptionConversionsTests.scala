@@ -33,7 +33,7 @@ class TryOptionConversionsTests extends JUnitSuite {
 
   @Test
   def testOptionSomeConversion() = {
-    val some = Some("abc")
+    val some = Option("abc")
     val observer = TestSubscriber[String]()
     some.toObservable.subscribe(observer)
 
@@ -44,7 +44,7 @@ class TryOptionConversionsTests extends JUnitSuite {
 
   @Test
   def testOptionNoneConversion() = {
-    val some = None
+    val some = Option.empty[String]
     val observer = TestSubscriber[String]()
     some.toObservable.subscribe(observer)
 
