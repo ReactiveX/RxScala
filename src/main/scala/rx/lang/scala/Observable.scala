@@ -20,6 +20,7 @@ import rx.annotations.{Beta, Experimental}
 import rx.exceptions.OnErrorNotImplementedException
 import rx.functions.FuncN
 import rx.lang.scala.observables.{ConnectableObservable, ErrorDelayingObservable}
+
 import scala.concurrent.duration
 import java.util
 
@@ -30,6 +31,7 @@ import scala.collection.{Iterable, Traversable, immutable}
 import scala.collection.mutable.ArrayBuffer
 import scala.language.higherKinds
 import scala.reflect.ClassTag
+import scala.util.Try
 
 
 /**
@@ -5039,6 +5041,24 @@ object Observable {
    */
   def from[T](iterable: Iterable[T]): Observable[T] = {
     toScalaObservable(rx.Observable.from(iterable.asJava))
+  }
+
+  /**
+   * Converts a `Try` into an `Observable`.
+   *
+   * Implementation note: the value will be immediately emitted each time an [[rx.lang.scala.Observer]] subscribes.
+   * Since this occurs before the [[rx.lang.scala.Subscription]] is returned,
+   * it in not possible to unsubscribe from the sequence before it completes.
+   *
+   * @param t the source Try
+   * @tparam T the type of value in the Try, and the type of items to be emitted by the resulting Observable
+   * @return an Observable that either emits the value or the error in the Try.
+   */
+  def from[T](t: Try[T]): Observable[T] = {
+    t match {
+      case Success(s) => Observable.just(s)
+      case Failure(e) => Observable.error(e)
+    }
   }
 
   /**

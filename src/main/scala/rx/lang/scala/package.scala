@@ -31,18 +31,11 @@ package object scala {
       def toObservable: Observable[T] = {  Observable.from(source) }
   }
 
-  implicit class TryToObservable[T](val t: Try[T]) extends AnyVal {
-    def toObservable: Observable[T] = {
-      t match {
-        case Success(s) => Observable.just(s)
-        case Failure(e) => Observable.error(e)
-      }
-    }
+  implicit class TryToObservable[T](val tryT: Try[T]) extends AnyVal {
+    def toObservable: Observable[T] = Observable.from(tryT)
   }
 
   implicit class OptionToObservable[T](val opt: Option[T]) extends AnyVal {
-    def toObservable: Observable[T] = {
-      opt.map(Observable.just(_)).getOrElse(Observable.empty)
-    }
+    def toObservable: Observable[T] = Observable.from(opt)
   }
 }
