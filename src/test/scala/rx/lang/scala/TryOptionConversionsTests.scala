@@ -6,7 +6,7 @@ import rx.lang.scala.observers.TestSubscriber
 
 import scala.util.{Failure, Success}
 
-class ConversionsTests extends JUnitSuite {
+class TryOptionConversionsTests extends JUnitSuite {
 
   @Test
   def testTrySuccessConversion() = {
