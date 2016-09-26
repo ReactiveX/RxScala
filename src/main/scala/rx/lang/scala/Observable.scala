@@ -20,7 +20,6 @@ import rx.annotations.{Beta, Experimental}
 import rx.exceptions.OnErrorNotImplementedException
 import rx.functions.FuncN
 import rx.lang.scala.observables.{ConnectableObservable, ErrorDelayingObservable}
-
 import scala.concurrent.duration
 import java.util
 
