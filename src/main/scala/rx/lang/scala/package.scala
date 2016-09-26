@@ -15,6 +15,8 @@
  */
 package rx.lang
 
+import _root_.scala.util.{Try, Success, Failure}
+
 /**
  * This package contains all classes that RxScala users need.
  *
@@ -27,5 +29,20 @@ package object scala {
    */
   implicit class ObservableExtensions[T](val source: Iterable[T]) extends AnyVal {
       def toObservable: Observable[T] = {  Observable.from(source) }
+  }
+
+  implicit class TryToObservable[T](val t: Try[T]) extends AnyVal {
+    def toObservable: Observable[T] = {
+      t match {
+        case Success(s) => Observable.just(s)
+        case Failure(e) => Observable.error(e)
+      }
+    }
+  }
+
+  implicit class OptionToObservable[T](val opt: Option[T]) extends AnyVal {
+    def toObservable: Observable[T] = {
+      opt.map(Observable.just(_)).getOrElse(Observable.empty)
+    }
   }
 }
