@@ -1,5 +1,21 @@
 # RxScala Releases
 
+## Version 0.26.3 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+This release upgrades RxJava to 1.2.0, adds new RxScala/RxJava converters (See
+[JavaConvertersDemo.scala](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/JavaConvertersDemo.scala)
+for examples), Scala `Try` and `Option` converters and bug fixes.
+
+### Pull Requests
+
+* [Pull 199] (https://github.com/ReactiveX/RxScala/pull/199) Fix the wrong return type of `take` overload with scheduler
+* [Pull 204] (https://github.com/ReactiveX/RxScala/pull/204) Upgrade to RxJava 1.1.9 and add missing operators
+* [Pull 207] (https://github.com/ReactiveX/RxScala/pull/207) RxScala <-> RxJava converters
+* [Pull 210] (https://github.com/ReactiveX/RxScala/pull/210) Try & Option converters
+* [Pull 211] (https://github.com/ReactiveX/RxScala/pull/211) Bump to RxJava 1.2.0
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.26.2 - June 17th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.1.6 and adds the new experimental `ErrorDelayingObservable` class.
