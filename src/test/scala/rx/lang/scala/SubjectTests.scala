@@ -15,20 +15,12 @@
  */
 package rx.lang.scala
 
+import scala.language.postfixOps
+
+import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
 import org.junit.{Assert, Test}
 import org.scalatest.junit.JUnitSuite
-import scala.concurrent.duration._
-import scala.language.postfixOps
-import rx.lang.scala.schedulers.TestScheduler
-import rx.lang.scala.subjects.{AsyncSubject, ReplaySubject, BehaviorSubject}
-import org.mockito.Mockito._
-import org.mockito.Matchers._
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Assert.assertFalse
-import org.junit.Ignore
-import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import rx.lang.scala.subjects.{AsyncSubject, BehaviorSubject, ReplaySubject, UnicastSubject}
 
 class SubjectTest extends JUnitSuite {
 
@@ -320,4 +312,49 @@ class SubjectTest extends JUnitSuite {
 
   }
 
+  @Test def UnicastSubjectIsABuffer() {
+
+    val channel = UnicastSubject[Integer]
+    channel.onNext(42)
+
+    var lastA: Integer = null
+    var errorA, completedA: Boolean = false
+    val a = channel.subscribe(x => { lastA = x}, e => { errorA = true} , () => { completedA = true })
+
+    assertEquals(42, lastA)
+
+    channel.onNext(4711)
+    assertEquals(4711, lastA)
+
+    var lastB: Integer = null
+    var errorB, completedB: Boolean = false
+    val b = channel.subscribe(x => { lastB = x}, e => { errorB = true} , () => { completedB = true })
+
+    assertEquals(null, lastB)
+    assertFalse(completedB)
+    assertTrue(errorB) // only a single subscriber is allowed
+
+    val channel2 = UnicastSubject[Integer]
+    channel2.onNext(13)
+    channel2.onCompleted()
+
+    var lastC: Integer = null
+    var errorC, completedC: Boolean = false
+    val c = channel2.subscribe(x => { lastC = x}, e => { errorC = true} , () => { completedC = true })
+
+    assertEquals(13, lastC)
+    assertTrue(completedC)
+    assertFalse(errorC)
+
+    val channel3 = UnicastSubject[Integer]
+    channel3.onError(new Exception("Boom"))
+
+    var lastD: Integer = null
+    var errorD, completedD: Boolean = false
+    val d = channel3.subscribe(x => { lastD = x}, e => { errorD = true} , () => { completedD = true })
+
+    assertEquals(null, lastD)
+    assertFalse(completedD)
+    assertTrue(errorD)
+  }
 }
