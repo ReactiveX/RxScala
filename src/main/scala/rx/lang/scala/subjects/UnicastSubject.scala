@@ -19,25 +19,29 @@ import rx.annotations.Experimental
 import rx.lang.scala.Subject
 
 /**
-  * A `Subject` variant which buffers events until a single `Subscriber` arrives and replays them to it
-  * and potentially switches to direct delivery once the `Subscriber` caught up and requested an unlimited
-  * amount. In this case, the buffered values are no longer retained. If the `Subscriber`
-  * requests a limited amount, queueing is involved and only those values are retained which
-  * weren't requested by the `Subscriber` at that time.
+  * $experimental A `Subject` variant which buffers events until a single `Subscriber` arrives and replays
+  * them to it and potentially switches to direct delivery once the `Subscriber` caught up and requested an
+  * unlimited amount. In this case, the buffered values are no longer retained. If the `Subscriber` requests
+  * a limited amount, queueing is involved and only those values are retained which weren't requested by the
+  * `Subscriber` at that time.
+  *
+  * @define experimental
+  * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
   */
 @Experimental
 object UnicastSubject {
 
   /**
-    * Constructs an empty `UnicastSubject` instance with the default capacity hint of 16 elements.
+    * $experimental Constructs an empty `UnicastSubject` instance with the default capacity hint of 16 elements.
     *
     * @tparam T the input and output value type
     * @return the created `UnicastSubject` instance
     */
+  @Experimental
   def apply[T](): UnicastSubject[T] = new UnicastSubject[T](rx.subjects.UnicastSubject.create[T]())
 
   /**
-    * Constructs an empty UnicastSubject instance with a capacity hint.
+    * $experimental Constructs an empty UnicastSubject instance with a capacity hint.
     * <p>The capacity hint determines the internal queue's island size: the larger
     * it is the less frequent allocation will happen if there is no subscriber
     * or the subscriber hasn't caught up.
@@ -46,6 +50,7 @@ object UnicastSubject {
     * @tparam T the input and output value type
     * @return the created `UnicastSubject` instance
     */
+  @Experimental
   def apply[T](capacity: Int): UnicastSubject[T] = new UnicastSubject[T](rx.subjects.UnicastSubject.create(capacity))
 }
 
