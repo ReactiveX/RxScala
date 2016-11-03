@@ -12,9 +12,9 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
 
 scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xfatal-warnings")
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.0"
 
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0-RC1")
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0")
 
 parallelExecution in Test := false
 
