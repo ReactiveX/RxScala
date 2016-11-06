@@ -400,7 +400,7 @@ class ObservableTests extends JUnitSuite {
   @Test
   def testToMap() {
     val expectedMap1 = (0 to 100).map(i => (i % 2, i)).toMap
-    val m1 = (0 to 100).toObservable.toMap[Int](_ % 2)
+    val m1 = (0 to 100).toObservable.toMap(_ % 2)
     assertEquals(expectedMap1, m1.toBlocking.single)
 
     val expectedMap2 = (0 to 100).map(i => (i % 2, i * 100)).toMap
