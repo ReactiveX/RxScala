@@ -1,6 +1,6 @@
 # RxScala Releases
 
-## Version 0.26.4 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.26.4 - November 7th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.2.2 and adds `UnicastSubject`. In addition, RxScala is also published with Scala 2.12.0 since this version.
 
