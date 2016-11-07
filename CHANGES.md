@@ -10,6 +10,8 @@ This release upgrades RxJava to 1.2.2 and adds `UnicastSubject`. In addition, Rx
 * [Pull 214] (https://github.com/ReactiveX/RxScala/pull/214) Update Scala version to 2.12.0 final
 * [Pull 215] (https://github.com/ReactiveX/RxScala/pull/215) Bump to RxJava 1.2.2
 
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.26.3 - Oct 8th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.2.0, adds new RxScala/RxJava converters (See
