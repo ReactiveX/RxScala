@@ -97,6 +97,7 @@ you should use the corresponding version of RxJava as the following table:
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.26.4 | 1.2.2+ |
 | 0.26.3 | 1.2.0+ |
 | 0.26.2 | 1.1.6+ |
 | 0.26.1 | 1.1.1+ |
