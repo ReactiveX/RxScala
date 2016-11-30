@@ -198,8 +198,8 @@ class ObservableCompletenessKit extends CompletenessKit {
     // manually added entries for Java static methods
     "amb(Iterable[_ <: Observable[_ <: T]])" -> "amb(Observable[T]*)",
     "create(OnSubscribe[T])" -> "apply(Subscriber[T] => Unit)",
-    "create(SyncOnSubscribe[S, T])" -> "[use `SyncOnSubscribe.apply[S, T]`]",
-    "create(AsyncOnSubscribe[S, T])" -> "[use `AsyncOnSubscribe.apply[S, T]`]",
+    "create(SyncOnSubscribe[S, T])" -> "create(SyncOnSubscribe[S, T])",
+    "create(AsyncOnSubscribe[S, T])" -> "create(AsyncOnSubscribe[S, T])",
     "combineLatest(Observable[_ <: T1], Observable[_ <: T2], Func2[_ >: T1, _ >: T2, _ <: R])" -> "combineLatestWith(Observable[U])((T, U) => R)",
     "combineLatest(List[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Iterable[Observable[T]])(Seq[T] => R)",
     "combineLatest(Iterable[_ <: Observable[_ <: T]], FuncN[_ <: R])" -> "combineLatest(Iterable[Observable[T]])(Seq[T] => R)",

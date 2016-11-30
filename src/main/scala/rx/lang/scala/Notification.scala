@@ -63,6 +63,16 @@ sealed trait Notification[+T] {
   }
 
   def apply(observer: Observer[T]): Unit = accept(observer)
+
+  // TODO: Should this be public or private to rx.lang.scala?
+  def map[U](f: T => U): Notification[U] = {
+    this match {
+      case Notification.OnNext(value) => Notification.OnNext(f(value))
+      // TODO: Or do we want to cast here? Notification.OnError[T] is not a Notification[U]
+      case Notification.OnError(error) => Notification.OnError(error)
+      case Notification.OnCompleted => Notification.OnCompleted
+    }
+  }
 }
 
 /**
