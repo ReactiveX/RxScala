@@ -17,18 +17,22 @@ package rx.lang.scala
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Future, Await}
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.junit.Assert._
-import org.junit.{ Ignore, Test }
+import org.junit.{Ignore, Test}
 import org.scalatest.junit.JUnitSuite
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import rx.lang.scala.schedulers.TestScheduler
 import rx.lang.scala.subjects.BehaviorSubject
 import org.mockito.Mockito._
 import org.mockito.Matchers._
+import rx.lang.scala.observers.TestSubscriber
+
+import scala.util.{Failure, Success, Try}
 
 class ObservableTests extends JUnitSuite {
 
@@ -412,4 +416,49 @@ class ObservableTests extends JUnitSuite {
     assertEquals(expectedMap3, m3.toBlocking.single)
   }
 
+  @Test
+  def testFlatMapTryAllSuccess(): Unit = {
+    val src = Observable.just(1, 2, 3, 4, 5)
+    val subscriber = TestSubscriber[Int]()
+    src.flatMapTry(Success(_)).subscribe(subscriber)
+
+    subscriber.assertValues(1, 2, 3, 4, 5)
+    subscriber.assertNoErrors()
+    subscriber.assertCompleted()
+  }
+
+  @Test
+  def testFlatMapTryFailureHalfWayThrough(): Unit = {
+    val src = Observable.just(1, 2, 3, 4, 5)
+    val error = new IllegalArgumentException("only numbers smaller than 4 are allowed")
+    val subscriber = TestSubscriber[Int]()
+    src.flatMapTry(i => if (i < 4) Success(i) else Failure(error)).subscribe(subscriber)
+
+    subscriber.assertValues(1, 2, 3)
+    subscriber.assertError(error)
+    subscriber.assertNotCompleted()
+  }
+
+  @Test
+  def testFlatMapWithAllSuccess(): Unit = {
+    val src = Observable.just(1, 2, 3, 4, 5)
+    val subscriber = TestSubscriber[Int]()
+    src.flatMapTryWith(Success(_))(_ + _).subscribe(subscriber)
+
+    subscriber.assertValues(2, 4, 6, 8, 10)
+    subscriber.assertNoErrors()
+    subscriber.assertCompleted()
+  }
+
+  @Test
+  def testFlatMapTryWithFailureHalfWayThrough(): Unit = {
+    val src = Observable.just(1, 2, 3, 4, 5)
+    val error = new IllegalArgumentException("only numbers smaller than 4 are allowed")
+    val subscriber = TestSubscriber[Int]()
+    src.flatMapTryWith(i => if (i < 4) Success(i) else Failure(error))(_ + _).subscribe(subscriber)
+
+    subscriber.assertValues(2, 4, 6)
+    subscriber.assertError(error)
+    subscriber.assertNotCompleted()
+  }
 }

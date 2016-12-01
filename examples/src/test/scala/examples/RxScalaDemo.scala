@@ -31,16 +31,16 @@ import scala.concurrent.duration.DurationLong
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.language.implicitConversions
-
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import org.junit.Ignore
 import org.junit.Test
 import org.scalatest.junit.JUnitSuite
-
 import rx.lang.scala._
 import rx.lang.scala.schedulers._
+
+import scala.util.{Failure, Success, Try}
 
 /**
  * Demo how the different operators can be used. In Eclipse, you can right-click
@@ -1481,6 +1481,22 @@ class RxScalaDemo extends JUnitSuite {
   @Test def flatMapIterableExample2() {
     val o = Observable.just(1, 10, 100, 1000)
     o.flatMapIterableWith(_=> (1 to 5))(_ * _).toBlocking.foreach(println)
+  }
+
+  @Test def flatMapTryExample(): Unit = {
+    val o = Observable.just(1, 10, 100, 1000)
+    def someErrorproneOperation(i: Int): Try[Int] = {
+      if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
+    }
+    o.flatMapTry(someErrorproneOperation).toBlocking.foreach(println)
+  }
+
+  @Test def flatMapTryWithExample(): Unit = {
+    val o = Observable.just(1, 10, 100, 1000)
+    def someErrorproneOperation(i: Int): Try[Int] = {
+      if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
+    }
+    o.flatMapTryWith(someErrorproneOperation)(_ * _).toBlocking.foreach(println)
   }
 
   @Test def concatMapExample() {
