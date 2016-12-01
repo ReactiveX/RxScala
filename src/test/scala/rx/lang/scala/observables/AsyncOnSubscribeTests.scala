@@ -11,7 +11,7 @@ class AsyncOnSubscribeTests extends JUnitSuite {
   @Test
   def testStateful(): Unit = {
     val last = 2000L
-    val sut = AsyncOnSubscribe(() => 0L)((count,demand) =>
+    val sut = Observable.create(AsyncOnSubscribe(() => 0L)((count,demand) =>
       if(count > last)
         (Notification.OnCompleted, count)
       else {
@@ -19,27 +19,27 @@ class AsyncOnSubscribeTests extends JUnitSuite {
         val next = Observable.from(count to max)
         (Notification.OnNext(next), max+1)
       }
-    ).toObservable
+    ))
     assertEquals((0L to last).toList, sut.toBlocking.toList)
   }
 
   @Test
   def testStateless(): Unit = {
-    val sut = AsyncOnSubscribe.stateless(r => Notification.OnNext(Observable.just(42).repeat(r))).toObservable
+    val sut = Observable.create(AsyncOnSubscribe.stateless(r => Notification.OnNext(Observable.just(42).repeat(r))))
     assertEquals(List(42,42,42,42), sut.take(4).toBlocking.toList)
   }
 
   @Test
   def testSingleState(): Unit = {
     val random = math.random
-    val sut = AsyncOnSubscribe.singleState(() => random)((s,r) => Notification.OnNext(Observable.just(random.toString).repeat(r))).toObservable
+    val sut = Observable.create(AsyncOnSubscribe.singleState(() => random)((s,r) => Notification.OnNext(Observable.just(random.toString).repeat(r))))
     assertEquals(List(random.toString, random.toString), sut.take(2).toBlocking.toList)
   }
 
   @Test
   def testUnsubscribe(): Unit = {
     val sideEffect = new java.util.concurrent.atomic.AtomicBoolean(false)
-    val sut = AsyncOnSubscribe(() => ())((s,r) => (Notification.OnCompleted, s), onUnsubscribe = s => sideEffect.set(true)).toObservable
+    val sut = Observable.create(AsyncOnSubscribe(() => ())((s,r) => (Notification.OnCompleted, s), onUnsubscribe = s => sideEffect.set(true)))
     sut.foreach(_ => ())
     assertEquals(true, sideEffect.get())
   }
@@ -47,7 +47,7 @@ class AsyncOnSubscribeTests extends JUnitSuite {
   @Test
   def testError(): Unit = {
     val e = new IllegalStateException("Oh noes")
-    val sut = AsyncOnSubscribe(() => 0)((s,_) => (if(s>2) Notification.OnNext(Observable.just(s)) else Notification.OnError(e), s+1)).toObservable
+    val sut = Observable.create(AsyncOnSubscribe(() => 0)((s,_) => (if(s>2) Notification.OnNext(Observable.just(s)) else Notification.OnError(e), s+1)))
     val testSubscriber = TestSubscriber[Int]()
     sut.subscribe(testSubscriber)
     testSubscriber.assertError(e)
@@ -57,7 +57,7 @@ class AsyncOnSubscribeTests extends JUnitSuite {
   // Ensure that the generator is executed for each subscription
   def testGenerator(): Unit = {
     val sideEffectCount = new java.util.concurrent.atomic.AtomicInteger(0)
-    val sut = AsyncOnSubscribe(() => sideEffectCount.incrementAndGet())((s, _) => (Notification.OnCompleted, s)).toObservable
+    val sut = Observable.create(AsyncOnSubscribe(() => sideEffectCount.incrementAndGet())((s, _) => (Notification.OnCompleted, s)))
     sut.toBlocking.toList
     sut.toBlocking.toList
     assertEquals(sideEffectCount.get(), 2)

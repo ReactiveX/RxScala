@@ -24,4 +24,7 @@ package rx.lang.scala
  * in Scala, because we use a pair `(key, observable)` instead of `GroupedObservable`
  * and a pair `(startFunction, observable)` instead of `ConnectableObservable`. 
  */
-package object observables {}
+package object observables {
+  type SyncOnSubscribe[S, T] = rx.observables.SyncOnSubscribe[S, T]
+  type AsyncOnSubscribe[S, T] = rx.observables.AsyncOnSubscribe[S, T]
+}

@@ -4943,7 +4943,7 @@ object Observable {
     * @see [[observables.SyncOnSubscribe.stateless]]
     */
   @Experimental
-  def create[S,T](syncOnSubscribe: SyncOnSubscribe[S,T]): Observable[T] = syncOnSubscribe.toObservable
+  def create[S,T](syncOnSubscribe: SyncOnSubscribe[S,T]): Observable[T] = toScalaObservable[T](rx.Observable.create(syncOnSubscribe))
 
   /**
     * Returns an Observable that respects the back-pressure semantics. When the returned Observable is
@@ -4964,7 +4964,7 @@ object Observable {
     * @see [[observables.AsyncOnSubscribe.stateless]]
     */
   @Experimental
-  def create[S,T](asyncOnSubscribe: AsyncOnSubscribe[S,T]): Observable[T] = asyncOnSubscribe.toObservable
+  def create[S,T](asyncOnSubscribe: AsyncOnSubscribe[S,T]): Observable[T] = toScalaObservable[T](rx.Observable.create(asyncOnSubscribe))
 
   /**
    * Returns an Observable that will execute the specified function when someone subscribes to it.
