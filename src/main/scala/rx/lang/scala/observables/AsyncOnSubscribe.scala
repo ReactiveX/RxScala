@@ -21,7 +21,7 @@ object AsyncOnSubscribe {
     */
   @Experimental
   def apply[S,T](generator: () => S)(next: (S, Long) => (Notification[Observable[T]], S), onUnsubscribe: S => Unit = (_:S) => ()): AsyncOnSubscribe[S,T] =
-    stateful(generator)(next, onUnsubscribe)
+    stateful[S, T](generator)(next, onUnsubscribe)
 
   /**
     * Generates a stateful [[AsyncOnSubscribe]]

@@ -25,6 +25,6 @@ package rx.lang.scala
  * and a pair `(startFunction, observable)` instead of `ConnectableObservable`. 
  */
 package object observables {
-  type SyncOnSubscribe[S, T] = rx.observables.SyncOnSubscribe[S, T]
-  type AsyncOnSubscribe[S, T] = rx.observables.AsyncOnSubscribe[S, T]
+  type SyncOnSubscribe[S, +T] = rx.observables.SyncOnSubscribe[S, _ <: T]
+  type AsyncOnSubscribe[S, +T] = rx.observables.AsyncOnSubscribe[S, _ <: T]
 }

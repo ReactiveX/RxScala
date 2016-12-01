@@ -13,14 +13,14 @@ import rx.lang.scala.{Notification, Observable}
   * * `onUnsubscribe` is called with the state provides by the last next when the observer unsubscribes
   */
 object SyncOnSubscribe {
-  
+
   /**
     * Alias for [[SyncOnSubscribe.stateful]]
     * @see [[SyncOnSubscribe.stateful]]
     */
   @Experimental
   def apply[S, T](generator: () => S)(next: S => (Notification[T], S), onUnsubscribe: S => Unit = (_:S) => ()): SyncOnSubscribe[S,T] =
-    stateful(generator)(next, onUnsubscribe)
+    stateful[S, T](generator)(next, onUnsubscribe)
 
   /**
     * Generates a stateful [[SyncOnSubscribe]]
@@ -61,7 +61,7 @@ object SyncOnSubscribe {
     */
   @Experimental
   def singleState[S,T](generator: () => S)(next: S => Notification[T], onUnsubscribe: S => Unit = (_:S) => ()): SyncOnSubscribe[S,T] =
-    apply(generator)(s => (next(s),s), onUnsubscribe)
+    apply[S, T](generator)(s => (next(s),s), onUnsubscribe)
 
   /**
     * Generates a stateless [[SyncOnSubscribe]], useful when the state is closed over in `next` or the `SyncOnSubscribe` inherently does not have a state
@@ -72,6 +72,6 @@ object SyncOnSubscribe {
     */
   @Experimental
   def stateless[T](next: () => Notification[T], onUnsubscribe: () => Unit = () => ()) =
-    apply(() => ())(_ => (next(), ()), _ => onUnsubscribe())
+    apply[Unit, T](() => ())(_ => (next(), ()), _ => onUnsubscribe())
 
 }
