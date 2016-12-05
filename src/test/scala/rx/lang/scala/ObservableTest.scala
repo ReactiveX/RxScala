@@ -420,7 +420,7 @@ class ObservableTests extends JUnitSuite {
   def testFlatMapTryAllSuccess(): Unit = {
     val src = Observable.just(1, 2, 3, 4, 5)
     val subscriber = TestSubscriber[Int]()
-    src.flatMapTry(Success(_)).subscribe(subscriber)
+    src.flatMap(Success(_)).subscribe(subscriber)
 
     subscriber.assertValues(1, 2, 3, 4, 5)
     subscriber.assertNoErrors()
@@ -432,7 +432,7 @@ class ObservableTests extends JUnitSuite {
     val src = Observable.just(1, 2, 3, 4, 5)
     val error = new IllegalArgumentException("only numbers smaller than 4 are allowed")
     val subscriber = TestSubscriber[Int]()
-    src.flatMapTry(i => if (i < 4) Success(i) else Failure(error)).subscribe(subscriber)
+    src.flatMap(i => if (i < 4) Success(i) else Failure(error)).subscribe(subscriber)
 
     subscriber.assertValues(1, 2, 3)
     subscriber.assertError(error)
@@ -443,7 +443,7 @@ class ObservableTests extends JUnitSuite {
   def testFlatMapWithAllSuccess(): Unit = {
     val src = Observable.just(1, 2, 3, 4, 5)
     val subscriber = TestSubscriber[Int]()
-    src.flatMapTryWith(Success(_))(_ + _).subscribe(subscriber)
+    src.flatMapWith(Success(_))(_ + _).subscribe(subscriber)
 
     subscriber.assertValues(2, 4, 6, 8, 10)
     subscriber.assertNoErrors()
@@ -455,7 +455,7 @@ class ObservableTests extends JUnitSuite {
     val src = Observable.just(1, 2, 3, 4, 5)
     val error = new IllegalArgumentException("only numbers smaller than 4 are allowed")
     val subscriber = TestSubscriber[Int]()
-    src.flatMapTryWith(i => if (i < 4) Success(i) else Failure(error))(_ + _).subscribe(subscriber)
+    src.flatMapWith(i => if (i < 4) Success(i) else Failure(error))(_ + _).subscribe(subscriber)
 
     subscriber.assertValues(2, 4, 6)
     subscriber.assertError(error)

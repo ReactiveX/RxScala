@@ -1488,7 +1488,7 @@ class RxScalaDemo extends JUnitSuite {
     def someErrorproneOperation(i: Int): Try[Int] = {
       if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
     }
-    o.flatMapTry(someErrorproneOperation).toBlocking.foreach(println)
+    o.flatMap(someErrorproneOperation).toBlocking.foreach(println)
   }
 
   @Test def flatMapTryWithExample(): Unit = {
@@ -1496,7 +1496,7 @@ class RxScalaDemo extends JUnitSuite {
     def someErrorproneOperation(i: Int): Try[Int] = {
       if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
     }
-    o.flatMapTryWith(someErrorproneOperation)(_ * _).toBlocking.foreach(println)
+    o.flatMapWith(someErrorproneOperation)(_ * _).toBlocking.foreach(println)
   }
 
   @Test def concatMapExample() {
