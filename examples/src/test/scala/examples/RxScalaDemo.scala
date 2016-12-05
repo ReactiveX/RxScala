@@ -31,15 +31,14 @@ import scala.concurrent.duration.DurationLong
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.language.implicitConversions
-
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import org.junit.Ignore
 import org.junit.Test
 import org.scalatest.junit.JUnitSuite
-
 import rx.lang.scala._
+import rx.lang.scala.observables.{AsyncOnSubscribe, SyncOnSubscribe}
 import rx.lang.scala.schedulers._
 
 /**
@@ -742,44 +741,68 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   /**
-   * This is the good way of doing it: If the consumer unsubscribes, no more elements are 
-   * calculated.
+    * Using AsyncOnSubscribe of SyncOnSubscribe ensures that your Observable
+    * does not calculate elements after the consumer unsubscribes and correctly does not overload
+    * the subscriber with data (responds to backpressure).
+    *
+    * Here we create a SyncOnSubscribe without state, this means that it performs the same action every time downstream can handle more data.
+    */
+  @Test def createExample(): Unit = {
+    val o = Observable.create(SyncOnSubscribe.stateless(
+      next = () => Notification.OnNext(math.random),
+      onUnsubscribe = () => println("I have stopped generating random numbers for this subscriber")
+    ))
+    o.take(10).foreach(r => println(s"Next random number: $r"))
+  }
+
+  /**
+   * You can also add state to (A)SyncOnSubscribe, you generate a state on each subscription and can alter that state in each next call
+   * Here we use it to count to a specific number
    */
-  @Test def createExampleGood() {
-    val o = Observable[String](subscriber => {
-      var i = 0
-      while (i < 2 && !subscriber.isUnsubscribed) {
-        subscriber.onNext(calculateElement(i))
-        i += 1
-      }
-      if (!subscriber.isUnsubscribed) subscriber.onCompleted()
-    })
+  @Test def createExampleWithState() {
+    // Starts with state `0`
+    val o = Observable.create(SyncOnSubscribe(() => 0)(i => {
+      if(i < 2)
+        // Check if the state has reached 2 yet, if not, we emit the current state and add 1 to the state
+        (Notification.OnNext(i), i+1)
+      else
+        // Otherwise we signal completion
+        (Notification.OnCompleted, i)
+    }))
     o.take(1).subscribe(println(_))
   }
 
-  @Test def createExampleGood2() {
+  /**
+    * This example shows how to read a (potentially blocking) data source step-by-step (line by line) using SyncOnSubscribe.
+    */
+  @Test def createExampleFromInputStream() {
     import scala.io.{Codec, Source}
 
     val rxscalaURL = "http://reactivex.io/rxscala/"
-    val rxscala = Observable[String](subscriber => {
-      try {
+    // We use the `singleState` helper here, since we only want to generate one state per subscriber
+    // and do not need to modify it afterwards
+    val rxscala = Observable.create(SyncOnSubscribe.singleState(
+      // This is our `generator`, which generates a state
+      generator = () => {
         val input = new java.net.URL(rxscalaURL).openStream()
-        subscriber.add(Subscription {
-          input.close()
-        })
-        val iter = Source.fromInputStream(input)(Codec.UTF8).getLines()
-        while(iter.hasNext && !subscriber.isUnsubscribed) {
-          val line = iter.next()
-          subscriber.onNext(line)
-        }
-        if (!subscriber.isUnsubscribed) {
-          subscriber.onCompleted()
-        }
+        (input, Source.fromInputStream(input)(Codec.UTF8).getLines())
+      })(
+      // This is our `next` function, which gets called whenever the subscriber can handle more data
+      next = {
+        case (_, lines) => {
+          if(lines.hasNext)
+            // Here we provide the next line
+            Notification.OnNext(lines.next())
+          else
+            // Here we signal that the stream has completed
+            Notification.OnCompleted
+          }
+        },
+      // This is our `onUnsubscribe` function, which gets called after the subscriber unsubscribes, usually to perform cleanup
+      onUnsubscribe = {
+        case (input, _) => scala.util.Try { input.close() }
       }
-      catch {
-        case e: Throwable => if (!subscriber.isUnsubscribed) subscriber.onError(e)
-      }
-    }).subscribeOn(IOScheduler())
+    )).subscribeOn(IOScheduler())
 
     val count = rxscala.flatMap(_.split("\\W+").toSeq.toObservable)
       .map(_.toLowerCase)
@@ -788,45 +811,35 @@ class RxScalaDemo extends JUnitSuite {
     println(s"RxScala appears ${count.toBlocking.single} times in ${rxscalaURL}")
   }
 
-  @Test def createExampleWithBackpressure() {
-    val o = Observable {
-      subscriber: Subscriber[String] => {
-        var emitted = 0
-        subscriber.setProducer(n => {
-            val intN = if (n >= 10) 10 else n.toInt
-            var i = 0
-            while(i < intN && emitted < 10 && !subscriber.isUnsubscribed) {
-              emitted += 1
-              subscriber.onNext(s"item ${emitted}")
-              i += 1
-            }
-            if (emitted == 10 && !subscriber.isUnsubscribed) {
-              subscriber.onCompleted()
-            }
-        })
-      }
-    }.subscribeOn(IOScheduler()) // Use `subscribeOn` to make sure `Producer` will run in the same Scheduler
-    o.observeOn(ComputationScheduler()).subscribe(new Subscriber[String] {
-      override def onStart() {
-        println("Request a new one at the beginning")
-        request(1)
-      }
+  /** This example show how to generate an Observable using AsyncOnSubscribe, which can be more efficient than SyncOnSubscribe.
+    * Using AsyncOnSubscribe has the same advantages as SyncOnSubscribe, and furthermore it allows us to generate more than one
+    * result at a time (which can be more efficient) and allows us to generate the results asynchronously.
+    */
+  @Test def createExampleAsyncOnUnsubscribe(): Unit = {
+    // We are going to count to this number
+    val countTo = 200L
 
-      override def onNext(v: String) {
-        println("Received " + v)
-        println("Request a new one after receiving " + v)
-        request(1)
+    val o = Observable.create(AsyncOnSubscribe(() => 0L)(
+      (count, demand) => {
+        // Stop counting if we're past the number we were going to count to
+        if(count > countTo)
+          (Notification.OnCompleted, count)
+        else {
+          // Generate an observable that contains [count,count+demand) and thus contains exactly `demand` items
+          val to = math.min(count + demand, countTo+1)
+          val range = count until to
+          val resultObservable = Observable.from(range)
+          println(s"Currently at $count, received a demand of $demand. Next range [$count,$to)")
+          (Notification.OnNext(resultObservable), to)
+        }
       }
-
-      override def onError(e: Throwable) {
-        e.printStackTrace()
-      }
-
-      override def onCompleted() {
-        println("Done")
+    ))
+    o.subscribe(new Subscriber[Long] {
+      override def onStart(): Unit = request(10)
+      override def onNext(i: Long): Unit = {
+        request(scala.util.Random.nextInt(10)+1)
       }
     })
-    Thread.sleep(10000)
   }
 
   def output(s: String): Unit = println(s)

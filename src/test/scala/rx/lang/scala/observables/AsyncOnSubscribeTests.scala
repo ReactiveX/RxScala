@@ -15,9 +15,9 @@ class AsyncOnSubscribeTests extends JUnitSuite {
       if(count > last)
         (Notification.OnCompleted, count)
       else {
-        val max = math.max(count + demand, last)
-        val next = Observable.from(count to max)
-        (Notification.OnNext(next), max+1)
+        val to = math.min(count+demand, last+1)
+        val next = Observable.from(count until to)
+        (Notification.OnNext(next), to)
       }
     ))
     assertEquals((0L to last).toList, o.toBlocking.toList)
