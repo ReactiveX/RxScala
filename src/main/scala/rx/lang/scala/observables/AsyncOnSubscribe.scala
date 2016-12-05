@@ -11,7 +11,7 @@ import rx.lang.scala.{Notification, Observable}
   * * `generator` is called to provide an initial state on each new subscription
   * * `next` is called with the last state and a `requested` amount of items to provide a new state
   *     and an `Observable` that (potentially asynchronously) emits up to `requested` items.
-  * * `onUnsubscribe` is called with the state provides by the last next when the observer unsubscribes
+  * * `onUnsubscribe` is called with the state provided by the last `next` call when the observer unsubscribes
   */
 object AsyncOnSubscribe {
 

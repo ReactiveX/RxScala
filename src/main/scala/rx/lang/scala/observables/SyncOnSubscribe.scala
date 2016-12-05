@@ -10,7 +10,7 @@ import rx.lang.scala.{Notification, Observable}
   * Semantics:
   * * `generator` is called to provide an initial state on each new subscription
   * * `next` is called with the last state to provide a data item and a new state for the next `next` call
-  * * `onUnsubscribe` is called with the state provides by the last next when the observer unsubscribes
+  * * `onUnsubscribe` is called with the state provided by the last `next` call when the observer unsubscribes
   */
 object SyncOnSubscribe {
 
