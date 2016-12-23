@@ -64,9 +64,11 @@ sealed trait Notification[+T] {
 
   def apply(observer: Observer[T]): Unit = accept(observer)
 
-  def map[U](f: T => U): Notification[U] = {
+  def map[U](f: T => U): Notification[U] = flatMap(t => Notification.OnNext(f(t)))
+
+  def flatMap[U](f: T => Notification[U]): Notification[U] = {
     this match {
-      case Notification.OnNext(value) => Notification.OnNext(f(value))
+      case Notification.OnNext(value) => f(value)
       case Notification.OnError(error) => Notification.OnError(error)
       case Notification.OnCompleted => Notification.OnCompleted
     }

@@ -55,4 +55,48 @@ class NotificationTests extends JUnitSuite {
       assertEquals(13, onCompleted(x=>42, e=>4711,()=>13))
 
   }
+
+  @Test
+  def TestFlatMapNextToNext() {
+    val notification = OnNext(41).flatMap(i => Notification.OnNext(i+1))
+    assertEquals(42, notification(i=>i, _ => -1, () => -1))
+  }
+
+  @Test
+  def TestFlatMapNextToError() {
+    val oops = new Exception("Oops")
+    val notification = OnNext(()).flatMap(_ => Notification.OnError(oops))
+    assertEquals(42, notification(_ => -1, {
+      case `oops` => 42
+      case _ => -1
+    }, () => -1))
+  }
+
+  @Test
+  def TestFlatMapNextToCompletion() {
+    val notification = OnNext(()).flatMap(_ => Notification.OnCompleted)
+    assertEquals(42, notification(_ => -1, e => -1, () => 42))
+  }
+
+  @Test
+  def TestFlatMapCompleted() {
+    val notification = OnCompleted.flatMap(_ => Notification.OnNext(1))
+    assertEquals(42, notification(_ => -1, e => -1, () => 42))
+  }
+
+  @Test
+  def TestFlatMapError() {
+    val oops = new Exception("Oops")
+    val notification = OnError(oops).flatMap(_ => Notification.OnNext(1))
+    assertEquals(42, notification(_ => -1, {
+      case `oops` => 42
+      case _ => -1
+    }, () => -1))
+  }
+
+  @Test
+  def map() {
+    val notification = OnNext(41).map(_+1)
+    assertEquals(42, notification(i=>i, _ => -1, () => -1))
+  }
 }
