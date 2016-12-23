@@ -15,7 +15,8 @@
  */
 package rx.lang
 
-import _root_.scala.util.{Try, Success, Failure}
+import _root_.scala.util.Try
+import _root_.scala.concurrent.{ExecutionContext, Future}
 
 /**
  * This package contains all classes that RxScala users need.
@@ -24,18 +25,23 @@ import _root_.scala.util.{Try, Success, Failure}
  */
 package object scala {
 
-  /**
-   * Placeholder for extension methods into Observable[T] from other types
-   */
+  /** Adds a [[toObservable]] extension method to [[_root_.scala.collection.Iterable Iterable]] */
   implicit class ObservableExtensions[T](val source: Iterable[T]) extends AnyVal {
-      def toObservable: Observable[T] = {  Observable.from(source) }
+    def toObservable: Observable[T] = Observable.from(source)
   }
 
+  /** Adds a [[toObservable]] extension method to [[_root_.scala.util.Try Try]] */
   implicit class TryToObservable[T](val tryT: Try[T]) extends AnyVal {
     def toObservable: Observable[T] = Observable.from(tryT)
   }
 
+  /** Adds a [[toObservable]] extension method to [[_root_.scala.Option Option]] */
   implicit class OptionToObservable[T](val opt: Option[T]) extends AnyVal {
     def toObservable: Observable[T] = Observable.from(opt)
+  }
+
+  /** Adds a [[toObservable]] extension method to [[_root_.scala.concurrent.Future Future]] */
+  implicit class FutureToObservable[T](val future: Future[T]) extends AnyVal {
+    def toObservable(implicit ec: ExecutionContext): Observable[T] = Observable.from(future)
   }
 }
