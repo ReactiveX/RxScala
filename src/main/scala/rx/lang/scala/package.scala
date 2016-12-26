@@ -15,7 +15,8 @@
  */
 package rx.lang
 
-import _root_.scala.util.{Try, Success, Failure}
+import _root_.scala.util.Try
+import _root_.scala.language.implicitConversions
 
 /**
  * This package contains all classes that RxScala users need.
@@ -38,4 +39,6 @@ package object scala {
   implicit class OptionToObservable[T](val opt: Option[T]) extends AnyVal {
     def toObservable: Observable[T] = Observable.from(opt)
   }
+
+  implicit def tryToObservable[T](tt: Try[T]): Observable[T] = Observable.from(tt)
 }

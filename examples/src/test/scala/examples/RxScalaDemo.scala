@@ -41,6 +41,8 @@ import rx.lang.scala._
 import rx.lang.scala.observables.{AsyncOnSubscribe, SyncOnSubscribe}
 import rx.lang.scala.schedulers._
 
+import scala.util.{Failure, Success, Try}
+
 /**
  * Demo how the different operators can be used. In Eclipse, you can right-click
  * a test and choose "Run As" > "Scala JUnit Test".
@@ -1494,6 +1496,22 @@ class RxScalaDemo extends JUnitSuite {
   @Test def flatMapIterableExample2() {
     val o = Observable.just(1, 10, 100, 1000)
     o.flatMapIterableWith(_=> (1 to 5))(_ * _).toBlocking.foreach(println)
+  }
+
+  @Test def flatMapTryExample(): Unit = {
+    val o = Observable.just(1, 10, 100, 1000)
+    def someErrorproneOperation(i: Int): Try[Int] = {
+      if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
+    }
+    o.flatMap(someErrorproneOperation).toBlocking.foreach(println)
+  }
+
+  @Test def flatMapTryWithExample(): Unit = {
+    val o = Observable.just(1, 10, 100, 1000)
+    def someErrorproneOperation(i: Int): Try[Int] = {
+      if (i % 2 == 0) Success(i) else Failure(new IllegalArgumentException("only even numbers are allowed here!"))
+    }
+    o.flatMapWith(someErrorproneOperation)(_ * _).toBlocking.foreach(println)
   }
 
   @Test def concatMapExample() {
