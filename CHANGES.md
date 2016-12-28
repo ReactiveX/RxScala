@@ -1,6 +1,6 @@
 # RxScala Releases
 
-## Version 0.26.5 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+## Version 0.26.5 - December 28th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 The most notable change is adding `SyncOnSubscribe` and `AsyncOnSubscribe` support. Search them in [RxScalaDemo](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/RxScalaDemo.scala)
 for examples. RxJava and Scala are upgraded to the latest version as well. Check the following section for other changes.
