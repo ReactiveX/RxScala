@@ -6,7 +6,7 @@ matrix:
     - jdk: oraclejdk7
       scala: 2.11.8
     - jdk: oraclejdk8
-      scala: 2.12.0
+      scala: 2.12.1
 script:
 - sbt ++$TRAVIS_SCALA_VERSION test examples/test doc
 after_success:

@@ -162,6 +162,8 @@ class ObservableCompletenessKit extends CompletenessKit {
     "takeLastBuffer(Long, TimeUnit)" -> commentForTakeLastBuffer,
     "takeLastBuffer(Long, TimeUnit, Scheduler)" -> commentForTakeLastBuffer,
     "takeUntil(Observable[_ <: E])" -> "takeUntil(Observable[Any])",
+    "test()" -> "[TODO]",
+    "test(Long)" -> "[TODO]",
     "timeout(Func0[_ <: Observable[U]], Func1[_ >: T, _ <: Observable[V]], Observable[_ <: T])" -> "timeout(() => Observable[Any], T => Observable[Any], Observable[U])",
     "timeout(Func1[_ >: T, _ <: Observable[V]], Observable[_ <: T])" -> "timeout(T => Observable[Any], Observable[U])",
     "timeout(Func0[_ <: Observable[U]], Func1[_ >: T, _ <: Observable[V]])" -> "timeout(() => Observable[Any], T => Observable[Any])",
