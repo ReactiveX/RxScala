@@ -1,5 +1,18 @@
 # RxScala Releases
 
+## Version 0.26.5 - TODO ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
+
+The most notable change is adding `SyncOnSubscribe` and `AsyncOnSubscribe` support. Search them in [RxScalaDemo](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/RxScalaDemo.scala)
+for examples. RxJava and Scala are upgraded to the latest version as well. Check the following section for other changes.
+
+### Pull Requests
+
+* [Pull 220] (https://github.com/ReactiveX/RxScala/pull/220) Implement SyncOnSubscribe and AsyncOnSubscribe
+* [Pull 222] (https://github.com/ReactiveX/RxScala/pull/222) Add FutureToObservable
+* [Pull 223] (https://github.com/ReactiveX/RxScala/pull/223) Add Notification.flatMap
+
+Artifacts: [Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22)
+
 ## Version 0.26.4 - November 7th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 This release upgrades RxJava to 1.2.2 and adds `UnicastSubject`. In addition, RxScala is also published with Scala 2.12.0 since this version.
