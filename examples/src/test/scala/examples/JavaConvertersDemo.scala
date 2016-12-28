@@ -39,10 +39,10 @@ class JavaConvertersDemo extends JUnitSuite {
     val javaSubscription: rx.Subscription = useJavaObservableSomewhere(Observable.just(1, 2, 3).asJava)
 
     // after which you get a RxJava Subscription back, which can be used again in a RxScala setting using `asScalaSubscription`...
-    val scalaSubscription: Subscription = javaSubscription.asScalaSubscription
+    val scalaSubscription: Subscription = javaSubscription.asScala
 
     // and convert it back to a RxJava Subscription using `asJavaSubscription`
-    val javaSubscriptionAgain: rx.Subscription = scalaSubscription.asJavaSubscription
+    val javaSubscriptionAgain: rx.Subscription = scalaSubscription.asJava
   }
 
   @Test
@@ -73,12 +73,12 @@ class JavaConvertersDemo extends JUnitSuite {
       // Subscriber uses `asJavaSubscriber` and `asScalaSubscriber`;
       // Subscription uses the `asJavaSubscription` and `asScalaSubscription` instead.
       val jObserver: rx.Observer[_ >: Int] = subscriber.asJava
-      val jSubscriber: rx.Subscriber[_ >: Int] = subscriber.asJavaSubscriber
-      val jSubscription: rx.Subscription = subscriber.asJavaSubscription
+      val jSubscriber: rx.Subscriber[_ >: Int] = subscriber.asJava
+      val jSubscription: rx.Subscription = subscriber.asJava
 
       val sObserver: Observer[_ >: Int] = jObserver.asScala
-      val sSubscriber: Subscriber[_ >: Int] = jSubscriber.asScalaSubscriber
-      val sSubscription: Subscription = jSubscription.asScalaSubscription
+      val sSubscriber: Subscriber[_ >: Int] = jSubscriber.asScala
+      val sSubscription: Subscription = jSubscription.asScala
     })
   }
 }
