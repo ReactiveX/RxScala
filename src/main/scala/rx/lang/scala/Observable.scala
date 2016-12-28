@@ -4852,6 +4852,9 @@ trait Observable[+T]
  * @define supportBackpressure
  * ===Backpressure:===
  * Fully supports backpressure.
+ *
+ * @define experimental
+ * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
  */
 object Observable {
   import scala.collection.JavaConverters._
@@ -4921,48 +4924,44 @@ object Observable {
   */
 
   /**
-    * Returns an Observable that respects the back-pressure semantics. When the returned Observable is
-    * subscribed to it will initiate the given [[observables.SyncOnSubscribe]]'s life cycle for
-    * generating events.
-    *
-    * Note: the `SyncOnSubscribe` provides a generic way to fulfill data by iterating
-    * over a (potentially stateful) function (e.g. reading data off of a channel, a parser). If your
-    * data comes directly from an asynchronous/potentially concurrent source then consider using [[observables.AsyncOnSubscribe]].
-    *
-    * $supportBackpressure
-    *
-    * $noDefaultScheduler
-    *
-    * @tparam T the type of the items that this Observable emits
-    * @tparam S the state type
-    * @param syncOnSubscribe
-    *          an implementation of `SyncOnSubscribe`. There are many creation methods on the object for convenience.
-    * @return an Observable that, when a [[Subscriber]] subscribes to it, will use the specified `SyncOnSubscribe` to generate events
-    * @see [[observables.SyncOnSubscribe.stateful]]
-    * @see [[observables.SyncOnSubscribe.singleState]]
-    * @see [[observables.SyncOnSubscribe.stateless]]
-    */
+   * $experimental Returns an [[Observable]] that respects the back-pressure semantics. When the returned [[Observable]] is
+   * subscribed to it will initiate the given [[observables.SyncOnSubscribe SyncOnSubscribe]]'s life cycle for generating events.
+   *
+   * Note: the [[observables.SyncOnSubscribe SyncOnSubscribe]] provides a generic way to fulfill data by iterating
+   * over a (potentially stateful) function (e.g. reading data off of a channel, a parser). If your
+   * data comes directly from an asynchronous/potentially concurrent source then consider using [[observables.AsyncOnSubscribe AsyncOnSubscribe]].
+   *
+   * $supportBackpressure
+   *
+   * $noDefaultScheduler
+   *
+   * @tparam T the type of the items that this [[Observable]] emits
+   * @tparam S the state type
+   * @param syncOnSubscribe an implementation of [[observables.SyncOnSubscribe SyncOnSubscribe]] There are many creation methods on the object for convenience.
+   * @return an [[Observable]] that, when a [[Subscriber]] subscribes to it, will use the specified [[observables.SyncOnSubscribe SyncOnSubscribe]] to generate events
+   * @see [[observables.SyncOnSubscribe.stateful]]
+   * @see [[observables.SyncOnSubscribe.singleState]]
+   * @see [[observables.SyncOnSubscribe.stateless]]
+   */
   @Experimental
   def create[S,T](syncOnSubscribe: SyncOnSubscribe[S,T]): Observable[T] = toScalaObservable[T](rx.Observable.create(syncOnSubscribe))
 
   /**
-    * Returns an Observable that respects the back-pressure semantics. When the returned Observable is
-    * subscribed to it will initiate the given [[observables.AsyncOnSubscribe]]'s life cycle for
-    * generating events.
-    *
-    * $supportBackpressure
-    *
-    * $noDefaultScheduler
-    *
-    * @tparam T the type of the items that this Observable emits
-    * @tparam S the state type
-    * @param asyncOnSubscribe
-    *          an implementation of `AsyncOnSubscribe`. There are many creation methods on the object for convenience.
-    * @return an Observable that, when a [[Subscriber]] subscribes to it, will use the specified `AsyncOnSubscribe` to generate events
-    * @see [[observables.AsyncOnSubscribe.stateful]]
-    * @see [[observables.AsyncOnSubscribe.singleState]]
-    * @see [[observables.AsyncOnSubscribe.stateless]]
-    */
+   * $experimental Returns an [[Observable]] that respects the back-pressure semantics. When the returned [[Observable]] is
+   * subscribed to it will initiate the given [[observables.AsyncOnSubscribe AsyncOnSubscribe]]'s life cycle for generating events.
+   *
+   * $supportBackpressure
+   *
+   * $noDefaultScheduler
+   *
+   * @tparam T the type of the items that this [[Observable]] emits
+   * @tparam S the state type
+   * @param asyncOnSubscribe an implementation of [[observables.AsyncOnSubscribe AsyncOnSubscribe]]. There are many creation methods on the object for convenience.
+   * @return an [[Observable]] that, when a [[Subscriber]] subscribes to it, will use the specified [[observables.AsyncOnSubscribe AsyncOnSubscribe]] to generate events
+   * @see [[observables.AsyncOnSubscribe.stateful]]
+   * @see [[observables.AsyncOnSubscribe.singleState]]
+   * @see [[observables.AsyncOnSubscribe.stateless]]
+   */
   @Experimental
   def create[S,T](asyncOnSubscribe: AsyncOnSubscribe[S,T]): Observable[T] = toScalaObservable[T](rx.Observable.create(asyncOnSubscribe))
 
