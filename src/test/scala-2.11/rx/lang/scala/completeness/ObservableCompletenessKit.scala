@@ -219,7 +219,7 @@ class ObservableCompletenessKit extends CompletenessKit {
     "from(Future[_ <: T])" -> fromFuture,
     "from(Future[_ <: T], Long, TimeUnit)" -> fromFuture,
     "from(Future[_ <: T], Scheduler)" -> fromFuture,
-    "fromEmitter(Action1[Emitter[T]], BackpressureMode)" -> "[TODO]",
+    "fromEmitter(Action1[Emitter[T]], BackpressureMode)" -> "fromEmitter(Emitter[T] => Unit, BackpressureMode)",
     "just(T)" -> "just(T*)",
     "merge(Observable[_ <: T], Observable[_ <: T])" -> "merge(Observable[U])",
     "merge(Observable[_ <: Observable[_ <: T]])" -> "flatten(<:<[Observable[T], Observable[Observable[U]]])",

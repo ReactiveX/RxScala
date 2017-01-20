@@ -4965,6 +4965,12 @@ object Observable {
   @Experimental
   def create[S,T](asyncOnSubscribe: AsyncOnSubscribe[S,T]): Observable[T] = toScalaObservable[T](rx.Observable.create(asyncOnSubscribe))
 
+  @Experimental
+  def fromEmitter[T](emitter: Emitter[T] => Unit, backpressureMode: Emitter.BackpressureMode): Observable[T] = {
+    import JavaConverters.toScalaEmitter
+    toScalaObservable[T](rx.Observable.fromEmitter[T]((e: rx.Emitter[T]) => emitter(e.asScala), backpressureMode))
+  }
+
   /**
    * Returns an Observable that will execute the specified function when someone subscribes to it.
    *

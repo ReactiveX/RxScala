@@ -84,6 +84,9 @@ trait DecorateAsJava {
   implicit def toJavaObserver[T](s: Observer[T]): AsJava[rx.Observer[_ >: T]] =
     new AsJava(s.asJavaObserver)
 
+  implicit def toJavaEmitter[T](s: Emitter[T]): AsJava[rx.Emitter[_ >: T]] =
+    new AsJava(s.asJavaEmitter)
+
   implicit def toJavaObservable[T](s: Observable[T]): AsJava[rx.Observable[_ <: T]] =
     new AsJava(s.asJavaObservable)
 
@@ -123,6 +126,9 @@ trait DecorateAsScala {
 
   implicit def toScalaObserver[T](s: rx.Observer[_ >: T]): AsScala[Observer[T]] =
     new AsScala(Observer(s))
+
+  implicit def toScalaEmitter[T](s: rx.Emitter[_ >: T]): AsScala[Emitter[T]] =
+    new AsScala(Emitter(s))
 
   implicit def toScalaObservable[T](s: rx.Observable[_ <: T]): AsScala[Observable[T]] = {
     val obs = new Observable[T] {
