@@ -5050,22 +5050,26 @@ object Observable {
     toScalaObservable[T](rx.Observable.from(items.toIterable.asJava))
   }
 
- /** Returns an Observable emitting the value produced by the Future as its single item.
-   * If the future fails, the Observable will fail as well.
+  /**
+   * Create a Observable that will the contain the same result as the Future produced by the sent in function.
+   * It calls the function to create a new Future on each subscribe and thus works as intended with
+   * `Observable` methods that do re-subscription as part of their functionality, such as `retry()` and `repeat()`.
    *
-   * @param f Future whose value ends up in the resulting Observable
+   * @param f function that produces an async result value in the form a Future
+   * @tparam T class of value produced by `f` function
    * @return an Observable completed after producing the value of the future, or with an exception
    */
-  def from[T](f: Future[T])(implicit execContext: ExecutionContext): Observable[T] = {
-    val s = AsyncSubject[T]()
-    f.onComplete {
-      case Failure(e) =>
-        s.onError(e)
-      case Success(c) =>
-        s.onNext(c)
-        s.onCompleted()
-    }
-    s
+  def from[T](f: => Future[T])(implicit execContext: ExecutionContext): Observable[T] = {
+    Observable[T]({ subscriber =>
+      f.onComplete({
+        case Success(v) =>
+          subscriber.onNext(v)
+          subscriber.onCompleted()
+
+        case Failure(e) =>
+          subscriber.onError(e)
+      })
+    })
   }
 
   /**
