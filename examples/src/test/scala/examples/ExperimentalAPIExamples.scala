@@ -64,7 +64,7 @@ object ExperimentalAPIExamples {
   @Test def onBackpressureBufferWithCapacityExample2(): Unit = {
     Observable[Int](subscriber => {
       (1 to 200).foreach(subscriber.onNext)
-    }).onBackpressureBuffer(10, println("Overflow")).observeOn(IOScheduler()).subscribe(
+    }).onBackpressureBuffer(10, () => println("Overflow")).observeOn(IOScheduler()).subscribe(
       v => {
         Thread.sleep(10)
         // A slow consumer

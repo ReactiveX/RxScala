@@ -853,7 +853,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def doOnCompletedExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.doOnCompleted { println("onCompleted") }
+    val o = List("red", "green", "blue").toObservable.doOnCompleted(() => println("onCompleted"))
     o.subscribe(v => println(v), e => e.printStackTrace)
     // red
     // green
@@ -862,7 +862,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def doOnSubscribeExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.doOnSubscribe { println("subscribed") }
+    val o = List("red", "green", "blue").toObservable.doOnSubscribe(() => println("subscribed"))
     o.subscribe(v => println(v), e => e.printStackTrace, () => println("onCompleted"))
     // subscribed
     // red
@@ -872,7 +872,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def doOnTerminateExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.doOnTerminate { println("terminate") }
+    val o = List("red", "green", "blue").toObservable.doOnTerminate(() => println("terminate"))
     o.subscribe(v => println(v), e => e.printStackTrace, () => println("onCompleted"))
     // red
     // green
@@ -882,7 +882,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def doOnUnsubscribeExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.doOnUnsubscribe { println("unsubscribed") }
+    val o = List("red", "green", "blue").toObservable.doOnUnsubscribe(() => println("unsubscribed"))
     o.subscribe(v => println(v), e => e.printStackTrace, () => println("onCompleted"))
     // red
     // green
@@ -892,7 +892,7 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def doAfterTerminateExample(): Unit = {
-    val o = List("red", "green", "blue").toObservable.doAfterTerminate { println("finally") }
+    val o = List("red", "green", "blue").toObservable.doAfterTerminate(() => println("finally"))
     o.subscribe(v => println(v), e => e.printStackTrace, () => println("onCompleted"))
     // red
     // green
@@ -1545,7 +1545,7 @@ class RxScalaDemo extends JUnitSuite {
       Observable.interval(100 millis)
         .map(l => s"o$n emit $l")
         .take(3)
-        .doOnSubscribe(println(s"subscribe to o$n"))
+        .doOnSubscribe(() => println(s"subscribe to o$n"))
     }.switch.take(5).subscribe(println(_))
   }
 
@@ -1558,7 +1558,7 @@ class RxScalaDemo extends JUnitSuite {
         Observable.interval(100 millis)
           .map(l => s"o$n emit $l")
           .take(3)
-          .doOnSubscribe(println(s"subscribe to o$n"))
+          .doOnSubscribe(() => println(s"subscribe to o$n"))
       }
     }.switch.subscribe(println(_), _.printStackTrace())
 
@@ -1572,7 +1572,7 @@ class RxScalaDemo extends JUnitSuite {
         Observable.interval(100 millis)
           .map(l => s"o$n emit $l")
           .take(3)
-          .doOnSubscribe(println(s"subscribe to o$n"))
+          .doOnSubscribe(() => println(s"subscribe to o$n"))
       }
     }.delayError.switch.subscribe(println(_), _.printStackTrace())
   }
@@ -1593,7 +1593,7 @@ class RxScalaDemo extends JUnitSuite {
         Observable.interval(100 millis)
           .map(l => s"o$n emit $l")
           .take(3)
-          .doOnSubscribe(println(s"subscribe to o$n"))
+          .doOnSubscribe(() => println(s"subscribe to o$n"))
       }
     }.subscribe(println(_), _.printStackTrace())
 
@@ -1607,7 +1607,7 @@ class RxScalaDemo extends JUnitSuite {
         Observable.interval(100 millis)
           .map(l => s"o$n emit $l")
           .take(3)
-          .doOnSubscribe(println(s"subscribe to o$n"))
+          .doOnSubscribe(() => println(s"subscribe to o$n"))
       }
     }.subscribe(println(_), _.printStackTrace())
   }
@@ -1778,56 +1778,56 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   @Test def concatEagerExample(): Unit = {
-    val o1 = Observable.interval(100 millis).take(3).map(l => s"o1 emit $l").doOnSubscribe(println("subscribe to o1"))
-    val o2 = Observable.interval(100 millis).take(3).map(l => s"o2 emit $l").doOnSubscribe(println("subscribe to o2"))
+    val o1 = Observable.interval(100 millis).take(3).map(l => s"o1 emit $l").doOnSubscribe(() => println("subscribe to o1"))
+    val o2 = Observable.interval(100 millis).take(3).map(l => s"o2 emit $l").doOnSubscribe(() => println("subscribe to o2"))
     o1.concatEager(o2).subscribe(println(_))
   }
 
   @Test def concatEagerExample2(): Unit = {
     (0 until 10).map { i =>
-      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(() => println(s"subscribe to o$i"))
     }.toObservable.concatEager.subscribe(println(_))
   }
 
   @Test def concatEagerExample3(): Unit = {
     (0 until 10).map { i =>
-      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(() => println(s"subscribe to o$i"))
     }.toObservable.concatEager(capacityHint = 3).subscribe(println(_))
   }
 
   @Test def concatMapEagerExample(): Unit = {
     (0 until 10).toObservable.concatMapEager { i =>
-      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(() => println(s"subscribe to o$i"))
     }.subscribe(println(_))
   }
 
   @Test def concatMapEagerExample2(): Unit = {
     (0 until 10).toObservable.concatMapEager(capacityHint = 10, i => {
-      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(() => println(s"subscribe to o$i"))
     }).subscribe(println(_))
   }
 
   @Test def concatMapEagerExample3(): Unit = {
     (0 until 10).toObservable.concatMapEager(capacityHint = 10, maxConcurrent = 3, i => {
-      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(println(s"subscribe to o$i"))
+      Observable.interval(100 millis).take(3).map(l => s"o$i emit $l").doOnSubscribe(() => println(s"subscribe to o$i"))
     }).subscribe(println(_))
   }
 
   @Test def flattenDelayErrorExample() {
     val o1 = Observable.just(1).delay(200 millis).
-      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(println(s"subscribe to o1"))
-    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
-    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
-    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
+      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(() => println(s"subscribe to o1"))
+    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o2"))
+    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o3"))
+    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o4"))
     Observable.just(o1, o2, o3, o4).delayError.flatten.subscribe(println(_), _.printStackTrace())
   }
 
   @Test def flattenDelayErrorExample2() {
     val o1 = Observable.just(1).delay(200 millis).
-      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(println(s"subscribe to o1"))
-    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(println(s"subscribe to o2"))
-    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(println(s"subscribe to o3"))
-    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(println(s"subscribe to o4"))
+      flatMap(i => Observable.error(new RuntimeException("Oops!"))).doOnSubscribe(() => println(s"subscribe to o1"))
+    val o2 = Observable.interval(100 millis).map(l => s"o2 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o2"))
+    val o3 = Observable.interval(100 millis).map(l => s"o3 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o3"))
+    val o4 = Observable.interval(100 millis).map(l => s"o4 emit $l").take(3).doOnSubscribe(() => println(s"subscribe to o4"))
     Observable.just(o1, o2, o3, o4).delayError.flatten(2).subscribe(println(_), _.printStackTrace())
   }
 
@@ -1860,17 +1860,17 @@ class RxScalaDemo extends JUnitSuite {
   }
 
   def autoConnectExample(): Unit = {
-    val o = Observable.just(1, 2, 3).doOnSubscribe {
-      println("Start to emit items")
-    }.publish.autoConnect
+    val o = Observable.just(1, 2, 3)
+      .doOnSubscribe(() => println("Start to emit items"))
+      .publish.autoConnect
     println("1st Observer is subscribing")
     o.subscribe(println(_))
   }
 
   def autoConnectExample2(): Unit = {
-    val o = Observable.just(1, 2, 3).doOnSubscribe {
-      println("Start to emit items")
-    }.publish.autoConnect(3)
+    val o = Observable.just(1, 2, 3)
+      .doOnSubscribe(() => println("Start to emit items"))
+      .publish.autoConnect(3)
     println("1st Observer is subscribing")
     o.subscribe(i => println(s"s1: $i"))
     println("2nd Observer is subscribing")

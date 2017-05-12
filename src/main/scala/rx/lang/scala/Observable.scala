@@ -1118,8 +1118,8 @@ trait Observable[+T]
    * @return an [[Observable]] that emits the same items as the source [[Observable]], then invokes the `action`
    * @see <a href="http://reactivex.io/documentation/operators/do.html">ReactiveX operators documentation: Do</a>
    */
-  def doAfterTerminate(action: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.doAfterTerminate(() => action))
+  def doAfterTerminate(action: () => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doAfterTerminate(action))
   }
 
   /**
@@ -3888,8 +3888,8 @@ trait Observable[+T]
    *                    `onCompleted`
    * @return the source Observable with the side-effecting behavior applied
    */
-  def doOnCompleted(onCompleted: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.doOnCompleted(() => onCompleted))
+  def doOnCompleted(onCompleted: () => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doOnCompleted(onCompleted))
   }
 
   /**
@@ -3949,8 +3949,8 @@ trait Observable[+T]
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#doonsubscribe">RxJava wiki: doOnSubscribe</a>
    * @since 0.20
    */
-  def doOnSubscribe(onSubscribe: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.doOnSubscribe(() => onSubscribe))
+  def doOnSubscribe(onSubscribe: () => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doOnSubscribe(onSubscribe))
   }
 
   /**
@@ -3965,8 +3965,8 @@ trait Observable[+T]
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#wiki-doonterminate">RxJava Wiki: doOnTerminate()</a>
    * @see <a href="http://msdn.microsoft.com/en-us/library/hh229804.aspx">MSDN: Observable.Do</a>
    */
-  def doOnTerminate(onTerminate: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.doOnTerminate(() => onTerminate))
+  def doOnTerminate(onTerminate: () => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doOnTerminate(onTerminate))
   }
 
   /**
@@ -4003,8 +4003,8 @@ trait Observable[+T]
    * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Observable-Utility-Operators#doonunsubscribe">RxJava wiki: doOnUnsubscribe</a>
    * @since 0.20
    */
-  def doOnUnsubscribe(onUnsubscribe: => Unit): Observable[T] = {
-    toScalaObservable[T](asJavaObservable.doOnUnsubscribe(() => onUnsubscribe))
+  def doOnUnsubscribe(onUnsubscribe: () => Unit): Observable[T] = {
+    toScalaObservable[T](asJavaObservable.doOnUnsubscribe(onUnsubscribe))
   }
 
   /**
@@ -4716,10 +4716,8 @@ trait Observable[+T]
    * @since (if this graduates from Experimental/Beta to supported, replace this parenthetical with the release number)
    */
   @Beta
-  def onBackpressureBuffer(capacity: Long, onOverflow: => Unit): Observable[T] = {
-    asJavaObservable.onBackpressureBuffer(capacity, new Action0 {
-      override def call(): Unit = onOverflow
-    })
+  def onBackpressureBuffer(capacity: Long, onOverflow: () => Unit): Observable[T] = {
+    asJavaObservable.onBackpressureBuffer(capacity, onOverflow)
   }
 
   /**
