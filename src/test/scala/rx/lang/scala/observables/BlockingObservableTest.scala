@@ -28,7 +28,7 @@ class BlockingObservableTest extends JUnitSuite {
   // Tests which needn't be run:
 
   @Ignore
-  def testMostRecent() {
+  def testMostRecent(): Unit = {
     class Fruit {
       def printMe(): Unit = println(this)
     }
@@ -49,120 +49,120 @@ class BlockingObservableTest extends JUnitSuite {
   // Tests which have to be run:
 
   @Test
-  def testSingleOption() {
+  def testSingleOption(): Unit = {
     val o = Observable.just(1)
     assertEquals(Some(1), o.toBlocking.singleOption)
   }
 
   @Test
-  def testSingleOptionWithEmpty() {
+  def testSingleOptionWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(None, o.toBlocking.singleOption)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def testSingleOptionWithMultipleItems() {
+  def testSingleOptionWithMultipleItems(): Unit = {
     Observable.just(1, 2).toBlocking.singleOption
   }
 
   @Test
-  def testSingleOrElse() {
+  def testSingleOrElse(): Unit = {
     val o = Observable.just(1)
     assertEquals(1, o.toBlocking.singleOrElse(2))
   }
 
   @Test
-  def testSingleOrElseWithEmpty() {
+  def testSingleOrElseWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(2, o.toBlocking.singleOrElse(2))
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def testSingleOrElseWithMultipleItems() {
+  def testSingleOrElseWithMultipleItems(): Unit = {
     Observable.just(1, 2).toBlocking.singleOrElse(2)
   }
 
   @Test
-  def testHeadOption() {
+  def testHeadOption(): Unit = {
     val o = Observable.just(1)
     assertEquals(Some(1), o.toBlocking.headOption)
   }
 
   @Test
-  def testHeadOptionWithEmpty() {
+  def testHeadOptionWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(None, o.toBlocking.headOption)
   }
 
   @Test
-  def testHeadOptionWithMultipleItems() {
+  def testHeadOptionWithMultipleItems(): Unit = {
     val o = Observable.just(1, 2)
     assertEquals(Some(1), o.toBlocking.headOption)
   }
 
   @Test
-  def testHeadOrElse() {
+  def testHeadOrElse(): Unit = {
     val o = Observable.just(1)
     assertEquals(1, o.toBlocking.headOrElse(2))
   }
 
   @Test
-  def testHeadOrElseWithEmpty() {
+  def testHeadOrElseWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(2, o.toBlocking.headOrElse(2))
   }
 
   @Test
-  def testHeadOrElseWithMultipleItems() {
+  def testHeadOrElseWithMultipleItems(): Unit = {
     val o = Observable.just(1, 2)
     assertEquals(1, o.toBlocking.headOrElse(2))
   }
 
   @Test
-  def testLastOption() {
+  def testLastOption(): Unit = {
     val o = Observable.just(1)
     assertEquals(Some(1), o.toBlocking.lastOption)
   }
 
   @Test
-  def testLastOptionWithEmpty() {
+  def testLastOptionWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(None, o.toBlocking.lastOption)
   }
 
   @Test
-  def testLastOptionWithMultipleItems() {
+  def testLastOptionWithMultipleItems(): Unit = {
     val o = Observable.just(1, 2)
     assertEquals(Some(2), o.toBlocking.lastOption)
   }
 
   @Test
-  def testLastOrElse() {
+  def testLastOrElse(): Unit = {
     val o = Observable.just(1)
     assertEquals(1, o.toBlocking.lastOrElse(2))
   }
 
   @Test
-  def testLastOrElseWithEmpty() {
+  def testLastOrElseWithEmpty(): Unit = {
     val o = Observable.empty
     assertEquals(2, o.toBlocking.lastOrElse(2))
   }
 
   @Test
-  def testLastOrElseWithMultipleItems() {
+  def testLastOrElseWithMultipleItems(): Unit = {
     val o = Observable.just(1, 2)
     assertEquals(2, o.toBlocking.lastOrElse(3))
   }
 
   @Test
-  def testToFuture() {
+  def testToFuture(): Unit = {
     val o = Observable.just(1)
     val r = Await.result(o.toBlocking.toFuture, 10 seconds)
     assertEquals(1, r)
   }
 
   @Test
-  def testToFutureWithEmpty() {
+  def testToFutureWithEmpty(): Unit = {
     val o = Observable.empty
     val future = o.toBlocking.toFuture //if this were to throw the original test would wrongly succeed
     Await.result(future.failed, 10 seconds) match {
@@ -172,7 +172,7 @@ class BlockingObservableTest extends JUnitSuite {
   }
 
   @Test
-  def testToFutureWithMultipleItems() {
+  def testToFutureWithMultipleItems(): Unit = {
     val o = Observable.just(1, 2)
     val future = o.toBlocking.toFuture //if this were to throw the original test would wrongly succeed
     Await.result(future.failed, 10 seconds) match {

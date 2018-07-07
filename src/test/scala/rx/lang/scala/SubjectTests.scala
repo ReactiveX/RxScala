@@ -24,7 +24,7 @@ import rx.lang.scala.subjects.{AsyncSubject, BehaviorSubject, ReplaySubject, Uni
 
 class SubjectTest extends JUnitSuite {
 
-  @Test def SubjectIsAChannel() {
+  @Test def SubjectIsAChannel(): Unit = {
 
     var lastA: Integer = null
     var errorA: Throwable = null
@@ -101,7 +101,7 @@ class SubjectTest extends JUnitSuite {
       assertEquals(4711, lastB)
   }
 
-  @Test def ReplaySubjectIsAChannel() {
+  @Test def ReplaySubjectIsAChannel(): Unit = {
 
     val channel = ReplaySubject[Integer]
 
@@ -177,7 +177,7 @@ class SubjectTest extends JUnitSuite {
       assertFalse(errorC)
   }
 
-  @Test def BehaviorSubjectIsACache() {
+  @Test def BehaviorSubjectIsACache(): Unit = {
 
     val channel = BehaviorSubject(2013)
 
@@ -244,7 +244,7 @@ class SubjectTest extends JUnitSuite {
 
   }
 
-  @Test def AsyncSubjectIsAFuture() {
+  @Test def AsyncSubjectIsAFuture(): Unit = {
 
     val channel = AsyncSubject[Int]()
 
@@ -312,7 +312,7 @@ class SubjectTest extends JUnitSuite {
 
   }
 
-  @Test def UnicastSubjectIsABuffer() {
+  @Test def UnicastSubjectIsABuffer(): Unit = {
 
     val channel = UnicastSubject[Integer]
     channel.onNext(42)

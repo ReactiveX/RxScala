@@ -28,7 +28,7 @@ import org.scalatest.junit.JUnitSuite
 
 class SubscriberTests extends JUnitSuite {
 
-  @Test def testIssue1173() {
+  @Test def testIssue1173(): Unit = {
     // https://github.com/Netflix/RxJava/issues/1173
     val subscriber = Subscriber((n: Int) => println(n))
     assertNotNull(subscriber.asJavaObserver)
@@ -36,7 +36,7 @@ class SubscriberTests extends JUnitSuite {
     assertNotNull(subscriber.asJavaSubscriber)
   }
 
-  @Test def testUnsubscribeForSubscriber() {
+  @Test def testUnsubscribeForSubscriber(): Unit = {
     var innerSubscriber: Subscriber[Int] = null
     val o = Observable[Int](subscriber => {
       Observable[Int](subscriber => {
@@ -48,7 +48,7 @@ class SubscriberTests extends JUnitSuite {
     assertTrue(innerSubscriber.isUnsubscribed)
   }
 
-  @Test def testBlockCallbackOnlyOnce() {
+  @Test def testBlockCallbackOnlyOnce(): Unit = {
     var called = false
     val o = Observable[Int](subscriber => {
       subscriber.add({ called = !called })
@@ -136,20 +136,20 @@ class SubscriberTests extends JUnitSuite {
 
     // A special rx.Subscriber to make sure backpressure works
      val rxSubscriber = new rx.Subscriber[Int]() {
-       override def onStart() {
+       override def onStart(): Unit = {
          request(1)
        }
 
-       override def onNext(v: Int) {
+       override def onNext(v: Int): Unit = {
          l += v
          request(1)
        }
 
-       override def onError(e: Throwable) {
+       override def onError(e: Throwable): Unit = {
          e.printStackTrace()
        }
 
-       override def onCompleted() {
+       override def onCompleted(): Unit = {
          completed = true
        }
      }
@@ -185,7 +185,7 @@ class SubscriberTests extends JUnitSuite {
     assertEquals(zeros, l)
   }
 
-  @Test def testIssue202() {
+  @Test def testIssue202(): Unit = {
     // https://github.com/ReactiveX/RxScala/issues/202
     val subject = Subject[Option[Unit]]()
     val testSubscriber = TestSubscriber[Option[Unit]]()

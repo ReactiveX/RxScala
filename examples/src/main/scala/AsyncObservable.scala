@@ -15,7 +15,7 @@ object AsyncObservable extends App {
       subscriber => {
         // For simplicity this example uses a Thread instead of an ExecutorService/ThreadPool
         new Thread(new Runnable() {
-          def run() {
+          def run(): Unit = {
             for (i <- 0 to 75) {
               if (subscriber.isUnsubscribed) {
                 return

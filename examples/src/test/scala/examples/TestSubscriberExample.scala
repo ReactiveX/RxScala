@@ -30,7 +30,7 @@ import scala.concurrent.duration._
 class TestSubscriberExample extends JUnitSuite {
 
   @Test
-  def example1() {
+  def example1(): Unit = {
     val subscriber = TestSubscriber[Int]()
     Observable.just(1, 2, 3).subscribe(subscriber)
     subscriber.assertValues(1, 2, 3)
@@ -40,7 +40,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example2() {
+  def example2(): Unit = {
     val subscriber = TestSubscriber[Int]()
     val o = Observable.just(1, 2, 3) ++ Observable.error(new IOException("Oops"))
     o.subscribe(subscriber)
@@ -50,7 +50,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example3() {
+  def example3(): Unit = {
     val subscriber = TestSubscriber[Int]()
     val e = new IOException("Oops")
     val o = Observable.just(1, 2, 3) ++ Observable.error(e)
@@ -62,7 +62,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example4() {
+  def example4(): Unit = {
     val subscriber = TestSubscriber[Int]()
     Observable.never.subscribe(subscriber)
     subscriber.assertNoValues()
@@ -70,7 +70,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example5() {
+  def example5(): Unit = {
     val subscriber = TestSubscriber[Int]()
     Observable.just(1, 2, 3).subscribeOn(IOScheduler()).subscribe(subscriber)
     subscriber.awaitTerminalEvent(30.seconds)
@@ -81,28 +81,28 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example6() {
+  def example6(): Unit = {
     val subscriber = TestSubscriber[Int]()
     Observable.just(1, 2, 3).subscribe(subscriber)
     subscriber.assertUnsubscribed()
   }
 
   @Test
-  def example7() {
+  def example7(): Unit = {
     val subscriber = TestSubscriber[Int]()
     Observable.just(1).subscribe(subscriber)
     subscriber.assertValue(1)
   }
 
   @Test
-  def example8() {
+  def example8(): Unit = {
     val subscriber = TestSubscriber[Int]()
     (0 until 10).toObservable.subscribe(subscriber)
     subscriber.assertValueCount(10)
   }
 
   @Test
-  def example9() {
+  def example9(): Unit = {
     val subscriber = TestSubscriber[Int]()
     val o = Observable { (subscriber: Subscriber[Int]) =>
       if (!subscriber.isUnsubscribed) {
@@ -119,7 +119,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example10() {
+  def example10(): Unit = {
     val subscriber = TestSubscriber[Int](1)
     Observable.just(1, 2, 3).subscribe(subscriber)
     subscriber.assertValues(1)
@@ -135,7 +135,7 @@ class TestSubscriberExample extends JUnitSuite {
   }
 
   @Test
-  def example11() {
+  def example11(): Unit = {
     val subscriber = TestSubscriber[Int]()
     // Use TestSubscriber with RxJava
     JObservable.just(1, 2, 3).subscribe(subscriber)

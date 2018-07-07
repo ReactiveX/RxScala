@@ -34,7 +34,7 @@ object CompletenessTables {
      .replaceAllLiterally(">", "&gt;")
 
 
-  def printMarkdownCorrespondenceTables() {
+  def printMarkdownCorrespondenceTables(): Unit = {
     println("""
 ---
 layout: comparison

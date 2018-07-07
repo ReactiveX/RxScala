@@ -21,7 +21,7 @@ import org.scalatest.junit.JUnitSuite
 
 class ConstructorTest extends JUnitSuite {
 
-  @Test def toObservable() {
+  @Test def toObservable(): Unit = {
     val xs = List(1,2,3).toObservable.toBlocking.toList
     assertEquals(List(1,2,3), xs)
 

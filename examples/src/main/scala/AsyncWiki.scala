@@ -10,7 +10,7 @@ object AsyncWiki extends App {
   def fetchWikipediaArticleAsynchronously(wikipediaArticleNames: String*): Observable[String] = {
     Observable(subscriber => {
       new Thread(new Runnable() {
-        def run() {
+        def run(): Unit = {
           for (articleName <- wikipediaArticleNames) {
             if (subscriber.isUnsubscribed) {
               return

@@ -190,7 +190,7 @@ trait CompletenessKit extends JUnitSuite {
     checkMethodPresenceStatus(good, bad, tp)
   }
 
-  def printMethodSet(title: String, tp: Type) {
+  def printMethodSet(title: String, tp: Type): Unit = {
     println("\n" + title)
     println(title.map(_ => '-') + "\n")
     getPublicInstanceMethods(tp).toList.sorted.foreach(println(_))
