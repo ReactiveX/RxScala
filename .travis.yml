@@ -1,9 +1,9 @@
 language: scala
 matrix:
   include:
-    - jdk: oraclejdk7
+    - jdk: openjdk7
       scala: 2.10.6
-    - jdk: oraclejdk7
+    - jdk: openjdk7
       scala: 2.11.8
     - jdk: oraclejdk8
       scala: 2.12.1
