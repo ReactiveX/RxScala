@@ -9,7 +9,7 @@ import rx.lang.scala.schedulers.TestScheduler
 
 class SchedulerTests extends JUnitSuite {
 
-  @Test def testScheduleRecSingleRound() {
+  @Test def testScheduleRecSingleRound(): Unit = {
     val scheduler = TestScheduler()
     val worker = scheduler.createWorker
     var count = 0
@@ -18,7 +18,7 @@ class SchedulerTests extends JUnitSuite {
     assertTrue(count == 1)
   }
 
-  @Test def testScheduleRecMultipleRounds() {
+  @Test def testScheduleRecMultipleRounds(): Unit = {
     val scheduler = TestScheduler()
     val worker = scheduler.createWorker
     var count = 0
@@ -27,7 +27,7 @@ class SchedulerTests extends JUnitSuite {
     assertTrue(count == 100)
   }
 
-  @Test def testScheduleRecUnsubscribe() {
+  @Test def testScheduleRecUnsubscribe(): Unit = {
     val scheduler = TestScheduler()
     val worker = scheduler.createWorker
     var count = 0
@@ -38,7 +38,7 @@ class SchedulerTests extends JUnitSuite {
   }
 
   @Test(expected = classOf[Exception])
-  def testScheduleRecException() {
+  def testScheduleRecException(): Unit = {
     val scheduler = TestScheduler()
     scheduler.createWorker.scheduleRec({ throw new Exception() })
     scheduler.advanceTimeBy(1L, TimeUnit.SECONDS)

@@ -32,7 +32,7 @@ import rx.lang.scala.subscriptions.{SerialSubscription, MultipleAssignmentSubscr
 
 class SubscriptionTests extends JUnitSuite {
   @Test
-  def subscriptionCreate() {
+  def subscriptionCreate(): Unit = {
 
     val subscription = Subscription()
 
@@ -44,7 +44,7 @@ class SubscriptionTests extends JUnitSuite {
   }
 
   @Test
-  def subscriptionUnsubscribeIdempotent() {
+  def subscriptionUnsubscribeIdempotent(): Unit = {
 
     var called = false
 
@@ -65,7 +65,7 @@ class SubscriptionTests extends JUnitSuite {
   }
 
   @Test
-  def compositeSubscriptionAdd() {
+  def compositeSubscriptionAdd(): Unit = {
 
     val s0 = Subscription()
     val s1 = Subscription()
@@ -94,7 +94,7 @@ class SubscriptionTests extends JUnitSuite {
   }
 
   @Test
-  def compositeSubscriptionRemove() {
+  def compositeSubscriptionRemove(): Unit = {
 
     val s0 = Subscription()
     val composite = CompositeSubscription()
@@ -112,7 +112,7 @@ class SubscriptionTests extends JUnitSuite {
   }
 
   @Test
-  def multiAssignmentSubscriptionAdd() {
+  def multiAssignmentSubscriptionAdd(): Unit = {
 
       val s0 = Subscription()
       val s1 = Subscription()
@@ -149,7 +149,7 @@ class SubscriptionTests extends JUnitSuite {
   }
 
   @Test
-  def serialSubscriptionAdd() {
+  def serialSubscriptionAdd(): Unit = {
 
     val s0 = Subscription()
     val s1 = Subscription()

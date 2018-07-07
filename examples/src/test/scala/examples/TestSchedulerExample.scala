@@ -26,7 +26,7 @@ import rx.lang.scala.JavaConversions._
 
 class TestSchedulerExample extends JUnitSuite {
 
-  @Test def testInterval() {
+  @Test def testInterval(): Unit = {
     val scheduler = TestScheduler()
     // Use a Java Observer for Mockito
     val observer = mock(classOf[rx.Observer[Long]])

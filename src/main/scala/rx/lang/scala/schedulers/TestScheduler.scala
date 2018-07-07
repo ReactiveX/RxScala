@@ -68,15 +68,15 @@ object TestScheduler {
  */
 class TestScheduler private[scala] (val asJavaScheduler: rx.schedulers.TestScheduler) extends Scheduler {
 
-  def advanceTimeBy(time: Duration) {
+  def advanceTimeBy(time: Duration): Unit = {
     asJavaScheduler.advanceTimeBy(time.length, time.unit)
   }
 
-  def advanceTimeTo(time: Duration) {
+  def advanceTimeTo(time: Duration): Unit = {
     asJavaScheduler.advanceTimeTo(time.length, time.unit)
   }
 
-  def triggerActions() {
+  def triggerActions(): Unit = {
     asJavaScheduler.triggerActions()
   }
 }

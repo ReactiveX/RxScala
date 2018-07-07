@@ -10,7 +10,7 @@ object AsyncWikiErrorHandling extends App {
   def fetchWikipediaArticleAsynchronously(wikipediaArticleNames: String*): Observable[String] = {
     Observable(subscriber => {
       new Thread(new Runnable() {
-        def run() {
+        def run(): Unit = {
           try {
             for (articleName <- wikipediaArticleNames) {
               if (subscriber.isUnsubscribed) {

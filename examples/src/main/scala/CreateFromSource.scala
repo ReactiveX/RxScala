@@ -2,7 +2,7 @@ import rx.lang.scala.Observable
 
 object CreateFromSource {
 
-  def create() {
+  def create(): Unit = {
     val o1 = Observable.just("a", "b", "c")
 
     def list = List(5, 6, 7, 8)
