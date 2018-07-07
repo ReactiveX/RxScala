@@ -74,7 +74,8 @@ apiMappings ++= {
 }
 
 // Override the task to fix the links to JavaDoc
-doc in Compile <<= (doc in Compile) map { target: File =>
+doc in Compile := {
+  val target = (doc in Compile).value
   (target ** "*.html").get.filter(hasJavadocLink).foreach { f =>
     val newContent: String = allExternalJavadocLinks.foldLeft(IO.read(f)) {
       case (oldContent: String, javadocURL: String) =>
