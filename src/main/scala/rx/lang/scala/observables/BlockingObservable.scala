@@ -334,7 +334,6 @@ class BlockingObservable[+T] private[scala] (val o: Observable[T])
 // "implementation restriction: nested class is not allowed in value class.
 // This restriction is planned to be removed in subsequent releases."  
 private[observables] class WithFilter[+T] (p: T => Boolean, asJava: rx.observables.BlockingObservable[_ <: T]) {
-  import rx.lang.scala.ImplicitFunctionConversions._
   
   // there's no map and flatMap here, they're only available on Observable
   

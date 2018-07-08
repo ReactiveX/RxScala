@@ -5,7 +5,7 @@ import org.scalatest.junit.JUnitSuite
 import rx.lang.scala.observers.TestSubscriber
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 class ScalaTypesConversionsTests extends JUnitSuite {
 

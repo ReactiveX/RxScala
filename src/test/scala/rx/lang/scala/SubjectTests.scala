@@ -15,7 +15,6 @@
  */
 package rx.lang.scala
 
-import scala.language.postfixOps
 
 import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
 import org.junit.{Assert, Test}

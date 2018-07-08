@@ -1,7 +1,7 @@
 package rx.lang.scala.observables
 
 import rx.annotations.Experimental
-import rx.lang.scala.{Notification, Observable, Subscriber}
+import rx.lang.scala.{Notification, Observable}
 
 /**
  * $experimental A utility class to create [[Observable]]s that start acting when subscribed to and responds

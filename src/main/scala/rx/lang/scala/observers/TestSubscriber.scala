@@ -21,7 +21,7 @@ import scala.concurrent.duration.Duration
 import rx.{Subscriber => JSubscriber, Observer => JObserver, Subscription => JSubscription}
 import rx.annotations.Experimental
 import rx.observers.{TestSubscriber => JTestSubscriber}
-import rx.lang.scala.{Observable, Observer, Subscriber}
+import rx.lang.scala.{Observer, Subscriber}
 
 /**
  * A [[TestSubscriber]] is a variety of [[Subscriber]] that you can use for unit testing, to perform
