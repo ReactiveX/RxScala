@@ -17,7 +17,7 @@
 package rx.lang.scala.observables
 
 import rx.annotations.Beta
-import rx.lang.scala.{Observable, Subscription, Subscriber}
+import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.JavaConversions._
 
 /**

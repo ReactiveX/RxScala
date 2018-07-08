@@ -17,14 +17,11 @@
 package rx.lang.scala
 
 import rx.annotations.{Beta, Experimental}
-import rx.exceptions.OnErrorNotImplementedException
 import rx.functions.FuncN
 import rx.lang.scala.observables.{AsyncOnSubscribe, ConnectableObservable, ErrorDelayingObservable, SyncOnSubscribe}
 
 import scala.concurrent.duration
-import java.util
 
-import collection.JavaConversions._
 import scala.collection.generic.CanBuildFrom
 import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.{Iterable, Traversable, immutable}
@@ -4858,7 +4855,6 @@ trait Observable[+T]
  */
 object Observable {
   import scala.collection.JavaConverters._
-  import scala.collection.immutable.Range
   import scala.concurrent.duration.Duration
   import scala.concurrent.{Future, ExecutionContext}
   import scala.util.{Success, Failure}

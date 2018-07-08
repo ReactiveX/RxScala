@@ -15,7 +15,6 @@
  */
 package rx.lang.scala
 
-import rx.annotations.Experimental
 import rx.lang.scala.subjects.SerializedSubject
 
 /**

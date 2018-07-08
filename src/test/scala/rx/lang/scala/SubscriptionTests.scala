@@ -16,14 +16,8 @@
 package rx.lang.scala
 
 
-import org.junit.{Assert, Test}
-import org.junit.Assert
+import org.junit.Test
 import org.scalatest.junit.JUnitSuite
-import scala.concurrent.duration._
-import scala.language.postfixOps
-import org.mockito.Mockito._
-import org.mockito.Matchers._
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import rx.lang.scala.subscriptions.{SerialSubscription, MultipleAssignmentSubscription, CompositeSubscription}
