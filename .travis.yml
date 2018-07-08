@@ -2,11 +2,11 @@ language: scala
 matrix:
   include:
     - jdk: openjdk7
-      scala: 2.10.6
+      scala: 2.10.7
     - jdk: openjdk7
-      scala: 2.11.8
+      scala: 2.11.12
     - jdk: oraclejdk8
-      scala: 2.12.1
+      scala: 2.12.6
 script:
 - sbt ++$TRAVIS_SCALA_VERSION test examples/test doc
 after_success:
