@@ -16,6 +16,7 @@
 import scala.concurrent.duration.DurationInt
 import scala.language.postfixOps
 import org.junit.Test
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.junit.JUnitSuite
