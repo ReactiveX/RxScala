@@ -5,6 +5,83 @@ import rx.lang.scala.observables.OnSubscribe
 import scala.collection.Iterable
 import scala.util.Try
 
+
+/**
+  * The Single interface that implements the Reactive Pattern.
+  *
+  * @define subscribeObserverMain
+  * Call this method to subscribe an [[rx.lang.scala.Single]] for receiving
+  * items and notifications from the Single.
+  *
+  * A typical implementation of `subscribe` does the following:
+  *
+  * It stores a reference to the Observer in a collection object, such as a `List[T]` object.
+  *
+  * It returns a reference to the [[rx.lang.scala.Subscription]] interface. This enables Observers to
+  * unsubscribe, that is, to stop receiving items and notifications before the Single stops
+  * sending them, which also invokes the Observer's [[rx.lang.scala.Observer.onCompleted onCompleted]] method.
+  *
+  * An `Single[T]` instance is responsible for accepting all subscriptions
+  * and notifying all Observers. Unless the documentation for a particular
+  * `Observable[T]` implementation indicates otherwise, Observers should make no
+  * assumptions about the order in which multiple Observers will receive their notifications.
+  *
+  * @define subscribeObserverParamObserver
+  *         the observer
+  * @define subscribeObserverParamScheduler
+  *         the [[rx.lang.scala.Scheduler]] on which Observers subscribe to the Observable
+  *
+  * @define subscribeSubscriberMain
+  * Call this method to subscribe an [[Subscriber]] for receiving items and notifications from the [[Observable]].
+  *
+  * A typical implementation of `subscribe` does the following:
+  *
+  * It stores a reference to the Observer in a collection object, such as a `List[T]` object.
+  *
+  * It returns a reference to the [[rx.lang.scala.Subscription]] interface. This enables [[Subscriber]]s to
+  * unsubscribe, that is, to stop receiving items and notifications before the Observable stops
+  * sending them, which also invokes the Subscriber's [[rx.lang.scala.Observer.onCompleted onCompleted]] method.
+  *
+  * An [[Observable]] instance is responsible for accepting all subscriptions
+  * and notifying all [[Subscriber]]s. Unless the documentation for a particular
+  * [[Observable]] implementation indicates otherwise, [[Subscriber]]s should make no
+  * assumptions about the order in which multiple [[Subscriber]]s will receive their notifications.
+  *
+  * @define subscribeSubscriberParamObserver
+  *         the [[Subscriber]]
+  * @define subscribeSubscriberParamScheduler
+  *         the [[rx.lang.scala.Scheduler]] on which [[Subscriber]]s subscribe to the Observable
+  *
+  * @define subscribeAllReturn
+  *         a [[rx.lang.scala.Subscription]] reference whose `unsubscribe` method can be called to  stop receiving items
+  *         before the Observable has finished sending them
+  *
+  * @define subscribeCallbacksMainWithNotifications
+  * Call this method to receive items and notifications from this observable.
+  *
+  * @define subscribeCallbacksMainNoNotifications
+  * Call this method to receive items from this observable.
+  *
+  * @define subscribeCallbacksParamOnNext
+  *         this function will be called whenever the Observable emits an item
+  * @define subscribeCallbacksParamOnError
+  *         this function will be called if an error occurs
+  * @define subscribeCallbacksParamOnComplete
+  *         this function will be called when this Observable has finished emitting items
+  * @define subscribeCallbacksParamScheduler
+  *         the scheduler to use
+  *
+  * @define noDefaultScheduler
+  * ===Scheduler:===
+  * This method does not operate by default on a particular [[Scheduler]].
+  *
+  * @define experimental
+  * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+  *
+  * @define beta
+  * <span class="badge badge-red" style="float: right;">BETA</span>
+  *
+  */
 trait Single[+T] {
 
   import ImplicitFunctionConversions._
@@ -753,6 +830,16 @@ trait Single[+T] {
 
 }
 
+/**
+  * Provides various ways to construct new Singles.
+  *
+  * @define noDefaultScheduler
+  * ===Scheduler:===
+  * This method does not operate by default on a particular [[Scheduler]].
+  *
+  * @define experimental
+  * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
+  */
 object Single {
   import ImplicitFunctionConversions._
   import JavaConversions._
@@ -773,23 +860,20 @@ object Single {
   */
 
   /**
-    * $experimental Returns an [[Observable]] that respects the back-pressure semantics. When the returned [[Observable]] is
-    * subscribed to it will initiate the given [[observables.SyncOnSubscribe SyncOnSubscribe]]'s life cycle for generating events.
+    * $experimental Returns an [[Single]] that respects the back-pressure semantics. When the returned [[Observable]] is
+    * subscribed to it will initiate the given [[observables.OnSubscribe]]'s life cycle for generating events.
     *
     * Note: the [[observables.SyncOnSubscribe SyncOnSubscribe]] provides a generic way to fulfill data by iterating
     * over a (potentially stateful) function (e.g. reading data off of a channel, a parser). If your
     * data comes directly from an asynchronous/potentially concurrent source then consider using [[observables.AsyncOnSubscribe AsyncOnSubscribe]].
     *
-    * $supportBackpressure
-    *
     * $noDefaultScheduler
     *
-    * @tparam T the type of the items that this [[Observable]] emits
-    * @param OnSubscribe an implementation of [[observables.SyncOnSubscribe SyncOnSubscribe]] There are many creation methods on the object for convenience.
+    * @tparam T the type of the items that this [[Single]] emits
+    * @param onSubscribe an implementation of [[observables.OnSubscribe]] There are many creation methods on the object for convenience.
     * @return an [[Observable]] that, when a [[Subscriber]] subscribes to it, will use the specified [[observables.SyncOnSubscribe SyncOnSubscribe]] to generate events
-    * @see [[observables.SyncOnSubscribe.stateful]]
-    * @see [[observables.SyncOnSubscribe.singleState]]
-    * @see [[observables.SyncOnSubscribe.stateless]]
+    * @see [[observables.OnSubscribe]]
+
     */
   @Experimental
   def create[T](onSubscribe: OnSubscribe[T]): Single[T] = toScalaSingle[T](rx.Single.create(onSubscribe))
