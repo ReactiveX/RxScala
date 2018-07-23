@@ -55,6 +55,12 @@ object JavaConversions {
     }
   }
 
+  implicit def toScalaSingle[T](single: rx.Single[_ <: T]): Single[T] = {
+    new Single[T]{
+      val asJavaSingle = single
+    }
+  }
+
   implicit def toJavaOperator[T, R](operator: Subscriber[R] => Subscriber[T]): rx.Observable.Operator[R, T] = {
     new rx.Observable.Operator[R, T] {
       override def call(subscriber: rx.Subscriber[_ >: R]): rx.Subscriber[_ >: T] = {

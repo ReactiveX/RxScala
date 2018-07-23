@@ -27,4 +27,5 @@ package rx.lang.scala
 package object observables {
   type SyncOnSubscribe[S, +T] = rx.observables.SyncOnSubscribe[S, _ <: T]
   type AsyncOnSubscribe[S, +T] = rx.observables.AsyncOnSubscribe[S, _ <: T]
+  type OnSubscribe[+T] = rx.Single.OnSubscribe[_<: T]
 }
