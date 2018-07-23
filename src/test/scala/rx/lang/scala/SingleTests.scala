@@ -65,6 +65,15 @@ class SingleTests extends JUnitSuite {
 
   }
 
+  @Test def testZip(): Unit = {
+
+    val zipped = Single.just(1) zip (Single.just(2))
+    assertEquals((1, 2), zipped.toBlocking.single)
+
+  }
+
+
+
   @Test def testConcatSingles(): Unit = {
 
     val o = Single.just(1)++Single.just(2)
