@@ -22,7 +22,7 @@ import org.apache.bcel.classfile.Utility
 import org.apache.bcel.util.ByteSequence
 import org.junit.Assert._
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 
 class APICoverage extends JUnitSuite {
 

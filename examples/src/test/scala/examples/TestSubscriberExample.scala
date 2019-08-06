@@ -18,7 +18,7 @@ package examples
 import java.io.IOException
 import org.junit.Assert._
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.{Observable => JObservable}
 import rx.lang.scala._
 import rx.lang.scala.JavaConversions._

@@ -16,7 +16,7 @@
 package rx.lang.scala.completeness
 
 import org.junit.{Ignore, Test}
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 
 import scala.collection.immutable.SortedMap
 import scala.reflect.runtime.universe.{Symbol, Type, typeOf}

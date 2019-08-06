@@ -18,7 +18,7 @@ package rx.lang.scala
 
 import org.junit.Test
 import org.junit.Assert._
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
 
 

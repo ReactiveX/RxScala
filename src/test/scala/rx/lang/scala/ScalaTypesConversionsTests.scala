@@ -1,7 +1,7 @@
 package rx.lang.scala
 
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala.observers.TestSubscriber
 
 import scala.concurrent.Future

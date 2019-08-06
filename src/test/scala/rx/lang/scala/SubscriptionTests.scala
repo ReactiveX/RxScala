@@ -17,7 +17,7 @@ package rx.lang.scala
 
 
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import rx.lang.scala.subscriptions.{SerialSubscription, MultipleAssignmentSubscription, CompositeSubscription}

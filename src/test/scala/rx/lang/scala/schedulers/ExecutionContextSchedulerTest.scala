@@ -23,7 +23,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 
 class ExecutionContextSchedulerTest extends JUnitSuite {
 

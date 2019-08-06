@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala.schedulers.TestScheduler
 
 class SchedulerTests extends JUnitSuite {

@@ -16,7 +16,7 @@
 package rx.lang.scala
 import org.junit.Assert._
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 
 class ConstructorTest extends JUnitSuite {
 

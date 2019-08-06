@@ -19,7 +19,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import org.junit.Assert._
 import org.junit.{Test, Ignore}
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import scala.language.postfixOps
 import rx.lang.scala.Observable
 
