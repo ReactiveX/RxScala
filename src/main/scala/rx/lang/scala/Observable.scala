@@ -22,7 +22,7 @@ import rx.lang.scala.observables.{AsyncOnSubscribe, ConnectableObservable, Error
 
 import scala.concurrent.duration
 
-import scala.collection.generic.CanBuildFrom
+import rx.lang.scala.scalacompat._
 import scala.annotation.unchecked.uncheckedVariance
 import scala.collection.{Iterable, Traversable, immutable}
 import scala.collection.mutable.ArrayBuffer
@@ -119,8 +119,7 @@ import scala.util.Try
  */
 trait Observable[+T]
 {
-  import scala.collection.JavaConverters._
-  import scala.collection.Seq
+  import rx.lang.scala.scalacompat.CollectionConverters._
   import scala.concurrent.duration.{Duration, TimeUnit, MILLISECONDS}
   import scala.collection.mutable
   import rx.functions._
@@ -590,7 +589,7 @@ trait Observable[+T]
    */
   def zipWith[U, R](that: Iterable[U])(selector: (T, U) => R): Observable[R] = {
     val thisJava = asJavaObservable.asInstanceOf[rx.Observable[T]]
-    toScalaObservable[R](thisJava.zipWith(that.asJava, selector))
+    toScalaObservable[R](thisJava.zipWith[U, R](that.asJava, selector))
   }
 
   /**
@@ -823,7 +822,7 @@ trait Observable[+T]
     val f = new Func0[rx.Observable[_ <: Any]]() {
       override def call(): rx.Observable[_ <: Any] = boundary.asJavaObservable
     }
-    toScalaObservable(asJavaObservable.buffer[Any](f)).map(_.asScala)
+    toScalaObservable(asJavaObservable.buffer[Any](f)).map(_.asScala.toSeq)
   }
 
   /**
@@ -842,7 +841,7 @@ trait Observable[+T]
    */
   def tumblingBuffer(boundary: Observable[Any], initialCapacity: Int): Observable[Seq[T]] = {
     val thisJava = this.asJavaObservable.asInstanceOf[rx.Observable[T]]
-    toScalaObservable(thisJava.buffer(boundary.asJavaObservable, initialCapacity)).map(_.asScala)
+    toScalaObservable(thisJava.buffer(boundary.asJavaObservable, initialCapacity)).map(_.asScala.toSeq)
   }
 
   /**
@@ -3736,7 +3735,7 @@ trait Observable[+T]
     val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
       (jOv: rx.Observable[_ <: Void]) => {
         val ov = toScalaObservable[Void](jOv)
-        notificationHandler(ov.map( _ => Unit )).asJavaObservable
+        notificationHandler(ov.map( _ => () )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f, scheduler))
@@ -3795,7 +3794,7 @@ trait Observable[+T]
     val f: Func1[_ >: rx.Observable[_ <: Void], _ <: rx.Observable[_ <: Any]] =
       (jOv: rx.Observable[_ <: Void]) => {
         val ov = toScalaObservable[Void](jOv)
-        notificationHandler(ov.map( _ => Unit )).asJavaObservable
+        notificationHandler(ov.map( _ => () )).asJavaObservable
       }
 
     toScalaObservable[T](asJavaObservable.repeatWhen(f))
@@ -4197,13 +4196,13 @@ trait Observable[+T]
    *
    * @param keySelector the function that extracts the key from a source item to be used in the `Map`
    * @param valueSelector the function that extracts the value from a source item to be used in the `Map`
-   * @param cbf `CanBuildFrom` to build the `Map`
+   * @param cbf `CanBuildFrom` (Scala 2.10-2.12) or `Factory` (Scala 2.13) to build the `Map`
    * @return an Observable that emits a single item: a `Map` containing the mapped items from the source
    *         Observable
    */
-  def to[M[_, _], K, V](keySelector: T => K, valueSelector: T => V)(implicit cbf: CanBuildFrom[Nothing, (K, V), M[K, V]]): Observable[M[K, V]] = {
+  def to[M[_, _], K, V](keySelector: T => K, valueSelector: T => V)(implicit cbf: Factory[(K, V), M[K, V]]): Observable[M[K, V]] = {
     val stateFactory = new rx.functions.Func0[mutable.Builder[(K, V), M[K, V]]] {
-      override def call(): mutable.Builder[(K, V), M[K, V]] = cbf()
+      override def call(): mutable.Builder[(K, V), M[K, V]] = cbf.newBuilder
     }
     val collector = new rx.functions.Action2[mutable.Builder[(K, V), M[K, V]], T] {
       override def call(builder: mutable.Builder[(K, V), M[K, V]], t: T): Unit = builder += keySelector(t) -> valueSelector(t)
@@ -4491,12 +4490,13 @@ trait Observable[+T]
    * of items, as you do not have the option to unsubscribe.
    *
    * @tparam Col the collection type to build.
+   * @param cbf `CanBuildFrom` (Scala 2.10-2.12) or `Factory` (Scala 2.13) to build the collection
    * @return an Observable that emits a single item, a collection containing all of the items emitted by
    *         the source Observable.
    */
-  def to[Col[_]](implicit cbf: CanBuildFrom[Nothing, T, Col[T@uncheckedVariance]]): Observable[Col[T@uncheckedVariance]] = {
+  def to[Col[_]](implicit cbf: Factory[T, Col[T@uncheckedVariance]]): Observable[Col[T@uncheckedVariance]] = {
     val stateFactory = new rx.functions.Func0[mutable.Builder[T, Col[T]]] {
-      override def call(): mutable.Builder[T, Col[T]] = cbf()
+      override def call(): mutable.Builder[T, Col[T]] = cbf.newBuilder
     }
     val collector = new rx.functions.Action2[mutable.Builder[T, Col[T]], T] {
       override def call(builder: mutable.Builder[T, Col[T]], t: T): Unit = builder += t
@@ -4514,6 +4514,7 @@ trait Observable[+T]
    * @return an Observable that emits a single item, a `Traversable` containing all of the items emitted by
    *         the source Observable.
    */
+  @deprecated("Use toIterable (Scala 2.13+) or to[Traversable] (Scala 2.12 and below) instead", "0.26.6")
   def toTraversable: Observable[Traversable[T]] = to[Traversable]
 
   /**
@@ -4562,6 +4563,7 @@ trait Observable[+T]
    * @return an Observable that emits a single item, a `Stream` containing all of the items emitted by
    *         the source Observable.
    */
+  @deprecated("Use to[LazyList] (Scala 2.13+) or to[Stream] (Scala 2.12 and below) instead", "0.26.6")
   def toStream: Observable[Stream[T]] = to[Stream]
 
   /**
@@ -4854,7 +4856,7 @@ trait Observable[+T]
  * <span class="badge badge-red" style="float: right;">EXPERIMENTAL</span>
  */
 object Observable {
-  import scala.collection.JavaConverters._
+  import rx.lang.scala.scalacompat.CollectionConverters._
   import scala.concurrent.duration.Duration
   import scala.concurrent.{Future, ExecutionContext}
   import scala.util.{Success, Failure}
@@ -4865,7 +4867,7 @@ object Observable {
   private[scala]
   def jObsOfListToScObsOfSeq[T](jObs: rx.Observable[_ <: java.util.List[T]]): Observable[Seq[T]] = {
     val oScala1: Observable[java.util.List[T]] = new Observable[java.util.List[T]]{ val asJavaObservable = jObs }
-    oScala1.map((lJava: java.util.List[T]) => lJava.asScala)
+    oScala1.map((lJava: java.util.List[T]) => lJava.asScala.toSeq)
   }
 
   private[scala]
@@ -5174,9 +5176,8 @@ object Observable {
    * @return an Observable that emits the zipped Seqs
    */
   def zip[T](observables: Observable[Observable[T]]): Observable[Seq[T]] = {
-    val f: FuncN[Seq[T]] = (args: Seq[java.lang.Object]) => {
-      val asSeq: Seq[Object] = args.toSeq
-      asSeq.asInstanceOf[Seq[T]]
+    val f: FuncN[Seq[T]] = new FuncN[Seq[T]] {
+      override def call(args: java.lang.Object*): Seq[T] = args.toSeq.asInstanceOf[Seq[T]]
     }
     val list = observables.map(_.asJavaObservable).asJavaObservable
     val o = rx.Observable.zip(list, f)

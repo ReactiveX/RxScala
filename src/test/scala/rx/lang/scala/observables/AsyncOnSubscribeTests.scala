@@ -2,7 +2,7 @@ package rx.lang.scala.observables
 
 import org.junit.Test
 import org.junit.Assert._
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala.observers.TestSubscriber
 import rx.lang.scala.{Notification, Observable}
 

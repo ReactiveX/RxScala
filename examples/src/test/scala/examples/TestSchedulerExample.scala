@@ -19,7 +19,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala._
 import rx.lang.scala.schedulers.TestScheduler
 import rx.observers.TestSubscriber

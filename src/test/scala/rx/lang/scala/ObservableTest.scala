@@ -22,7 +22,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.junit.Assert._
 import org.junit.{ Ignore, Test }
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import scala.concurrent.duration._
 import rx.lang.scala.schedulers.TestScheduler
 

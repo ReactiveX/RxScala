@@ -1,5 +1,16 @@
 # RxScala Releases
 
+## Version 0.26.6 - ...
+
+Adds Scala 2.13 support
+
+Note on compatibility:
+
+* Binary compatibility is only preserved within a Scala major version
+* This libraries definition of `Seq` follows that of the Scala major version, so `scala.collection.generic.Seq` in 2.10-2.12 and `scala.collection.immutable.Seq` in 2.13
+* Some methods which take an implicit `CanBuildFrom[Nothing, ...]` in the 2.10-2.12 version take an implicit `Factory` in the 2.13 version to follow the collection re-design.
+
+
 ## Version 0.26.5 - December 28th 2016 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
 The most notable change is adding `SyncOnSubscribe` and `AsyncOnSubscribe` support. Search them in [RxScalaDemo](https://github.com/ReactiveX/RxScala/blob/0.x/examples/src/test/scala/examples/RxScalaDemo.scala)

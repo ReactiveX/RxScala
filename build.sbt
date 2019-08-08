@@ -10,11 +10,16 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
   )
 )
 
-scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8", "-Xfatal-warnings")
+scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
-scalaVersion in ThisBuild := "2.12.6"
+scalaVersion in ThisBuild := "2.13.0"
 
-crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.6")
+crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.9", "2.13.0")
+
+unmanagedSourceDirectories in Compile ++= (scalaBinaryVersion.value match {
+  case "2.10" | "2.11" | "2.12" => Seq(baseDirectory.value / "src/main/scala_2.10-2.12")
+  case "2.13" => Seq() // "src/main/scala-2.13" will be picked up by default by sbt
+})
 
 parallelExecution in Test := false
 
@@ -23,7 +28,7 @@ libraryDependencies ++= {
     "io.reactivex" % "rxjava" % "1.2.4",
     "org.mockito" % "mockito-core" % "2.19.0" % "test",
     "junit" % "junit" % "4.12" % "test",
-    "org.scalatest" %% "scalatest" % "3.0.5" % "test")
+    "org.scalatest" %% "scalatest" % "3.0.8" % "test")
 }
 
 // Set up the doc mappings

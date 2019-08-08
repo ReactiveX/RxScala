@@ -36,7 +36,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
 import org.junit.Ignore
 import org.junit.Test
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala._
 import rx.lang.scala.observables.{AsyncOnSubscribe, SyncOnSubscribe}
 import rx.lang.scala.schedulers._

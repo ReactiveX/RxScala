@@ -3,7 +3,7 @@ package examples
 import java.util.concurrent.CountDownLatch
 
 import org.junit.{Ignore, Test}
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.functions.Action1
 import rx.lang.scala.JavaConverters._
 import rx.lang.scala.{Observable, Observer, Subscriber, Subscription}

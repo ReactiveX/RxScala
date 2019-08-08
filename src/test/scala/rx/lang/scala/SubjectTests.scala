@@ -18,7 +18,7 @@ package rx.lang.scala
 
 import org.junit.Assert.{assertEquals, assertFalse, assertTrue}
 import org.junit.{Assert, Test}
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import rx.lang.scala.subjects.{AsyncSubject, BehaviorSubject, ReplaySubject, UnicastSubject}
 
 class SubjectTest extends JUnitSuite {

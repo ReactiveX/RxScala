@@ -15,7 +15,7 @@
  */
 package rx.lang.scala.observables
 
-import scala.collection.JavaConverters._
+import rx.lang.scala.scalacompat.CollectionConverters._
 import scala.concurrent.{Future, Promise}
 import rx.annotations.Experimental
 import rx.lang.scala.ImplicitFunctionConversions._
