@@ -1,8 +1,10 @@
 # RxScala Releases
 
-## Version 0.26.6 - ...
+## Version 0.27.0 - December 29th 2019 ([Maven Central](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22))
 
-Adds Scala 2.13 support
+[End-of-Life (EOL) version](https://github.com/ReactiveX/RxScala/issues/244)
+
+Adds Scala 2.13 support.
 
 Note on compatibility:
 
