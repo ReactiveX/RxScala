@@ -2,6 +2,22 @@
 
 This is a Scala adapter to [RxJava](http://github.com/ReactiveX/RxJava).
 
+# End-of-Life (EOL) notice
+
+**This project is end of life** and new releases will only contain bug-fixes and support for new Scala versions.
+For more information, see [issue #244](https://github.com/ReactiveX/RxScala/issues/244).
+
+Alternatives to this library:
+
+* [RxJava](https://github.com/ReactiveX/RxJava) (Java, similar API as RxScala)
+* [Reactor](https://projectreactor.io/) (Java)
+* [Akka Streams](https://doc.akka.io/docs/akka/current/stream/index.html) (Scala & Java)
+* [monix](https://monix.io/) (Scala)
+* [cats-effect](https://typelevel.org/cats-effect/) (Scala)
+* [fs2](https://github.com/functional-streams-for-scala/fs2) (Scala)
+* [ZIO](https://zio.dev/) (Scala)
+
+# Usage
 Example usage:
 
 ```scala
@@ -71,16 +87,13 @@ Scala code using Rx should only import members from `rx.lang.scala` and below.
 
 ## Communication
 
-Since RxScala is part of the RxJava family the communication channels are similar:
-
-- Google Group: [RxJava](http://groups.google.com/d/forum/rxjava)
-- Twitter: [@RxJava](http://twitter.com/RxJava)
 - [GitHub Issues](https://github.com/ReactiveX/RxScala/issues)
 
 ## Versioning
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
+| 0.27.* | 1.0.* |
 | 0.26.* | 1.0.* |
 | 0.25.* | 1.0.* |
 | 0.24.* | 1.0.* |
@@ -97,7 +110,7 @@ you should use the corresponding version of RxJava as the following table:
 
 | RxScala version | Compatible RxJava version |
 | ------------------- | ------------------------- |
-| 0.26.5, 0.26.6 | 1.2.4+ |
+| 0.26.5 - 0.27.0 | 1.2.4+ |
 | 0.26.4 | 1.2.2+ |
 | 0.26.3 | 1.2.0+ |
 | 0.26.2 | 1.1.6+ |
@@ -127,10 +140,10 @@ RxJava:
 
 Binaries and dependency information for Maven, Ivy, Gradle and others can be found at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7C%22rxscala%22%20AND%20g%3A%22io.reactivex%22).
 
-Example for sbt/activator:
+Example for sbt:
 
 ```scala
-libraryDependencies += "io.reactivex" %% "rxscala" % "x.y.z"
+libraryDependencies += "io.reactivex" %% "rxscala" % "0.27.0"
 ```
 
 and for Maven:
@@ -139,14 +152,14 @@ and for Maven:
 <dependency>
     <groupId>io.reactivex</groupId>
     <artifactId>rxscala_${scala.compat.version}</artifactId>
-    <version>x.y.z</version>
+    <version>0.27.0</version>
 </dependency>
 ```
 
 and for Ivy:
 
 ```xml
-<dependency org="io.reactivex" name="rxscala_${scala.compat.version}" rev="x.y.z" />
+<dependency org="io.reactivex" name="rxscala_${scala.compat.version}" rev="0.27.0" />
 ```
 
 ## Build
