@@ -4,11 +4,10 @@ This is a Scala adapter to [RxJava](http://github.com/ReactiveX/RxJava).
 
 # End-of-Life (EOL) notice
 
-*This project is end of life* and new releases will only contain bugfixes and support for new Scala versions.
+**This project is end of life** and new releases will only contain bug-fixes and support for new Scala versions.
 For more information, see [issue #244](https://github.com/ReactiveX/RxScala/issues/244).
 
-Alterantive to this library:
-
+Alternatives to this library:
 
 * [RxJava](https://github.com/ReactiveX/RxJava) (Java, similar API as RxScala)
 * [Reactor](https://projectreactor.io/) (Java)
