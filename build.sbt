@@ -12,9 +12,9 @@ lazy val examples = project in file("examples") dependsOn (root % "test->test;co
 
 scalacOptions in ThisBuild := Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
-scalaVersion in ThisBuild := "2.13.0"
+scalaVersion in ThisBuild := "2.13.1"
 
-crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.9", "2.13.0")
+crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.10", "2.13.1")
 
 unmanagedSourceDirectories in Compile ++= (scalaBinaryVersion.value match {
   case "2.10" | "2.11" | "2.12" => Seq(baseDirectory.value / "src/main/scala_2.10-2.12")
